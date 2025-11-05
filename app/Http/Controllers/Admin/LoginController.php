@@ -22,7 +22,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             // Kiểm tra vai trò
             if (Auth::user()->vai_tro === 'quan_li') {
-                return redirect()->intended('/');
+                return redirect()->intended(route('admin.dashboard'));
             } else {
                 Auth::logout();
                 return back()->with('error', 'Email hoặc mật khẩu không đúng!');

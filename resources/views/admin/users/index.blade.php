@@ -9,7 +9,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span>Danh sách người dùng</span>
-                <a href="#" class="btn btn-primary btn-sm">
+                <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">
                     <i class="bi bi-plus"></i> Thêm người dùng
                 </a>
             </div>
@@ -69,9 +69,14 @@
                             <td>{{ $user->ngay_tao }}</td>
                             <td>{{ $user->ngay_cap_nhat }}</td>
                             <td>
-                                <a href="#" class="btn btn-sm btn-info" title="Xem"><i class="bi bi-eye"></i></a>
-                                <a href="#" class="btn btn-sm btn-warning" title="Sửa"><i class="bi bi-pencil"></i></a>
-                                <a href="#" class="btn btn-sm btn-danger" title="Xóa"><i class="bi bi-trash"></i></a>
+                                <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-sm btn-info" title="Xem"><i class="bi bi-eye"></i></a>
+                                <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-warning" title="Sửa"><i class="bi bi-pencil"></i></a>
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Xóa" onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach

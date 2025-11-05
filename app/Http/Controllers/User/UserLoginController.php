@@ -36,6 +36,7 @@ class UserLoginController extends Controller
     Auth::login($user);
     return redirect()->route('shoe.index')->with('js_success', 'Đăng nhập thành công!');
 }
+
 public function index()
     {
         return view('shoe.index');

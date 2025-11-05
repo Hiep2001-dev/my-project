@@ -12,15 +12,15 @@
     <div class="sidebar-menu">
         <ul class="menu">
             <li class="sidebar-title">Menu</li>
-            <li class="sidebar-item active">
-                <a href="{{ url('/') }}" class="sidebar-link">
+            <li class="sidebar-item {{ Route::is('admin.dashboard') ? 'active' : '' }}">
+                <a href="{{ route('admin.dashboard') }}" class="sidebar-link">
                     <i class="bi bi-grid-fill"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="sidebar-item">
-                <a href="#" class="sidebar-link">
-                    <i class="bi bi-layers"></i>
+            <li class="sidebar-item {{ Route::is('admin.products.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.products.index') }}" class="sidebar-link">
+                    <i class="bi bi-table"></i>
                     <span>Sản phẩm</span>
                 </a>
             </li>
@@ -30,20 +30,20 @@
                     <span>Đơn hàng</span>
                 </a>
             </li>
-            <li class="sidebar-item">
+            <li class="sidebar-item {{ Route::is('admin.users.index') ? 'active' : '' }}">
                 <a href="{{ route('admin.users.index') }}" class="sidebar-link">
                     <i class="bi bi-table"></i>
                     <span>Người dùng</span>
                 </a>
             </li>
-            <li class="sidebar-item">
-                <a href="#" class="sidebar-link">
+            <li class="sidebar-item"{{ Route::is('admin.categories.*') ? 'active' : '' }}>
+                <a href="{{ route('admin.categories.index') }}" class="sidebar-link">
                     <i class="bi bi-table"></i>
                     <span>Danh mục</span>
                 </a>
             </li>
-            <li class="sidebar-item">
-                <a href="#" class="sidebar-link">
+            <li class="sidebar-item"{{ Route::is('admin.brands.*') ? 'active' : '' }}>
+                <a href="{{ route('admin.brands.index') }}" class="sidebar-link">
                     <i class="bi bi-table"></i>
                     <span>Thương hiệu</span>
                 </a>
