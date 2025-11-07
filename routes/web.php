@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ProductVariationController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ImageProductController;
+use App\Http\Controllers\User\UserProductController;
 
 
 
@@ -89,14 +90,16 @@ Route::middleware('auth')->group(function () {
 Route::get('/admin/auth/login', [LoginController::class, 'showLoginForm'])->name('login.form');
 Route::post('/admin/auth/login', [LoginController::class, 'handleLogin'])->name('login.handle');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+
+
 //USER ROUTES
 
 Route::get('/shoe', function () {
     return view('shoe.index');
 });
-Route::get('/shoe/product', function () {
-    return view('shoe.product');
-})->name('shoe.product');
+Route::get('/shoe/product', [UserProductController::class, 'index'])->name('shoe.product');
+
 Route::get('/shoe/introduce', function () {
     return view('shoe.introduce');
 })->name('shoe.introduce');

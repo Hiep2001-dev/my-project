@@ -6,13 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class UserProductController extends Controller
 {
     // Hiển thị danh sách sản phẩm cho người dùng
     public function index()
     {
-        $products = Product::where('hoat_dong', 1)->orderBy('ngay_tao', 'desc')->paginate(20);
-        return view('shoe.product', compact('products'));
+       $products = Product::where('hoat_dong', 1)
+            ->with(['variations.images'])
+            ->orderBy('ngay_tao', 'desc')
+            ->paginate(20);
+       return view('shoe.product', compact('products'));
     }
 
     // Hiển thị chi tiết một sản phẩm

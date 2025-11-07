@@ -4,6 +4,44 @@
 @section('title', 'Tất cả sản phẩm')
 
 @section('content')
+<style>
+.product-img img {
+    width: 100%;
+    max-width: 180px;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+    box-shadow: none !important;
+    position: static !important;
+    z-index: 1 !important;
+}
+.product-block {
+    margin-bottom: 30px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    padding: 10px;
+}
+.product-detail {
+    text-align: center;
+    margin-top: 10px;
+}
+.pro-text a {
+    color: black;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 5px;
+}
+.pro-price p {
+    color: #e74c3c;
+    font-weight: bold;
+    margin: 0;
+}
+</style>
+
 <div class="header">
     <a style="color: #ffffff;text-decoration: none;" href="{{ url('shoe/index') }}">
         MIỄN PHÍ VẬN CHUYỂN VỚI ĐƠN HÀNG NỘI THÀNH > 300K - ĐỔI TRẢ TRONG 30 NGÀY - ĐẢM BẢO CHẤT LƯỢNG
@@ -14,7 +52,7 @@
 
 {{-- Banner --}}
 <div>
-    <img src="{{ asset('images/collection_banner.jpg') }}" alt="Products">
+    <img src="{{ asset('images/collection_banner.jpg') }}" alt="Products" style="width:100%;max-height:300px;object-fit:cover;">
 </div>
 
 <div class="breadcrumb-shop">
@@ -72,24 +110,36 @@
                 </div>
             </div>
             <div class="row">
+                
                 {{-- Hiển thị sản phẩm --}}
                 @foreach($products as $product)
                 <div class="col-md-3 col-sm-6 col-xs-6 col-6">
                     <div class="product-block">
-                        <div class="product-img fade-box">
-                            <a href="{{ route('shoe.product.show', $product->id) }}" title="{{ $product->ten }}" class="img-resize">
-                                <img src="{{ asset($product->hinh_anh) }}" alt="{{ $product->ten }}">
-                                <img src="{{ asset($product->hinh_anh_phu) }}" alt="{{ $product->ten }}">
+                        <a href="#" class="img-resize"></a>
+                        <div class="product-img">
+                            
+                                @php
+                                    $firstImage = null;
+                                    $secondImage = null;
+                                    foreach($product->variations as $variation) {
+                                        if($variation->images->count() > 0) {
+                                            $firstImage = $variation->images[0]->duong_dan ?? null;
+                                            $secondImage = $variation->images[1]->duong_dan ?? null;
+                                            break;
+                                        }
+                                    }
+                                @endphp
+                                <div class="product-img">
+                                    <img src="{{ asset($firstImage ?? 'images/no-image.png') }}" alt="{{ $product->ten }}">
+                                </div>
                             </a>
                         </div>
                         <div class="product-detail clearfix">
                             <div class="pro-text">
-                                <a style="color: black; font-size: 14px;text-decoration: none;" href="{{ route('shoe.product.show', $product->id) }}" title="{{ $product->ten }}">
-                                    {{ $product->ten }}
-                                </a>
+                                <a href="#">{{ $product->ten }}</a>
                             </div>
                             <div class="pro-price">
-                                <p class="">{{ number_format($product->gia, 0, ',', '.') }}₫</p>
+                                <p>{{ number_format($product->gia, 0, ',', '.') }}₫</p>
                             </div>
                         </div>
                     </div>
