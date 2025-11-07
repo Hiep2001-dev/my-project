@@ -59,5 +59,63 @@
             <a href="{{ route('admin.products.variations.index', $product->id) }}" class="btn btn-secondary">Quay lại</a>
         </div>
     </form>
+    {{-- Thêm vào dưới form sửa biến thể --}}
+    <div class="card mt-4">
+        <div class="card-header">
+            <strong>Thêm hình ảnh cho biến thể</strong>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('admin.products.images.store', [$product->id, $variation->id]) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="mb-3">
+                    <label for="image_file" class="form-label">Chọn ảnh</label>
+                    <input type="file" name="image_file" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="mo_ta" class="form-label">Mô tả</label>
+                    <input type="text" name="mo_ta" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="mac_dinh" class="form-label">Mặc định</label>
+                    <select name="mac_dinh" class="form-select">
+                        <option value="0">Không</option>
+                        <option value="1">Có</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Thêm ảnh</button>
+            </form>
+        </div>
+    </div>
+    {{-- Hiển thị danh sách ảnh --}}
+    <div class="card mt-4">
+        <div class="card-header">
+            <strong>Hình ảnh của biến thể</strong>
+        </div>
+        <div class="card-body">
+            @if($variation->images->count())
+                <div class="row">
+                    @foreach($variation->images as $img)
+                    <div class="col-md-3 mb-3">
+                        <div class="card">
+                            <img src="{{ asset($img->duong_dan) }}" class="card-img-top" alt="Ảnh" style="height:120px;object-fit:cover;">
+                            <div class="card-body p-2">
+                                <p class="mb-1">{{ $img->mo_ta }}</p>
+                                <form action="{{ route('admin.products.images.destroy', [$product->id, $variation->id, $img->id]) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Xóa ảnh này?')">Xóa</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            @else
+                <p>Chưa có hình ảnh nào cho biến thể này.</p>
+            @endif
+        </div>
+    </div>
+    <a href="{{ route('admin.products.images.create', [$product->id, $variation->id]) }}" class="btn btn-sm btn-primary">
+        <i class="bi bi-plus"></i> Thêm ảnh
+    </a>
 </div>
 @endsection

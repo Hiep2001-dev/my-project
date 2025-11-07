@@ -26,6 +26,7 @@
                             <th>Loại sân</th>
                             <th>Giá</th>
                             <th>Hoạt động</th>
+                            {{-- <th>Biến thể</th> --}}
                             <th>Ngày tạo</th>
                             <th>Ngày cập nhật</th>
                             <th>Thao tác</th>
@@ -58,13 +59,29 @@
                                     <span class="badge bg-danger">Ngừng bán</span>
                                 @endif
                             </td>
+                            {{-- <td>
+                                @foreach($product->variations as $variation)
+                                    <div class="mb-1">
+                                        <a href="{{ route('admin.products.variations.show', [$product->id, $variation->id]) }}" class="btn btn-sm btn-outline-secondary">
+                                            {{ $variation->ma_bien_the ?? 'Biến thể' }}
+                                        </a>
+                                        <span class="text-muted">({{ $variation->images->count() }} ảnh)</span>
+                                        <a href="{{ route('admin.products.images.index', [$product->id, $variation->id]) }}" class="btn btn-sm btn-outline-primary ms-1">
+                                            <i class="bi bi-image"></i> Quản lý ảnh
+                                        </a>
+                                    </div>
+                                @endforeach
+                                @if($product->variations->isEmpty())
+                                    <span class="text-muted">Chưa có biến thể</span>
+                                @endif
+                            </td> --}}
                             <td>{{ $product->ngay_tao }}</td>
                             <td>{{ $product->ngay_cap_nhat }}</td>
                             <td>
                                 <a href="{{ route('admin.products.show', $product->id) }}" class="btn btn-sm btn-info" title="Xem"><i class="bi bi-eye"></i></a>
                                 <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-warning" title="Sửa"><i class="bi bi-pencil"></i></a>
                                 <a href="{{ route('admin.products.variations.index', $product->id) }}" class="btn btn-sm btn-secondary" title="Biến thể">
-                                    <i class="bi bi-list-ul"></i> Biến thể
+                                    <i class="bi bi-list-ul"></i>
                                 </a>
                                 <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" style="display:inline;">
                                     @csrf
@@ -77,7 +94,7 @@
                         @endforeach
                         @if($products->isEmpty())
                         <tr>
-                            <td colspan="11" class="text-center">Không có dữ liệu</td>
+                            <td colspan="12" class="text-center">Không có dữ liệu</td>
                         </tr>
                         @endif
                     </tbody>

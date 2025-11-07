@@ -10,6 +10,12 @@ use App\Http\Controllers\User\UserLoginController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductVariationController;
+use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ImageProductController;
+
+
+
 //Admin Routes
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
@@ -63,6 +69,20 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/update', [ProductVariationController::class, 'update'])->name('admin.products.variations.update');
         Route::post('/{id}/delete', [ProductVariationController::class, 'destroy'])->name('admin.products.variations.destroy');
     });
+    // Image Products
+    Route::prefix('admin/products/{productId}/variations/{variationId}/images')->group(function () {
+        Route::get('/', [ImageProductController::class, 'index'])->name('admin.products.images.index');
+        Route::get('/create', [ImageProductController::class, 'create'])->name('admin.products.images.create');
+        Route::post('/store', [ImageProductController::class, 'store'])->name('admin.products.images.store');
+        Route::get('/{imageId}', [ImageProductController::class, 'show'])->name('admin.products.images.show');
+        Route::get('/{imageId}/edit', [ImageProductController::class, 'edit'])->name('admin.products.images.edit');
+        Route::post('/{imageId}/update', [ImageProductController::class, 'update'])->name('admin.products.images.update');
+        Route::post('/{imageId}/delete', [ImageProductController::class, 'destroy'])->name('admin.products.images.destroy');
+    });
+    Route::get('admin/products/{productId}/variations/{variationId}/images', [ImageProductController::class, 'index'])
+    ->name('admin.products.images.index');
+    Route::get('admin/products/{productId}/variations/{variationId}/images/create', [ImageProductController::class, 'create'])
+    ->name('admin.products.images.create');
 });
 
 // Authentication Routes

@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class ProductVariation extends Model
 {
     protected $table = 'bien_the_san_pham';
-
+    const CREATED_AT = 'ngay_tao';
+    const UPDATED_AT = 'ngay_cap_nhat';
     protected $fillable = [
         'san_pham_id',
         'ma_bien_the',
@@ -26,13 +27,17 @@ class ProductVariation extends Model
         'so_luong',
         'canh_bao_ton_kho',
         'trang_thai',
-        'ngay_tao',
-        'ngay_cap_nhat'
+        // 'ngay_tao',
+        // 'ngay_cap_nhat'
     ];
 
     // Biến thể thuộc về một sản phẩm
     public function product()
     {
         return $this->belongsTo(Product::class, 'san_pham_id');
+    }
+    public function images() 
+    { 
+        return $this->hasMany(ImageProduct::class, 'bien_the_id'); 
     }
 }

@@ -45,6 +45,9 @@
                 <td>
                     <a href="{{ route('admin.products.variations.show', [$product->id, $variation->id]) }}" class="btn btn-sm btn-info"><i class="bi bi-eye"></i></a>
                     <a href="{{ route('admin.products.variations.edit', [$product->id, $variation->id]) }}" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
+                    <a href="{{ route('admin.products.images.index', [$product->id, $variation->id]) }}" class="btn btn-sm btn-secondary">
+                        <i class="bi bi-image"></i>
+                    </a>
                     <form action="{{ route('admin.products.variations.destroy', [$product->id, $variation->id]) }}" method="POST" style="display:inline;">
                         @csrf
                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Xóa biến thể này?')"><i class="bi bi-trash"></i></button>

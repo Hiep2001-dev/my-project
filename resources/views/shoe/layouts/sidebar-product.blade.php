@@ -28,15 +28,15 @@
                                     <div class="collapse" id="collapseExample">
                                         <div class="card card-body" style="border:0;padding-top:0;">
                                             <ul class="menu-product">
-                                                <li><a href="{{ route('shoe.product.style', 1) }}" title="Sản phẩm - Style 1">Sản phẩm - Style 1</a></li>
-                                                <li><a href="{{ route('shoe.product.style', 2) }}" title="Sản phẩm - Style 2">Sản phẩm - Style 2</a></li>
-                                                <li><a href="{{ route('shoe.product.style', 3) }}" title="Sản phẩm - Style 3">Sản phẩm - Style 3</a></li>
+                                                <li><a href="#" title="Sản phẩm - Style 1">Sản phẩm - Style 1</a></li>
+                                                <li><a href="#" title="Sản phẩm - Style 2">Sản phẩm - Style 2</a></li>
+                                                <li><a href="#" title="Sản phẩm - Style 3">Sản phẩm - Style 3</a></li>
                                             </ul>
                                         </div>
                                     </div>
                                 </li>
                                 <li><a href="{{ route('shoe.introduce') }}" title="Giới thiệu"><span>Giới thiệu</span></a></li>
-                                <li><a href="{{ route('shoe.blog') }}" title="Blog"><span>Blog</span></a></li>
+                                <li><a href="#" title="Blog"><span>Blog</span></a></li>
                                 <li><a href="{{ route('shoe.contact') }}" title="Liên hệ"><span>Liên hệ</span></a></li>
                             </ul>
                         </div>
