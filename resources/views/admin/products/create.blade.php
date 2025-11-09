@@ -16,13 +16,13 @@
                             <label for="ma_sku" class="form-label">Mã SKU</label>
                             <input type="text" name="ma_sku" class="form-control" value="{{ old('ma_sku') }}">
                         </div>
-                        <div class="mb-3">
-                            <label for="ten" class="form-label">Tên sản phẩm <span class="text-danger">*</span></label>
-                            <input type="text" name="ten" class="form-control" required value="{{ old('ten') }}">
+                        <div class="form-group">
+                            <label for="ten">Tên sản phẩm <span class="text-danger">*</span></label>
+                            <input type="text" name="ten" id="ten" class="form-control" required value="{{ old('ten') }}">
                         </div>
-                        <div class="mb-3">
-                            <label for="duong_dan" class="form-label">Đường dẫn</label>
-                            <input type="text" name="duong_dan" class="form-control" value="{{ old('duong_dan') }}">
+                        <div class="form-group">
+                            <label for="duong_dan">Đường dẫn (slug)</label>
+                            <input type="text" name="duong_dan" id="duong_dan" class="form-control" readonly value="{{ old('duong_dan') }}">
                         </div>
                         <div class="mb-3">
                             <label for="thuong_hieu_id" class="form-label">Thương hiệu</label>
@@ -42,17 +42,6 @@
                                 <option value="nam" {{ old('gioi_tinh') == 'nam' ? 'selected' : '' }}>Nam</option>
                                 <option value="nu" {{ old('gioi_tinh') == 'nu' ? 'selected' : '' }}>Nữ</option>
                                 <option value="unisex" {{ old('gioi_tinh') == 'unisex' ? 'selected' : '' }}>Unisex</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="loai_san" class="form-label">Loại sân</label>
-                            <select name="loai_san" class="form-select">
-                                <option value="">-- Chọn loại sân --</option>
-                                <option value="TF" {{ old('loai_san') == 'TF' ? 'selected' : '' }}>TF</option>
-                                <option value="AG" {{ old('loai_san') == 'AG' ? 'selected' : '' }}>AG</option>
-                                <option value="FG" {{ old('loai_san') == 'FG' ? 'selected' : '' }}>FG</option>
-                                <option value="IC" {{ old('loai_san') == 'IC' ? 'selected' : '' }}>IC</option>
-                                <option value="NA" {{ old('loai_san') == 'NA' ? 'selected' : '' }}>NA</option>
                             </select>
                         </div>
                     </div>
@@ -75,28 +64,33 @@
                                 <option value="0" {{ old('hoat_dong') == '0' ? 'selected' : '' }}>Ngừng bán</option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="video" class="form-label">Video (URL)</label>
-                            <input type="text" name="video" class="form-control" value="{{ old('video') }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="thong_tin_ky_thuat" class="form-label">Thông tin kỹ thuật (JSON)</label>
-                            <textarea name="thong_tin_ky_thuat" class="form-control" rows="3">{{ old('thong_tin_ky_thuat') }}</textarea>
-                        </div>
+            
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="mo_ta" class="form-label">Mô tả</label>
                     <textarea name="mo_ta" class="form-control" rows="4">{{ old('mo_ta') }}</textarea>
                 </div>
-                <div class="mb-3">
-                    <label for="huong_dan_bao_quan" class="form-label">Hướng dẫn bảo quản</label>
-                    <textarea name="huong_dan_bao_quan" class="form-control" rows="3">{{ old('huong_dan_bao_quan') }}</textarea>
-                </div>
+            </div>
+        </div>
                 <button type="submit" class="btn btn-primary">Thêm mới</button>
                 <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Quay lại</a>
             </div>
         </div>
     </form>
+    
 </div>
+<script>
+function slugify(str) {
+    str = str.toLowerCase().trim();
+    str = str.replace(/[\s\-]+/g, '-');
+    str = str.replace(/[^\w\-]+/g, '');
+    str = str.replace(/\-\-+/g, '-');
+    return str;
+}
+
+document.getElementById('ten').addEventListener('input', function() {
+    document.getElementById('duong_dan').value = slugify(this.value);
+});
+</script>
 @endsection

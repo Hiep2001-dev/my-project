@@ -2,7 +2,7 @@
       <div class="">
         <div class="hot_sp" style="padding-top: 70px;padding-bottom: 50px;">
           <h2 style="text-align:center;padding-top: 10px">
-            <a style="font-size: 28px;color: black;text-decoration: none" href="">Khách hàng và Runner Inn</a>
+            <a style="font-size: 28px;color: black;text-decoration: none" href="">Khách hàng và FootStore HTH</a>
           </h2>
         </div>
         <div class="list-gallery clearfix">
@@ -51,18 +51,15 @@
                   Giới thiệu
                 </h4>
                 <div class="footer-content">
-                  <p>Runner Inn trang mua sắm trực tuyến của thương hiệu giày, thời trang nam, nữ, phụ kiện, giúp bạn
+                  <p>FootStore HTH trang mua sắm trực tuyến của thương hiệu giày nam nữ giúp bạn
                     tiếp
                     cận xu hướng thời trang mới nhất.</p>
                   <div class="logo-footer">
                     <img src="{{ asset('images/logo-bct.png') }}" alt="Bộ Công Thương">
                   </div>
                   <div class="social-list">
-                    <a href="#" class="fab fa-facebook"></a>
-                    <a href="#" class="fab fa-google"></a>
-                    <a href="#" class="fab fa-twitter"></a>
-                    <a href="#" class="fab fa-youtube"></a>
-                    <a href="#" class="fab fa-skype"></a>
+                    <a href="https://www.facebook.com/hinhtanhiep" class="fab fa-facebook"></a>
+                    
                   </div>
                 </div>
               </div>
@@ -100,10 +97,9 @@
                 </h4>
                 <div class="footer-content toggle-footer">
                   <ul>
-                    <li><span>Địa chỉ:</span> 117-119 Lý Chính Thắng, Phường 7, Quận 3, TP. Hồ Chí Minh, Vietnam</li>
+                    <li><span>Địa chỉ:</span> 180 Cao Lỗ, Phường 4, Quận 8, TP. Hồ Chí Minh, Vietnam</li>
                     <li><span>Điện thoại:</span> +84 (028) 38800659</li>
-                    <li><span>Fax:</span> +84 (028) 38800659</li>
-                    <li><span>Mail:</span> contact@aziworld.com</li>
+                    <li><span>Mail:</span> hinhtanhiep1810@gmail.com</li>
                   </ul>
                 </div>
               </div>
@@ -116,12 +112,12 @@
                 <div class="footer-content">
                   <div id="fb-root">
                     <div class="footer-static-content">
-                      <div class="fb-page" data-href="https://www.facebook.com/AziWorld-Viet-Nam-908555669481794/"
+                      <div class="fb-page" data-href="https://www.facebook.com/hinhtanhiep"
                         data-tabs="timeline" data-width="" data-height="215" data-small-header="false"
                         data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true">
-                        <blockquote cite="https://www.facebook.com/AziWorld-Viet-Nam-908555669481794/"
+                        <blockquote cite="https://www.facebook.com/hinhtanhiep"
                           class="fb-xfbml-parse-ignore"><a
-                            href="https://www.facebook.com/AziWorld-Viet-Nam-908555669481794/">AziWorld Viet Nam</a>
+                            href="https://www.facebook.com/hinhtanhiep">Hình Tân Hiệp</a>
                         </blockquote>
                       </div>
                     </div>
@@ -136,8 +132,8 @@
         <div class="container">
           <hr>
           <div class="main-footer--border" style="text-align:center;padding-bottom: 15px;">
-            <p>Copyright © 2019 <a href="https://runner-inn.myharavan.com"> Runner Inn</a>. <a target="_blank"
-                href="https://www.facebook.com/henrynguyen202">Powered by HuniBlue</a></p>
+            <p>Copyright © 2025 <a href="https://runner-inn.myharavan.com"> FootStore HTH</a>. <a target="_blank"
+                href="https://www.facebook.com/henrynguyen202">Powered by Hiep</a></p>
           </div>
         </div>
       </div>

@@ -20,7 +20,7 @@
                         @else Unisex
                         @endif
                     </p>
-                    <p><strong>Loại sân:</strong> {{ $product->loai_san }}</p>
+                    
                     <p><strong>Thuế:</strong> {{ $product->thue }}%</p>
                 </div>
                 <div class="col-md-6">
@@ -47,17 +47,6 @@
             <div class="mb-3">
                 <p><strong>Mô tả:</strong></p>
                 <p>{{ $product->mo_ta }}</p>
-            </div>
-            <div class="mb-3">
-                <p><strong>Video:</strong> {{ $product->video ?? 'Chưa có' }}</p>
-            </div>
-            <div class="mb-3">
-                <p><strong>Thông tin kỹ thuật:</strong></p>
-                <pre>{{ $product->thong_tin_ky_thuat }}</pre>
-            </div>
-            <div class="mb-3">
-                <p><strong>Hướng dẫn bảo quản:</strong></p>
-                <p>{{ $product->huong_dan_bao_quan }}</p>
             </div>
             <div class="mb-3">
                 <p><strong>Ngày tạo:</strong> {{ $product->ngay_tao }}</p>

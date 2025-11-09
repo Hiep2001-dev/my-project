@@ -8,7 +8,7 @@
                 <a href="{{ url('/') }}"><img src="{{ asset('assets/images/logo/logo.png') }}" alt="Logo"></a>
             </div>
             <h1 class="auth-title">Đăng nhập</h1>
-            <p class="auth-subtitle mb-5">Đăng nhập bằng thông tin bạn đã đăng ký.</p>
+            <p class="auth-subtitle mb-5">Đăng nhập bằng tài khoản Quản lí.</p>
 
             @if(session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
@@ -36,10 +36,6 @@
                 </div>
                 <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5" type="submit">Đăng nhập</button>
             </form>
-            <div class="text-center mt-5 text-lg fs-4">
-                <p class="text-gray-600">Chưa có tài khoản? <a href="#" class="font-bold">Đăng ký</a>.</p>
-                <p><a class="font-bold" href="#">Quên mật khẩu?</a>.</p>
-            </div>
         </div>
     </div>
     <div class="col-lg-7 d-none d-lg-block">

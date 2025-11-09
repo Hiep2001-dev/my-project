@@ -15,7 +15,6 @@ class ProductVariation extends Model
         'hinh_anh_chinh',
         'mau_sac',
         'ma_mau',
-        'size_cm',
         'size_eu',
         'ma_vach',
         'trong_luong_g',
@@ -27,8 +26,6 @@ class ProductVariation extends Model
         'so_luong',
         'canh_bao_ton_kho',
         'trang_thai',
-        // 'ngay_tao',
-        // 'ngay_cap_nhat'
     ];
 
     // Biến thể thuộc về một sản phẩm

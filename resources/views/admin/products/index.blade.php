@@ -23,10 +23,7 @@
                             <th>SKU</th>
                             <th>Thương hiệu</th>
                             <th>Giới tính</th>
-                            <th>Loại sân</th>
-                            <th>Giá</th>
                             <th>Hoạt động</th>
-                            {{-- <th>Biến thể</th> --}}
                             <th>Ngày tạo</th>
                             <th>Ngày cập nhật</th>
                             <th>Thao tác</th>
@@ -50,8 +47,6 @@
                                 @else Unisex
                                 @endif
                             </td>
-                            <td>{{ $product->loai_san }}</td>
-                            <td>{{ number_format($product->gia ?? 0, 0, ',', '.') }}₫</td>
                             <td>
                                 @if($product->hoat_dong)
                                     <span class="badge bg-success">Hoạt động</span>
@@ -59,22 +54,6 @@
                                     <span class="badge bg-danger">Ngừng bán</span>
                                 @endif
                             </td>
-                            {{-- <td>
-                                @foreach($product->variations as $variation)
-                                    <div class="mb-1">
-                                        <a href="{{ route('admin.products.variations.show', [$product->id, $variation->id]) }}" class="btn btn-sm btn-outline-secondary">
-                                            {{ $variation->ma_bien_the ?? 'Biến thể' }}
-                                        </a>
-                                        <span class="text-muted">({{ $variation->images->count() }} ảnh)</span>
-                                        <a href="{{ route('admin.products.images.index', [$product->id, $variation->id]) }}" class="btn btn-sm btn-outline-primary ms-1">
-                                            <i class="bi bi-image"></i> Quản lý ảnh
-                                        </a>
-                                    </div>
-                                @endforeach
-                                @if($product->variations->isEmpty())
-                                    <span class="text-muted">Chưa có biến thể</span>
-                                @endif
-                            </td> --}}
                             <td>{{ $product->ngay_tao }}</td>
                             <td>{{ $product->ngay_cap_nhat }}</td>
                             <td>

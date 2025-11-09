@@ -44,17 +44,6 @@
                                 <option value="unisex" {{ $product->gioi_tinh == 'unisex' ? 'selected' : '' }}>Unisex</option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="loai_san" class="form-label">Loại sân</label>
-                            <select name="loai_san" class="form-select">
-                                <option value="">-- Chọn loại sân --</option>
-                                <option value="TF" {{ $product->loai_san == 'TF' ? 'selected' : '' }}>TF</option>
-                                <option value="AG" {{ $product->loai_san == 'AG' ? 'selected' : '' }}>AG</option>
-                                <option value="FG" {{ $product->loai_san == 'FG' ? 'selected' : '' }}>FG</option>
-                                <option value="IC" {{ $product->loai_san == 'IC' ? 'selected' : '' }}>IC</option>
-                                <option value="NA" {{ $product->loai_san == 'NA' ? 'selected' : '' }}>NA</option>
-                            </select>
-                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -75,23 +64,11 @@
                                 <option value="0" {{ $product->hoat_dong == 0 ? 'selected' : '' }}>Ngừng bán</option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="video" class="form-label">Video (URL)</label>
-                            <input type="text" name="video" class="form-control" value="{{ $product->video }}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="thong_tin_ky_thuat" class="form-label">Thông tin kỹ thuật (JSON)</label>
-                            <textarea name="thong_tin_ky_thuat" class="form-control" rows="3">{{ $product->thong_tin_ky_thuat }}</textarea>
-                        </div>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="mo_ta" class="form-label">Mô tả</label>
                     <textarea name="mo_ta" class="form-control" rows="4">{{ $product->mo_ta }}</textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="huong_dan_bao_quan" class="form-label">Hướng dẫn bảo quản</label>
-                    <textarea name="huong_dan_bao_quan" class="form-control" rows="3">{{ $product->huong_dan_bao_quan }}</textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Cập nhật</button>
                 <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Quay lại</a>

@@ -42,11 +42,7 @@
 }
 </style>
 
-<div class="header">
-    <a style="color: #ffffff;text-decoration: none;" href="{{ url('shoe/index') }}">
-        MIỄN PHÍ VẬN CHUYỂN VỚI ĐƠN HÀNG NỘI THÀNH > 300K - ĐỔI TRẢ TRONG 30 NGÀY - ĐẢM BẢO CHẤT LƯỢNG
-    </a>
-</div>
+@include('shoe.layouts.header')
 
 @include('shoe.layouts.sidebar')
 
@@ -115,31 +111,27 @@
                 @foreach($products as $product)
                 <div class="col-md-3 col-sm-6 col-xs-6 col-6">
                     <div class="product-block">
-                        <a href="#" class="img-resize"></a>
-                        <div class="product-img">
-                            
-                                @php
-                                    $firstImage = null;
-                                    $secondImage = null;
-                                    foreach($product->variations as $variation) {
-                                        if($variation->images->count() > 0) {
-                                            $firstImage = $variation->images[0]->duong_dan ?? null;
-                                            $secondImage = $variation->images[1]->duong_dan ?? null;
-                                            break;
-                                        }
+                        <a href="{{ route('shoe.detailproduct', $product->id) }}" class="img-resize">
+                            @php
+                                $firstImage = null;
+                                $firstPrice = null;
+                                foreach($product->variations as $variation) {
+                                    if($variation->images->count() > 0 && !$firstImage) {
+                                        $firstImage = $variation->images[0]->duong_dan ?? null;
                                     }
-                                @endphp
-                                <div class="product-img">
-                                    <img src="{{ asset($firstImage ?? 'images/no-image.png') }}" alt="{{ $product->ten }}">
-                                </div>
-                            </a>
-                        </div>
+                                    if(is_null($firstPrice) && isset($variation->gia_ban)) {
+                                        $firstPrice = $variation->gia_ban;
+                                    }
+                                }
+                            @endphp
+                            <img src="{{ asset($firstImage ?? 'images/no-image.png') }}" alt="{{ $product->ten }}">
+                        </a>
                         <div class="product-detail clearfix">
                             <div class="pro-text">
-                                <a href="#">{{ $product->ten }}</a>
+                                <a href="{{ route('shoe.detailproduct', $product->id) }}">{{ $product->ten }}</a>
                             </div>
                             <div class="pro-price">
-                                <p>{{ number_format($product->gia, 0, ',', '.') }}₫</p>
+                                <p>{{ $firstPrice ? number_format($firstPrice, 0, ',', '.') : 'Liên hệ' }}₫</p>
                             </div>
                         </div>
                     </div>
@@ -155,23 +147,5 @@
 </div>
 
 {{-- Gallery --}}
-<section class="section section-gallery">
-    <div class="">
-        <div class="hot_sp" style="padding-top: 70px;padding-bottom: 50px;">
-            <h2 style="text-align:center;padding-top: 10px">
-                <a style="font-size: 28px;color: black;text-decoration: none" href="">Khách hàng và Runner Inn</a>
-            </h2>
-        </div>
-        <div class="list-gallery clearfix">
-            <ul class="shoes-gp">
-                <li><div class="gallery_item"><img class="img-resize" src="{{ asset('images/shoes/gallery_item_1.jpg') }}" alt=""></div></li>
-                <li><div class="gallery_item"><img class="img-resize" src="{{ asset('images/shoes/gallery_item_2.jpg') }}" alt=""></div></li>
-                <li><div class="gallery_item"><img class="img-resize" src="{{ asset('images/shoes/gallery_item_3.jpg') }}" alt=""></div></li>
-                <li><div class="gallery_item"><img class="img-resize" src="{{ asset('images/shoes/gallery_item_4.jpg') }}" alt=""></div></li>
-                <li><div class="gallery_item"><img class="img-resize" src="{{ asset('images/shoes/gallery_item_5.jpg') }}" alt=""></div></li>
-                <li><div class="gallery_item"><img class="img-resize" src="{{ asset('images/shoes/gallery_item_6.jpg') }}" alt=""></div></li>
-            </ul>
-        </div>
-    </div>
-</section>
+@include("shoe.layouts.footer")
 @endsection

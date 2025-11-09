@@ -33,8 +33,6 @@
             <a href="{{ route('admin.products.images.index', [$product->id, $variation->id]) }}" class="btn btn-secondary">Quay lại</a>
         </div>
     </form>
-    <a href="{{ route('admin.products.images.create', [$product->id, $variation->id]) }}" class="btn btn-sm btn-primary">
-        <i class="bi bi-plus"></i> Thêm ảnh
-    </a>
+    
 </div>
 @endsection

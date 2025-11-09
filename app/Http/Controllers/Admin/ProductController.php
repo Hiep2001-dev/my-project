@@ -6,15 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Brand;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Str;
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with('brand')->orderBy('id', 'desc')->get();
-        return view('admin.products.index', compact('products'));
-    }
+    $products = Product::with(['brand', 'variations'])
+        ->orderBy('id', 'desc')
+        ->paginate(20); // Phân trang, mỗi trang 20 sản phẩm
 
+    return view('admin.products.index', compact('products'));
+    }
     public function create()
     {
         $brands = Brand::all();
@@ -29,17 +31,14 @@ class ProductController extends Controller
             'duong_dan' => 'nullable|string|max:255|unique:san_pham,duong_dan',
             'thuong_hieu_id' => 'nullable|exists:thuong_hieu,id',
             'mo_ta' => 'nullable|string',
-            'video' => 'nullable|string|max:500',
-            'thong_tin_ky_thuat' => 'nullable|json',
-            'huong_dan_bao_quan' => 'nullable|string',
-            'loai_san' => 'nullable|in:TF,AG,FG,IC,NA',
             'gioi_tinh' => 'nullable|in:nam,nu,unisex',
             'thue' => 'nullable|numeric',
             'noi_bat' => 'nullable|boolean',
             'hoat_dong' => 'nullable|boolean',
         ]);
-
-        Product::create($request->all());
+        $data = $request->all();
+        $data['duong_dan'] = $this->makeSlug($data['ten']);
+        Product::create($data);
 
         return redirect()->route('admin.products.index')->with('success', 'Thêm sản phẩm thành công!');
     }
@@ -67,17 +66,15 @@ class ProductController extends Controller
             'duong_dan' => 'nullable|string|max:255|unique:san_pham,duong_dan,' . $id,
             'thuong_hieu_id' => 'nullable|exists:thuong_hieu,id',
             'mo_ta' => 'nullable|string',
-            'video' => 'nullable|string|max:500',
-            'thong_tin_ky_thuat' => 'nullable|json',
-            'huong_dan_bao_quan' => 'nullable|string',
-            'loai_san' => 'nullable|in:TF,AG,FG,IC,NA',
             'gioi_tinh' => 'nullable|in:nam,nu,unisex',
             'thue' => 'nullable|numeric',
             'noi_bat' => 'nullable|boolean',
             'hoat_dong' => 'nullable|boolean',
         ]);
+        $data = $request->all();
+        $data['duong_dan'] = $this->makeSlug($data['ten']); // Tạo slug từ tên sản phẩm
 
-        $product->update($request->all());
+        $product->update($data);
 
         return redirect()->route('admin.products.index')->with('success', 'Cập nhật sản phẩm thành công!');
     }
@@ -86,5 +83,10 @@ class ProductController extends Controller
     {
         Product::destroy($id);
         return redirect()->route('admin.products.index')->with('success', 'Xóa sản phẩm thành công!');
+    }
+
+    private function makeSlug($string)
+    {
+        return \Str::slug($string, '-');
     }
 }

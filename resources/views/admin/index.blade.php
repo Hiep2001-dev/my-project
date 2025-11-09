@@ -84,7 +84,7 @@
             <!-- Chart Section -->
             <div class="card">
                 <div class="card-header">
-                    <h4>Profile Visit</h4>
+                    <h4>Danh sách đơn hàng</h4>
                 </div>
                 <div class="card-body">
                     <canvas id="profileVisit"></canvas>

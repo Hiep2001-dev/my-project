@@ -95,11 +95,9 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 //USER ROUTES
 
-Route::get('/shoe', function () {
-    return view('shoe.index');
-});
+Route::get('/shoe/index', [UserProductController::class, 'index'])->name('shoe.index');
 Route::get('/shoe/product', [UserProductController::class, 'index'])->name('shoe.product');
-
+Route::get('/shoe/product/{id}', [UserProductController::class, 'show'])->name('shoe.detailproduct');
 Route::get('/shoe/introduce', function () {
     return view('shoe.introduce');
 })->name('shoe.introduce');
@@ -119,7 +117,7 @@ Route::get('/shoe/signup', function () {
 Route::get('/shoe/signin', [UserLoginController::class, 'showLoginForm'])->name('shoe.signin');
 Route::post('/shoe/signin', [UserLoginController::class, 'login'])->name('shoe.login');
 Route::post('/user/register', [UserRegisterController::class, 'register'])->name('user.register');
-Route::get('/shoe/index', [UserLoginController::class, 'index'])->name('shoe.index');
+// Route::get('/shoe/index', [UserLoginController::class, 'index'])->name('shoe.index');
 Route::post('/shoe/logout', function () {
     Auth::logout();
     return redirect()->route('shoe.index');

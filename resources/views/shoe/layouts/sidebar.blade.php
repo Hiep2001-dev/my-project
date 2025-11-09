@@ -1,5 +1,4 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
-
     <div class="container">
       <a class="navbar-brand" href="{{ url('shoe/index') }}">
         <img src="{{ asset('images/logo.png') }}" class="logo-top" alt="">
@@ -10,10 +9,10 @@
             <a class="nav-link" href="{{ url('shoe/index') }}">TRANG CHỦ</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ url('shoe/product') }}">BỘ SƯU TẬP</a>
+            <a class="nav-link" href="{{ url('shoe/product') }}">SẢN PHẨM</a>
           </li>
           <li class="nav-item lisanpham">
-            <a class="nav-link" href="{{ url('shoe/detailproduct') }}">SẢN PHẨM
+            <a class="nav-link" href="{{ url('shoe/detailproduct') }}">THƯƠNG HIỆU
               <i class="fa fa-chevron-down" aria-hidden="true"></i>
             </a>
             <ul class="sub_menu">
@@ -39,9 +38,6 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url('shoe/blog') }}">BLOG</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url('shoe/contact') }}">LIÊN HỆ</a>
           </li>
         </ul>
       </div>
@@ -173,8 +169,8 @@
 
       <div class="icon-ol">
         @if(Auth::check())
-        <span class="">
-            Chào!  {{ Auth::user()->ho_ten }}
+        <span class="welcome-user" style="font-size: 15px; color: #3A6ECC; font-weight: 500; margin-right: 10px; background: #f5f7fa; border-radius: 20px; padding: 6px 18px;">
+            <i class="fas fa-user-circle me-1"></i> {{Auth::user()->ho_ten}}
         </span>
         <form action="{{ route('shoe.logout') }}" method="POST" style="display:inline;">
             @csrf
@@ -205,7 +201,5 @@
     </div>
     </div>
   </nav>
-    <div class="owl-carousel owl-theme owl-carousel-setting">
-    <div class="item"><img src="{{ asset('images/slideshow_1.jpg') }}" class="d-block w-100" alt="..."></div>
-    <div class="item"><img src="{{ asset('images/slideshow_2.jpg') }}" class="d-block w-100" alt="..."></div>
+    
 </div>

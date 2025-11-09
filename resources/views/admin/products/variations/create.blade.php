@@ -24,10 +24,6 @@
                         <input type="text" name="ma_mau" class="form-control" value="{{ old('ma_mau') }}">
                     </div>
                     <div class="mb-3">
-                        <label for="size_cm" class="form-label">Size (cm)</label>
-                        <input type="number" step="0.1" name="size_cm" class="form-control" value="{{ old('size_cm') }}">
-                    </div>
-                    <div class="mb-3">
                         <label for="size_eu" class="form-label">Size (EU)</label>
                         <input type="text" name="size_eu" class="form-control" value="{{ old('size_eu') }}">
                     </div>
@@ -59,8 +55,10 @@
             <a href="{{ route('admin.products.variations.index', $product->id) }}" class="btn btn-secondary">Quay lại</a>
         </div>
     </form>
-    <a href="{{ route('admin.products.images.create', [$product->id, $variation->id]) }}" class="btn btn-sm btn-primary">
-        <i class="bi bi-plus"></i> Thêm ảnh
-    </a>
+    @if(isset($variation))
+        <a href="{{ route('admin.products.images.create', [$product->id, $variation->id]) }}" class="btn btn-sm btn-primary">
+            <i class="bi bi-plus"></i> Thêm ảnh
+        </a>
+    @endif
 </div>
 @endsection

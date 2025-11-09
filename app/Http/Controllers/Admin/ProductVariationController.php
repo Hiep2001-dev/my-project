@@ -71,7 +71,6 @@ class ProductVariationController extends Controller
         $request->validate([
             'ma_bien_the' => 'nullable|string|max:80|unique:bien_the_san_pham,ma_bien_the,' . $id,
             'mau_sac' => 'nullable|string|max:100',
-            'size_cm' => 'nullable|numeric',
             'size_eu' => 'nullable|string|max:10',
             'gia_ban' => 'required|numeric',
             'gia_nhap' => 'nullable|numeric',

@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+  <link rel="icon" type="image/png" href="{{ asset('assets/images/logo/logo.png') }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  
   <link rel="stylesheet" href="{{ asset('plugins/bootstrap/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ asset('plugins/animate/animate.min.css') }}">
   <link rel="stylesheet" href="{{ asset('plugins/fontawesome/all.css') }}">

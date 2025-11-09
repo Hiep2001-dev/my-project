@@ -8,9 +8,7 @@
     <a href="{{ route('admin.products.images.create', [$product->id, $variation->id]) }}" class="btn btn-primary mb-2">
         <i class="bi bi-plus"></i> Thêm hình ảnh
     </a>
-    <a href="{{ route('admin.products.images.index', [$product->id, $variation->id]) }}" class="btn btn-secondary mb-2">
-        Quản lý ảnh
-    </a>
+    
     <table class="table table-striped">
         <thead>
             <tr>
