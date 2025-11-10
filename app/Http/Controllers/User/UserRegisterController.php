@@ -12,7 +12,6 @@ class UserRegisterController extends Controller
         $request->validate([
             'ho_ten' => 'required|string|max:150',
             'email' => 'required|email|unique:nguoi_dung,email',
-            // 'so_dien_thoai' => 'nullable|string|max:30',
             'ngay_sinh' => 'nullable|date',
             'mat_khau' => 'required|confirmed|min:6',
         ],[

@@ -1,5 +1,5 @@
 <?php
-// app/Http/Controllers/Admin/ThuongHieuController.php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;

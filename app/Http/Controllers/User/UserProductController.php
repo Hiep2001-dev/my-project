@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class UserProductController extends Controller
 {
-    // Hiển thị danh sách sản phẩm cho người dùng
+ 
     public function index()
     {
        $products = Product::where('hoat_dong', 1)
@@ -16,14 +16,14 @@ class UserProductController extends Controller
             ->with(['variations.images'])
             ->orderBy('ngay_tao', 'desc')
             ->paginate(20);
-       return view('shoe.index', compact('products')); // Đúng là shoe.index
+       return view('shoe.index', compact('products')); 
     }
     public function show($id){
          $product = Product::where('hoat_dong', 1)
             ->with(['variations.images'])
             ->findOrFail($id);
 
-        // Lấy sản phẩm liên quan (ví dụ: cùng loại, trừ sản phẩm hiện tại)
+       
         $relatedProducts = Product::where('hoat_dong', 1)
             ->where('id', '!=', $id)
             ->with(['variations.images'])

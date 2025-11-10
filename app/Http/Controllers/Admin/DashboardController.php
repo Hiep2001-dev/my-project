@@ -10,7 +10,6 @@ class DashboardController extends Controller
     {
         $admins = User::where('vai_tro', 'quan_li')->get();
         $nhanviens = User::where('vai_tro', 'nhan_vien')->get();
-        // Ví dụ dữ liệu sidebar
         $sidebarItems = [
             [
                 'name' => 'Dashboard',
@@ -23,7 +22,7 @@ class DashboardController extends Controller
                 'name' => 'Components',
                 'isTitle' => true,
             ],
-            // Thêm các mục khác nếu cần
+
         ];
 
         $filename = 'dashboard';

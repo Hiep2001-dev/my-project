@@ -30,5 +30,12 @@
             @endforeach
         </tbody>
     </table>
+    <div class="mt-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {{ $categories->links('pagination::bootstrap-5') }}
+            </ul>
+        </nav>
+    </div>
 </div>
 @endsection

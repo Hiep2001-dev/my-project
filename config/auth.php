@@ -69,7 +69,7 @@ return [
         ],
         'admins' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class, // Nếu chung bảng, vẫn dùng User
+            'model' => App\Models\User::class,
         ],
     ],
 

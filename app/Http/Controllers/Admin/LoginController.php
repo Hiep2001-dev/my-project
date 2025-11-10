@@ -20,8 +20,7 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            // Kiểm tra vai trò
-            if (Auth::user()->vai_tro === 'quan_li') {
+            if (in_array(Auth::user()->vai_tro, ['quan_li', 'super_admin'])) {
                 return redirect()->intended(route('admin.dashboard'));
             } else {
                 Auth::logout();
