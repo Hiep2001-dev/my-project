@@ -1,4 +1,4 @@
-{{-- resources/views/admin/brands/index.blade.php --}}
+
 @extends('admin.layouts.master')
 @section('content')
 <div class="page-heading"><h3>Quản lý thương hiệu</h3></div>
@@ -10,6 +10,7 @@
                 <th>Tên</th>
                 <th>Logo</th>
                 <th>Mô tả</th>
+                <th>Hoạt động</th>
                 <th>Thao tác</th>
             </tr>
         </thead>
@@ -21,6 +22,11 @@
                     <img src="{{ asset($brand->logo) }}" alt="logo" style="height:40px">
                 </td>
                 <td>{{ $brand->mo_ta }}</td>
+                <td>
+                    @if($brand->hoat_dong) <span class="badge bg-success">Hoạt động</span>
+                    @else <span class="badge bg-danger">Ngừng hoạt động</span>
+                    @endif
+                </td>
                 <td>
                     <a href="{{ route('admin.brands.edit', $brand->id) }}" class="btn btn-warning btn-sm">Sửa</a>
                     @if($brand->products->count() == 0)

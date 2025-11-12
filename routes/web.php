@@ -25,8 +25,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin.users.index');
         Route::get('/create', [UserController::class, 'create'])->name('admin.users.create');
         Route::post('/store', [UserController::class, 'store'])->name('admin.users.store');
-        Route::get('/{id}', [UserController::class, 'show'])->name('admin.users.show');
-        Route::get('/{id}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
+        Route::post('/{id}', [UserController::class, 'show'])->name('admin.users.show');
+        Route::post('/{id}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
         Route::post('/{id}/update', [UserController::class, 'update'])->name('admin.users.update');
         Route::post('/{id}/delete', [UserController::class, 'destroy'])->name('admin.users.destroy');
     });
@@ -60,7 +60,6 @@ Route::middleware('auth')->group(function () {
         
     });
     //Product Variations
-
     Route::prefix('products/{productId}/variations')->group(function () {
         Route::get('/', [ProductVariationController::class, 'index'])->name('admin.products.variations.index');
         Route::get('/create', [ProductVariationController::class, 'create'])->name('admin.products.variations.create');
