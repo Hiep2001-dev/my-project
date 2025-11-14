@@ -57,7 +57,7 @@
                   <a class="nav-link" href="{{ url('shoe/index') }}">TRANG CHỦ</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ url('shoe/Product') }}">BỘ SƯU TẬP</a>
+                  <a class="nav-link" href="{{ url('shoe/product') }}">BỘ SƯU TẬP</a>
                 </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle aaaa"  href="#" id="navbarDropdown" role="button" data-toggle="dropdown"

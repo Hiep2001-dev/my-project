@@ -32,13 +32,13 @@
                     <span>Đơn hàng</span>
                 </a>
             </li>
-            <li class="sidebar-item{{ Route::is('admin.categories.*') ? 'active' : '' }}">
+            <li class="sidebar-item{{ Route::is('admin.categories.index') ? 'active' : '' }}">
                 <a href="{{ route('admin.categories.index') }}" class="sidebar-link">
                     <i class="bi bi-tags-fill"></i>
                     <span>Danh mục</span>
                 </a>
             </li>
-            <li class="sidebar-item{{ Route::is('admin.brands.*') ? 'active' : '' }}">
+            <li class="sidebar-item{{ Route::is('admin.brands.index') ? 'active' : '' }}">
                 <a href="{{ route('admin.brands.index') }}" class="sidebar-link">
                     <i class="bi bi-star-fill"></i>
                     <span>Thương hiệu</span>
@@ -50,8 +50,8 @@
                     <span>Sản phẩm</span>
                 </a>
             </li>
-            <li class="sidebar-item">
-                <a href="#" class="sidebar-link">
+            <li class="sidebar-item {{ Route::is('admin.posts.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.posts.index') }}" class="sidebar-link">
                     <i class="bi bi-file-earmark-text"></i>
                     <span>Bài viết</span>
                 </a>

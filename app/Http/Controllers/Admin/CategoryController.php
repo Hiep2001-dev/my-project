@@ -8,17 +8,18 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    // Hiển thị danh sách danh mục
     public function index()
     {
-        $categories = Category::orderBy('id', 'desc')->paginate(10);
+        // Lấy danh mục gốc với phân trang
+        $categories = Category::with('children')->paginate(10);
         return view('admin.categories.index', compact('categories'));
     }
 
     // Hiển thị form tạo mới
     public function create()
     {
-        return view('admin.categories.create');
+        $allCategories = Category::whereNull('cha_id')->get(); // Chỉ lấy danh mục gốc làm cha
+        return view('admin.categories.create', compact('allCategories'));
     }
 
     // Lưu danh mục mới
@@ -27,19 +28,22 @@ class CategoryController extends Controller
         $request->validate([
             'ten' => 'required|string|max:150',
             'mo_ta' => 'nullable|string',
-            'loai' => 'nullable|in:giay_chay_bo,giay_tap_gym,giay_bong_ro',
+            'cha_id' => 'nullable|integer',
             'hoat_dong' => 'nullable|boolean',
         ]);
 
-        $data = $request->only(['ten', 'mo_ta', 'loai', 'hoat_dong']);
+        $data = $request->only(['ten', 'mo_ta', 'cha_id', 'hoat_dong']);
         Category::create($data);
         return redirect()->route('admin.categories.index')->with('success', 'Thêm danh mục thành công!');
     }
+
     public function edit($id)
     {
         $category = Category::findOrFail($id);
-        return view('admin.categories.edit', compact('category'));
+        $allCategories = Category::all(); // Lấy tất cả danh mục để chọn cha
+        return view('admin.categories.edit', compact('category', 'allCategories'));
     }
+
     public function update(Request $request, $id)
     {
         $category = Category::findOrFail($id);
@@ -47,14 +51,15 @@ class CategoryController extends Controller
         $request->validate([
             'ten' => 'required|string|max:150',
             'mo_ta' => 'nullable|string',
-            'loai' => 'nullable|in:giay_chay_bo,giay_tap_gym,giay_bong_ro',
+            'cha_id' => 'nullable|integer',
             'hoat_dong' => 'nullable|boolean',
         ]);
 
-        $data = $request->only(['ten', 'mo_ta', 'loai', 'hoat_dong']);
+        $data = $request->only(['ten', 'mo_ta', 'cha_id', 'hoat_dong']);
         $category->update($data);
         return redirect()->route('admin.categories.index')->with('success', 'Cập nhật danh mục thành công!');
     }
+
     public function destroy($id)
     {
         $category = Category::findOrFail($id);

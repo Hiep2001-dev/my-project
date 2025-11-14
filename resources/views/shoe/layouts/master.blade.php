@@ -27,7 +27,7 @@
   <script src="{{ asset('plugins/jquery-3.4.1/jquery-3.4.1.min.js') }}"></script>
   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
   <script src="{{ asset('plugins/bootstrap/popper.min.js') }}"></script>
-  <script src="{{ asset('plugins/bootstrap/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('plugins/owl.carousel/owl.carousel.min.js') }}"></script>
   <script src="{{ asset('js/home.js') }}"></script>
   <script src="{{ asset('js/script.js') }}"></script>

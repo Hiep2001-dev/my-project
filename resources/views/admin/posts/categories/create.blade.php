@@ -1,12 +1,12 @@
-{{-- filepath: resources/views/admin/categories/create.blade.php --}}
+{{-- filepath: resources/views/admin/posts/categories/create.blade.php --}}
 @extends('admin.layouts.master')
 @section('content')
 <div class="container mt-4">
-    <h3>Thêm danh mục mới</h3>
-    <form action="{{ route('admin.categories.store') }}" method="POST">
+    <h3>Thêm chuyên mục bài viết</h3>
+    <form action="{{ route('admin.post_categories.store') }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label for="ten" class="form-label">Tên danh mục <span class="text-danger">*</span></label>
+            <label for="ten" class="form-label">Tên chuyên mục <span class="text-danger">*</span></label>
             <input type="text" name="ten" id="ten" class="form-control" value="{{ old('ten') }}" required>
             @error('ten')
                 <div class="text-danger small">{{ $message }}</div>
@@ -20,9 +20,9 @@
             @enderror
         </div>
         <div class="mb-3">
-            <label for="cha_id" class="form-label">Danh mục cha</label>
+            <label for="cha_id" class="form-label">Chuyên mục cha</label>
             <select name="cha_id" id="cha_id" class="form-control">
-                <option value="">-- Danh mục gốc --</option>
+                <option value="">-- Chuyên mục gốc --</option>
                 @foreach($allCategories as $cat)
                     <option value="{{ $cat->id }}" {{ old('cha_id') == $cat->id ? 'selected' : '' }}>
                         {{ $cat->ten }}
@@ -34,17 +34,24 @@
             @enderror
         </div>
         <div class="mb-3">
-            <label for="hoat_dong" class="form-label">Hoạt động</label>
+            <label for="thu_tu" class="form-label">Thứ tự</label>
+            <input type="number" name="thu_tu" id="thu_tu" class="form-control" value="{{ old('thu_tu', 0) }}">
+            @error('thu_tu')
+                <div class="text-danger small">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="mb-3">
+            <label for="hoat_dong" class="form-label">Trạng thái</label>
             <select name="hoat_dong" id="hoat_dong" class="form-control">
-                <option value="1" {{ old('hoat_dong', 1) == 1 ? 'selected' : '' }}>Có</option>
-                <option value="0" {{ old('hoat_dong', 1) == 0 ? 'selected' : '' }}>Không</option>
+                <option value="1" {{ old('hoat_dong', 1) == 1 ? 'selected' : '' }}>Hoạt động</option>
+                <option value="0" {{ old('hoat_dong', 1) == 0 ? 'selected' : '' }}>Ẩn</option>
             </select>
             @error('hoat_dong')
                 <div class="text-danger small">{{ $message }}</div>
             @enderror
         </div>
         <button type="submit" class="btn btn-primary">Thêm mới</button>
-        <a href="{{ route('admin.categories.index') }}" class="btn btn-secondary">Quay lại</a>
+        <a href="{{ route('admin.post_categories.index') }}" class="btn btn-secondary">Quay lại</a>
     </form>
 </div>
 @endsection

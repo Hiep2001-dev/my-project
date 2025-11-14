@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
@@ -14,7 +13,10 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ImageProductController;
 use App\Http\Controllers\User\UserProductController;
-
+use App\Http\Controllers\Admin\PostCategoryController;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\User\UserDashboardController;
+use App\Http\Controllers\User\BlogController;
 
 
 //Admin Routes
@@ -25,7 +27,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin.users.index');
         Route::get('/create', [UserController::class, 'create'])->name('admin.users.create');
         Route::post('/store', [UserController::class, 'store'])->name('admin.users.store');
-        Route::post('/{id}', [UserController::class, 'show'])->name('admin.users.show');
+        Route::get('/{id}', [UserController::class, 'show'])->name('admin.users.show');
         Route::post('/{id}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
         Route::post('/{id}/update', [UserController::class, 'update'])->name('admin.users.update');
         Route::post('/{id}/delete', [UserController::class, 'destroy'])->name('admin.users.destroy');
@@ -79,10 +81,30 @@ Route::middleware('auth')->group(function () {
         Route::post('/{imageId}/update', [ImageProductController::class, 'update'])->name('admin.products.images.update');
         Route::post('/{imageId}/delete', [ImageProductController::class, 'destroy'])->name('admin.products.images.destroy');
     });
-    Route::get('admin/products/{productId}/variations/{variationId}/images', [ImageProductController::class, 'index'])
-    ->name('admin.products.images.index');
-    Route::get('admin/products/{productId}/variations/{variationId}/images/create', [ImageProductController::class, 'create'])
-    ->name('admin.products.images.create');
+    // Posts
+    Route::prefix('admin/posts')->group(function () {
+        Route::get('/', [PostController::class, 'index'])->name('admin.posts.index');
+        Route::get('/create', [PostController::class, 'create'])->name('admin.posts.create');
+        Route::post('/store', [PostController::class, 'store'])->name('admin.posts.store');
+        Route::get('/{id}', [PostController::class, 'show'])->name('admin.posts.show');
+        Route::get('/{id}/edit', [PostController::class, 'edit'])->name('admin.posts.edit');
+        Route::put('/{id}', [PostController::class, 'update'])->name('admin.posts.update');
+        Route::delete('/{id}', [PostController::class, 'destroy'])->name('admin.posts.destroy');
+    });
+
+    // Post Categories
+    Route::prefix('admin/posts/categories')->group(function () {
+        Route::get('/', [PostCategoryController::class, 'index'])->name('admin.post_categories.index');
+        Route::get('/create', [PostCategoryController::class, 'create'])->name('admin.post_categories.create');
+        Route::post('/store', [PostCategoryController::class, 'store'])->name('admin.post_categories.store');
+        Route::get('/{id}/edit', [PostCategoryController::class, 'edit'])->name('admin.post_categories.edit');
+        Route::put('/{id}', [PostCategoryController::class, 'update'])->name('admin.post_categories.update');
+        Route::delete('/{id}', [PostCategoryController::class, 'destroy'])->name('admin.post_categories.destroy');
+});
+    // Route::get('admin/products/{productId}/variations/{variationId}/images', [ImageProductController::class, 'index'])
+    // ->name('admin.products.images.index');
+    // Route::get('admin/products/{productId}/variations/{variationId}/images/create', [ImageProductController::class, 'create'])
+    // ->name('admin.products.images.create');
 });
 
 // Authentication Routes
@@ -94,9 +116,17 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 //USER ROUTES
 
-Route::get('/shoe/index', [UserProductController::class, 'index'])->name('shoe.index');
+Route::get('/shoe/index', [UserDashboardController::class, 'index'])->name('shoe.index');
+
 Route::get('/shoe/product', [UserProductController::class, 'index'])->name('shoe.product');
 Route::get('/shoe/product/{id}', [UserProductController::class, 'show'])->name('shoe.detailproduct');
+Route::get('/shoe/category/{id}', [UserProductController::class, 'category'])->name('shoe.category');
+Route::get('/shoe/brand/{id}', [UserProductController::class, 'brand'])->name('shoe.brand');
+
+Route::get('/shoe/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/shoe/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
+Route::get('/shoe/blog/category/{id}', [BlogController::class, 'category'])->name('blog.category');
+
 Route::get('/shoe/introduce', function () {
     return view('shoe.introduce');
 })->name('shoe.introduce');
