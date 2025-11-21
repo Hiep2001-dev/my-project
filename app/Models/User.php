@@ -18,7 +18,6 @@ class User extends Authenticatable
     // Khóa chính (mặc định 'id')
     protected $primaryKey = 'id';
 
-    // Nếu cột password không tên 'password' mà là 'mat_khau'
     protected $hidden = [
         'mat_khau',
         'remember_token',
@@ -30,7 +29,6 @@ class User extends Authenticatable
         'ngay_cap_nhat' => 'datetime',
     ];
 
-    // Các trường có thể gán hàng loạt (tùy chỉnh theo cột trong DB)
     protected $fillable = [
         'email',
         'so_dien_thoai',
@@ -43,7 +41,7 @@ class User extends Authenticatable
         'diem_tich_luy',
         'remember_token',
         'mat_khau',
-        // không thêm mat_khau vào $fillable nếu bạn dùng mass-assignment cho password
+        
     ];
 
     // Nếu cột password tên khác (ví dụ 'mat_khau'), Laravel auth cần biết:

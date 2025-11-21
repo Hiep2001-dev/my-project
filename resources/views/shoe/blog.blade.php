@@ -30,7 +30,6 @@
     </div>
     <div class="container">
         <div class="row">
-            {{-- Sidebar bài viết mới nhất --}}
             <div class="col-md-3 d-none d-sm-block d-sm-none d-md-block">
                 <div class="sidebar-blog">
                     <div class="news-latest">
@@ -111,6 +110,5 @@
             </div>
         </div>
     </div>
-    {{-- Gallery và footer giữ nguyên --}}
     @include('shoe.layouts.footer')
 </body>

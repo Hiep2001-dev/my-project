@@ -10,9 +10,16 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with(['chuyenMuc', 'tacGia'])->orderByDesc('ngay_tao')->paginate(10);
+        $keyword = $request->input('keyword');
+        $query = Post::with(['chuyenMuc', 'tacGia'])->orderByDesc('ngay_tao');
+
+        if ($keyword) {
+            $query->where('tieu_de', 'LIKE', '%' . $keyword . '%');
+        }
+
+        $posts = $query->paginate(10)->appends(['keyword' => $keyword]);
         return view('admin.posts.index', compact('posts'));
     }
 

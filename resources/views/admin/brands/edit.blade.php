@@ -39,17 +39,6 @@
                 <option value="0" {{ old('hoat_dong', $brand->hoat_dong ?? 1) == 0 ? 'selected' : '' }}>Không</option>
             </select>
         </div>
-        <div class="mb-3">
-            <label for="danh_muc_id" class="form-label">Danh mục</label>
-            <select name="danh_muc_id" id="danh_muc_id" class="form-control">
-                <option value="">-- Chọn danh mục --</option>
-                @foreach($categories as $cat)
-                    <option value="{{ $cat->id }}" {{ old('danh_muc_id', $brand->danh_muc_id ?? '') == $cat->id ? 'selected' : '' }}>
-                        {{ $cat->ten }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
         <button type="submit" class="btn btn-primary">Cập nhật</button>
         <a href="{{ route('admin.brands.index') }}" class="btn btn-secondary">Quay lại</a>
     </form>

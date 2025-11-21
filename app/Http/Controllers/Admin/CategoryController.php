@@ -8,21 +8,29 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Lấy danh mục gốc với phân trang
-        $categories = Category::with('children')->paginate(10);
+        $keyword = $request->input('keyword');
+
+        // Nếu có từ khóa, thực hiện tìm kiếm
+        if ($keyword) {
+            $categories = Category::where('ten', 'LIKE', '%' . $keyword . '%') 
+                ->with('children', 'parent') 
+                ->orderBy('id', 'desc')
+                ->paginate(10);
+        } else {
+            // Nếu không có từ khóa, lấy tất cả danh mục
+            $categories = Category::with('children', 'parent')->paginate(10);
+        }
+
         return view('admin.categories.index', compact('categories'));
     }
 
-    // Hiển thị form tạo mới
     public function create()
     {
-        $allCategories = Category::whereNull('cha_id')->get(); // Chỉ lấy danh mục gốc làm cha
+        $allCategories = Category::whereNull('cha_id')->get();
         return view('admin.categories.create', compact('allCategories'));
     }
-
-    // Lưu danh mục mới
     public function store(Request $request)
     {
         $request->validate([
@@ -40,7 +48,7 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = Category::findOrFail($id);
-        $allCategories = Category::all(); // Lấy tất cả danh mục để chọn cha
+        $allCategories = Category::all();
         return view('admin.categories.edit', compact('category', 'allCategories'));
     }
 

@@ -2,13 +2,18 @@
 @section('content')
 <div class="container mt-4">
     <h3>Danh sách danh mục</h3>
-    <a href="{{ route('admin.categories.create') }}" class="btn btn-primary mb-3">Thêm danh mục</a>
-    
-    {{-- Hiển thị danh mục dạng phân cấp (cây) --}}
-    <div class="card mb-4">
-        <div class="card-header">
-            <strong>Cấu trúc danh mục phân cấp</strong>
+
+    <form action="{{ route('admin.categories.index') }}" method="GET" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="keyword" class="form-control" placeholder="Nhập tên để tìm kiếm..." value="{{ request('keyword') }}">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
         </div>
+    </form>
+
+    <a href="{{ route('admin.categories.create') }}" class="btn btn-primary mb-3">Thêm danh mục</a>
+
+    <div class="card mb-4">
+
         <div class="card-body">
             <ul class="list-unstyled">
                 @foreach($categories->where('cha_id', null) as $cat)

@@ -9,20 +9,21 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $currentUser = auth()->user();
-        if ($currentUser && $currentUser->vai_tro === 'super_admin') {
-            $users = User::where('id', '!=', $currentUser->id)
-            ->orderBy('id', 'desc')
-            
-            ->paginate(10);
+        
+        $keyword = $request->input('keyword');
+        $query = User::where('vai_tro', '!=', 'super_admin')->orderBy('id', 'desc'); 
+        if ($keyword) {
+            $users = User::where('ho_ten', 'LIKE', '%' . $keyword . '%')
+                ->orWhere('email', 'LIKE', '%' . $keyword . '%')
+                ->orderBy('id', 'desc')
+                ->paginate(10);
         } else {
-            $users = User::orderBy('id', 'desc')->paginate(10);
+            $users = $query->paginate(10);
         }
-        $admins = User::where('vai_tro', 'quan_li')->get();
-        $nhanviens = User::where('vai_tro', 'nhan_vien')->get();
-        return view('admin.users.index', compact('users', 'admins', 'nhanviens'));
+
+        return view('admin.users.index', compact('users'));
     }
     public function create()
     {
@@ -66,7 +67,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-         $user = User::findOrFail($id);
+        $user = User::findOrFail($id);
 
         $request->validate([
             'ho_ten' => 'required|string|max:255',

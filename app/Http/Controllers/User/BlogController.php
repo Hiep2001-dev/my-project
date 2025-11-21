@@ -9,8 +9,15 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $posts = Post::orderByDesc('ngay_xuat_ban')->paginate(9);
-        $latestPosts = Post::orderByDesc('ngay_xuat_ban')->limit(5)->get();
+        $posts = Post::with(['chuyenMuc', 'tacGia'])
+        ->where('trang_thai', 'xuat_ban') 
+        ->orderByDesc('ngay_xuat_ban')
+        ->paginate(10);
+         $latestPosts = Post::with('tacGia')
+        ->where('trang_thai', 'xuat_ban') 
+        ->orderByDesc('ngay_xuat_ban')
+        ->limit(5)
+        ->get();
         $categories = PostCategory::where('hoat_dong', 1)->get();
         return view('shoe.blog', compact('posts', 'latestPosts', 'categories'));
     }

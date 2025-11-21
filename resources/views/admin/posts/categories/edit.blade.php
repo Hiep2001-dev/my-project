@@ -5,7 +5,7 @@
     <h3>Cập nhật chuyên mục bài viết</h3>
     <form action="{{ route('admin.post_categories.update', $category->id) }}" method="POST">
         @csrf
-        @method('PUT')
+        {{-- @method('PUT') --}}
         <div class="mb-3">
             <label for="ten" class="form-label">Tên chuyên mục <span class="text-danger">*</span></label>
             <input type="text" name="ten" id="ten" class="form-control" value="{{ old('ten', $category->ten) }}" required>

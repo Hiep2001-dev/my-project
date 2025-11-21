@@ -107,7 +107,6 @@
             </div>
             <div class="row">
                 
-                {{-- Hiển thị sản phẩm --}}
                 @foreach($products as $product)
                 <div class="col-md-3 col-sm-6 col-xs-6 col-6">
                     <div class="product-block">

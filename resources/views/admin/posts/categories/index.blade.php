@@ -34,7 +34,6 @@
                     <a href="{{ route('admin.post_categories.edit', $cat->id) }}" class="btn btn-warning btn-sm">Sửa</a>
                     <form action="{{ route('admin.post_categories.destroy', $cat->id) }}" method="POST" style="display:inline;">
                         @csrf
-                        @method('DELETE')
                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Xóa chuyên mục này?')">Xóa</button>
                     </form>
                 </td>

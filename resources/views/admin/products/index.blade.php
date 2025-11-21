@@ -15,6 +15,15 @@
                 </a>
             </div>
             <div class="card-body">
+                {{-- Form tìm kiếm --}}
+                <form action="{{ route('admin.products.index') }}" method="GET" class="mb-4">
+                    <div class="input-group">
+                        <input type="text" name="keyword" class="form-control" placeholder="Nhập tên hoặc mã SKU để tìm kiếm..." value="{{ request('keyword') }}">
+                        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                    </div>
+                </form>
+
+                {{-- Hiển thị danh sách sản phẩm --}}
                 <table class="table table-striped" id="productTable">
                     <thead>
                         <tr>

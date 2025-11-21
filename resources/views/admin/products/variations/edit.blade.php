@@ -24,10 +24,6 @@
                         <input type="text" name="ma_mau" class="form-control" value="{{ $variation->ma_mau }}">
                     </div>
                     <div class="mb-3">
-                        <label for="size_cm" class="form-label">Size (cm)</label>
-                        <input type="number" step="0.1" name="size_cm" class="form-control" value="{{ $variation->size_cm }}">
-                    </div>
-                    <div class="mb-3">
                         <label for="size_eu" class="form-label">Size (EU)</label>
                         <input type="text" name="size_eu" class="form-control" value="{{ $variation->size_eu }}">
                     </div>

@@ -3,8 +3,16 @@
 @section('content')
 <div class="container mt-4">
     <h3>Quản lý bài viết</h3>
+    <form action="{{ route('admin.posts.index') }}" method="GET" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="keyword" class="form-control" placeholder="Nhập tiêu đề bài viết để tìm kiếm..." value="{{ request('keyword') }}">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </div>
+    </form>
+
     <a href="{{ route('admin.posts.create') }}" class="btn btn-primary mb-3">Thêm bài viết mới</a>
     <a href="{{ route('admin.post_categories.index') }}" class="btn btn-secondary mb-3">Quản lý chuyên mục bài viết</a>
+    
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -25,7 +33,15 @@
                 <td>{{ $post->tieu_de }}</td>
                 <td>{{ $post->chuyenMuc ? $post->chuyenMuc->ten : '-' }}</td>
                 <td>{{ $post->tacGia ? $post->tacGia->ten : '-' }}</td>
-                <td>{{ ucfirst($post->trang_thai) }}</td>
+                <td>
+                    @if($post->trang_thai == 'xuat_ban')
+                        <span class="badge bg-success">Xuất bản</span>
+                    @elseif($post->trang_thai == 'nhap')
+                        <span class="badge bg-warning">Nháp</span>
+                    @else
+                        <span class="badge bg-secondary">Lưu trữ</span>
+                    @endif
+                </td>
                 <td>{{ $post->ngay_xuat_ban }}</td>
                 <td>{{ $post->ngay_tao }}</td>
                 <td>

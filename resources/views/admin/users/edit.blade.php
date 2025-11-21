@@ -8,6 +8,7 @@
 <div class="page-content">
     <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
         @csrf
+        @method('PUT')
         <div class="mb-3">
             <label for="ho_ten" class="form-label">Họ tên</label>
             <input type="text" name="ho_ten" class="form-control" value="{{ $user->ho_ten }}" required>
@@ -31,7 +32,9 @@
         <div class="mb-3">
             <label for="vai_tro" class="form-label">Vai trò</label>
             <select name="vai_tro" class="form-select">
-                <option value="quan_li" @if($user->vai_tro == 'quan_li') selected @endif>Quản lý</option>
+                @if(Auth::user()->vai_tro == 'super_admin')
+                    <option value="quan_li" @if($user->vai_tro == 'quan_li') selected @endif>Quản lí</option>
+                @endif
                 <option value="nhan_vien" @if($user->vai_tro == 'nhan_vien') selected @endif>Nhân viên</option>
                 <option value="khach_hang" @if($user->vai_tro == 'khach_hang') selected @endif>Khách hàng</option>
             </select>

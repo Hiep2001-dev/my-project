@@ -9,7 +9,6 @@
                     @foreach($categories as $cat)
                         @if($cat->cha_id)
                             <li>
-                                {{-- Size --}}
                                 @if(strtolower($cat->ten) === 'size' || strtolower($cat->ten) === 'kích thước')
                                     <a href="javascript:void(0)"
                                        data-bs-toggle="collapse"
@@ -22,30 +21,25 @@
                                         <div class="group-filter" aria-expanded="true">
                                             <div class="layered-content filter-size s-filter">
                                                 <ul class="check-box-list clearfix">
-                                                    <li>
-                                                        <input type="checkbox" id="size-35-{{ $cat->id }}">
-                                                        <label for="size-35-{{ $cat->id }}">35</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="size-36-{{ $cat->id }}">
-                                                        <label for="size-36-{{ $cat->id }}">36</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="size-37-{{ $cat->id }}">
-                                                        <label for="size-37-{{ $cat->id }}">37</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="size-38-{{ $cat->id }}">
-                                                        <label for="size-38-{{ $cat->id }}">38</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="size-39-{{ $cat->id }}">
-                                                        <label for="size-39-{{ $cat->id }}">39</label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="size-40-{{ $cat->id }}">
-                                                        <label for="size-40-{{ $cat->id }}">40</label>
-                                                    </li>
+                                                    @php
+                                                        $availableSizes = \App\Models\ProductVariation::where('trang_thai', 'hien')
+                                                            ->whereNotNull('size_eu')
+                                                            ->pluck('size_eu')
+                                                            ->unique()
+                                                            ->sort()
+                                                            ->values();
+                                                    @endphp
+                                                    @foreach($availableSizes as $size)
+                                                        <li>
+                                                            <input type="checkbox" 
+                                                                   id="size-{{ $size }}-{{ $cat->id }}" 
+                                                                   name="sizes[]" 
+                                                                   value="{{ $size }}"
+                                                                   class="filter-checkbox filter-size-checkbox"
+                                                                   onchange="applyFilters()">
+                                                            <label for="size-{{ $size }}-{{ $cat->id }}">{{ $size }}</label>
+                                                        </li>
+                                                    @endforeach
                                                 </ul>
                                             </div>
                                         </div>
@@ -63,51 +57,50 @@
                                         <div class="group-filter" aria-expanded="true">
                                             <div class="layered-content filter-color s-filter">
                                                 <ul class="check-box-list">
-                                                    <li>
-                                                        <input type="checkbox" id="color-red-{{ $cat->id }}">
-                                                        <label for="color-red-{{ $cat->id }}" style="background-color: #fb4727"></label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="color-blue-{{ $cat->id }}">
-                                                        <label for="color-blue-{{ $cat->id }}" style="background-color: #2a6fd1"></label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="color-green-{{ $cat->id }}">
-                                                        <label for="color-green-{{ $cat->id }}" style="background-color: #28a745"></label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="color-yellow-{{ $cat->id }}">
-                                                        <label for="color-yellow-{{ $cat->id }}" style="background-color: #ffc107"></label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="color-purple-{{ $cat->id }}">
-                                                        <label for="color-purple-{{ $cat->id }}" style="background-color: #6f42c1"></label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="color-pink-{{ $cat->id }}">
-                                                        <label for="color-pink-{{ $cat->id }}" style="background-color: #e83e8c"></label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="color-orange-{{ $cat->id }}">
-                                                        <label for="color-orange-{{ $cat->id }}" style="background-color: #fd7e14"></label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="color-brown-{{ $cat->id }}">
-                                                        <label for="color-brown-{{ $cat->id }}" style="background-color: #795548"></label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="color-black-{{ $cat->id }}">
-                                                        <label for="color-black-{{ $cat->id }}" style="background-color: #343a40"></label>
-                                                    </li>
-                                                    <li>
-                                                        <input type="checkbox" id="color-white-{{ $cat->id }}">
-                                                        <label for="color-white-{{ $cat->id }}" style="background-color: #ffffff"></label>
-                                                    </li>
+                                                    @php
+                                                        $availableColors = \App\Models\ProductVariation::where('trang_thai', 'hien')
+                                                            ->whereNotNull('mau_sac')
+                                                            ->pluck('mau_sac')
+                                                            ->unique()
+                                                            ->values();
+                                                        
+                                                        $colorMap = [
+                                                            'Đỏ' => '#fb4727',
+                                                            'Xanh dương' => '#2a6fd1',
+                                                            'Xanh lá' => '#28a745',
+                                                            'Vàng' => '#ffc107',
+                                                            'Tím' => '#6f42c1',
+                                                            'Hồng' => '#e83e8c',
+                                                            'Cam' => '#fd7e14',
+                                                            'Nâu' => '#795548',
+                                                            'Đen' => '#343a40',
+                                                            'Trắng' => '#ffffff',
+                                                            'Xám' => '#808080',
+                                                            'Be' => '#F5F5DC',
+                                                        ];
+                                                    @endphp
+                                                    @foreach($availableColors as $color)
+                                                        @php
+                                                            $colorCode = $colorMap[$color] ?? '#CCCCCC';
+                                                            $colorSlug = \Illuminate\Support\Str::slug($color);
+                                                        @endphp
+                                                        <li>
+                                                            <input type="checkbox" 
+                                                                   id="color-{{ $colorSlug }}-{{ $cat->id }}" 
+                                                                   name="colors[]" 
+                                                                   value="{{ $color }}"
+                                                                   class="filter-checkbox filter-color-checkbox"
+                                                                   onchange="applyFilters()">
+                                                            <label for="color-{{ $colorSlug }}-{{ $cat->id }}" 
+                                                                   style="background-color: {{ $colorCode }}; 
+                                                                          {{ $color == 'Trắng' ? 'border: 1px solid #ddd;' : '' }}"
+                                                                   title="{{ $color }}"></label>
+                                                        </li>
+                                                    @endforeach
                                                 </ul>
                                             </div>
                                         </div>
                                     </div>
-                                {{-- Thương hiệu --}}
                                 @elseif(strtolower($cat->ten) === 'thương hiệu')
                                     <a href="javascript:void(0)"
                                         data-bs-toggle="collapse"
@@ -120,12 +113,18 @@
                                         <ul class="list-unstyled ms-3 mt-2">
                                             @foreach($brands as $brand)
                                                 <li class="mb-2">
-                                                    <a href="{{ route('shoe.brand', $brand->id) }}" title="{{ $brand->ten }}">
+                                                    <input type="checkbox" 
+                                                           id="brand-{{ $brand->id }}" 
+                                                           name="brands[]" 
+                                                           value="{{ $brand->id }}"
+                                                           class="filter-checkbox filter-brand-checkbox"
+                                                           onchange="applyFilters()">
+                                                    <label for="brand-{{ $brand->id }}" style="cursor: pointer;">
                                                         @if($brand->logo)
                                                             <img src="{{ asset($brand->logo) }}" alt="{{ $brand->ten }}" style="height:24px;max-width:60px;object-fit:contain;">
                                                         @endif
                                                         <span>{{ $brand->ten }}</span>
-                                                    </a>
+                                                    </label>
                                                 </li>
                                             @endforeach
                                         </ul>
@@ -143,3 +142,74 @@
         </div>
     </div>
 </div>
+
+<script>
+function applyFilters() {
+    // Lấy các giá trị đã chọn
+    let selectedColors = [];
+    let selectedSizes = [];
+    let selectedBrands = [];
+    
+    document.querySelectorAll('.filter-color-checkbox:checked').forEach(cb => {
+        selectedColors.push(cb.value);
+    });
+    
+    document.querySelectorAll('.filter-size-checkbox:checked').forEach(cb => {
+        selectedSizes.push(cb.value);
+    });
+    
+    document.querySelectorAll('.filter-brand-checkbox:checked').forEach(cb => {
+        selectedBrands.push(cb.value);
+    });
+    
+    // Tạo URL với query parameters
+    let url = new URL(window.location.href);
+    url.searchParams.delete('colors[]');
+    url.searchParams.delete('sizes[]');
+    url.searchParams.delete('brands[]');
+    
+    selectedColors.forEach(color => url.searchParams.append('colors[]', color));
+    selectedSizes.forEach(size => url.searchParams.append('sizes[]', size));
+    selectedBrands.forEach(brand => url.searchParams.append('brands[]', brand));
+    
+    // Reload trang với bộ lọc mới
+    window.location.href = url.toString();
+}
+
+function clearFilters() {
+    // Bỏ chọn tất cả checkbox
+    document.querySelectorAll('.filter-checkbox:checked').forEach(cb => {
+        cb.checked = false;
+    });
+    
+    // Reload trang không có filter
+    let url = new URL(window.location.href);
+    url.searchParams.delete('colors[]');
+    url.searchParams.delete('sizes[]');
+    url.searchParams.delete('brands[]');
+    window.location.href = url.toString();
+}
+
+// Giữ trạng thái checkbox khi reload
+document.addEventListener('DOMContentLoaded', function() {
+    let url = new URL(window.location.href);
+    
+    // Restore colors
+    url.searchParams.getAll('colors[]').forEach(color => {
+        let checkbox = document.querySelector(`.filter-color-checkbox[value="${color}"]`);
+        if (checkbox) checkbox.checked = true;
+    });
+    
+    // Restore sizes
+    url.searchParams.getAll('sizes[]').forEach(size => {
+        let checkbox = document.querySelector(`.filter-size-checkbox[value="${size}"]`);
+        if (checkbox) checkbox.checked = true;
+    });
+    
+    // Restore brands
+    url.searchParams.getAll('brands[]').forEach(brand => {
+        let checkbox = document.querySelector(`.filter-brand-checkbox[value="${brand}"]`);
+        if (checkbox) checkbox.checked = true;
+    });
+});
+</script>

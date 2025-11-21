@@ -9,14 +9,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-    $products = Product::with(['brand', 'variations'])
-        ->orderBy('id', 'desc')
-        ->paginate(10);
-        
+        $keyword = $request->input('keyword');
 
-    return view('admin.products.index', compact('products'));
+        // Nếu có từ khóa, thực hiện tìm kiếm
+        if ($keyword) {
+            $products = Product::with(['brand', 'variations'])
+                ->where('ten', 'LIKE', '%' . $keyword . '%') // Tìm kiếm theo tên sản phẩm
+                ->orWhere('ma_sku', 'LIKE', '%' . $keyword . '%') // Tìm kiếm theo mã SKU
+                ->orderBy('id', 'desc')
+                ->paginate(10);
+        } else {
+            // Nếu không có từ khóa, lấy tất cả sản phẩm
+            $products = Product::with(['brand', 'variations'])
+                ->orderBy('id', 'desc')
+                ->paginate(10);
+        }
+
+        return view('admin.products.index', compact('products'));
     }
     public function create()
     {

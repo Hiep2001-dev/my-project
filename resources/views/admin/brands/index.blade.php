@@ -1,8 +1,15 @@
-
-@extends('admin.layouts.master')
+@extends('admin.layouts.master')    
 @section('content')
 <div class="page-heading"><h3>Quản lý thương hiệu</h3></div>
 <div class="page-content">
+    {{-- Form tìm kiếm --}}
+    <form action="{{ route('admin.brands.index') }}" method="GET" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="keyword" class="form-control" placeholder="Nhập tên để tìm kiếm..." value="{{ request('keyword') }}">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </div>
+    </form>
+
     <a href="{{ route('admin.brands.create') }}" class="btn btn-primary mb-2">Thêm thương hiệu</a>
     <table class="table">
         <thead>
