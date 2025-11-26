@@ -45,8 +45,7 @@ class UserProductController extends Controller
             ->with(['variations.images'])
             ->findOrFail($id);
 
-        // Debug để xem dữ liệu variations
-        // dd($product->variations->toArray());
+
 
         $relatedProducts = Product::where('hoat_dong', 1)
             ->where('id', '!=', $id)
@@ -72,4 +71,32 @@ class UserProductController extends Controller
 
         return view('shoe.product', compact('products', 'categories', 'currentCategory'));
     }
+    public function getSizesByColor(Request $request, $productId)
+    {
+        $color = $request->get('color');
+        
+        $product = Product::findOrFail($productId);
+        
+        // Lấy danh sách size và giá theo màu
+        $variations = $product->variations()
+            ->where('trang_thai', 'hien')
+            ->where('mau_sac', $color)
+            ->orderBy('size_eu')
+            ->get();
+        
+        $sizesData = [];
+        foreach ($variations as $variation) {
+            $sizesData[] = [
+                'size' => $variation->size_eu,
+                'price' => $variation->gia_ban,
+                'stock' => $variation->so_luong_ton ?? 0
+            ];
+        }
+        
+        return response()->json([
+            'success' => true,
+            'sizes' => $sizesData
+        ]);
+    }
+    
 }

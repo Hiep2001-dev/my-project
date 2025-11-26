@@ -10,16 +10,12 @@
         <div class="breadcrumb-shop">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pd5">
+                    <div class="col-lg-12 pd5">
                         <ol class="breadcrumb breadcrumb-arrows">
                             <li>
-                                <a href="{{ url('shoe/index') }}">
-                                    <span>Trang chủ</span>
-                                </a>
+                                <a href="{{ url('shoe/index') }}"><span>Trang chủ</span></a>
                             </li>
-                            <li class="active">
-                                <span>Thông tin cá nhân</span>
-                            </li>
+                            <li class="active"><span>Thông tin cá nhân</span></li>
                         </ol>
                     </div>
                 </div>
@@ -38,28 +34,14 @@
                                 <p class="text-muted">{{ Auth::user()->email }}</p>
                             </div>
                             <hr>
-                            <ul class="nav flex-column">
-                                <li class="nav-item">
-                                    <a class="nav-link active" href="#profile" data-toggle="tab">
-                                        <i class="fas fa-user"></i> Thông tin cá nhân
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#orders" data-toggle="tab">
-                                        <i class="fas fa-box"></i> Đơn hàng của tôi
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#password" data-toggle="tab">
-                                        <i class="fas fa-lock"></i> Đổi mật khẩu
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <form action="{{ route('shoe.logout') }}" method="POST">
+                            <ul class="sidebar-menu list-unstyled">
+                                <li><a href="{{ route('shoe.profile') }}"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
+                                <li><a href="#"><i class="fas fa-box"></i> Đơn hàng của tôi</a></li>
+                                <li><a href="{{ route('shoe.profile.change-password') }}"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
+                                <li>
+                                    <form action="{{ route('shoe.logout') }}" method="POST" style="display:inline;">
                                         @csrf
-                                        <button type="submit" class="nav-link btn btn-link text-danger" style="text-align: left; width: 100%;">
-                                            <i class="fas fa-sign-out-alt"></i> Đăng xuất
-                                        </button>
+                                        <button type="submit" class="btn btn-link text-danger p-0"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
                                     </form>
                                 </li>
                             </ul>
@@ -70,7 +52,6 @@
                 <!-- Content -->
                 <div class="col-md-9">
                     <div class="tab-content">
-                        <!-- Tab Thông tin cá nhân -->
                         <div class="tab-pane fade show active" id="profile">
                             <div class="card">
                                 <div class="card-header">
@@ -92,21 +73,13 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Họ và tên <span class="text-danger">*</span></label>
-                                                    <input type="text" name="ho_ten" class="form-control @error('ho_ten') is-invalid @enderror" 
-                                                           value="{{ old('ho_ten', $user->ho_ten) }}" required>
-                                                    @error('ho_ten')
-                                                        <span class="invalid-feedback">{{ $message }}</span>
-                                                    @enderror
+                                                    <input type="text" name="ho_ten" class="form-control" value="{{ old('ho_ten', $user->ho_ten) }}" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Email <span class="text-danger">*</span></label>
-                                                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
-                                                           value="{{ old('email', $user->email) }}" required>
-                                                    @error('email')
-                                                        <span class="invalid-feedback">{{ $message }}</span>
-                                                    @enderror
+                                                    <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -114,28 +87,30 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Số điện thoại</label>
-                                                    <input type="text" name="so_dien_thoai" class="form-control @error('so_dien_thoai') is-invalid @enderror" 
-                                                           value="{{ old('so_dien_thoai', $user->so_dien_thoai) }}">
-                                                    @error('so_dien_thoai')
-                                                        <span class="invalid-feedback">{{ $message }}</span>
-                                                    @enderror
+                                                    <input type="text" name="so_dien_thoai" class="form-control" value="{{ old('so_dien_thoai', $user->so_dien_thoai) }}">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Ngày sinh</label>
-                                                    <input type="date" name="ngay_sinh" class="form-control" 
-                                                           value="{{ old('ngay_sinh', $user->ngay_sinh) }}">
+                                                    <input type="date" name="ngay_sinh" class="form-control" value="{{ old('ngay_sinh', $user->ngay_sinh) }}">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label>Địa chỉ</label>
-                                            <textarea name="dia_chi" class="form-control @error('dia_chi') is-invalid @enderror" 
-                                                      rows="3">{{ old('dia_chi', $user->dia_chi) }}</textarea>
-                                            @error('dia_chi')
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
+                                            <label>Địa chỉ nhận hàng</label>
+                                            <select name="dia_chi_id" class="form-control mb-2" id="diaChiSelect">
+                                                <option value="">-- Chọn địa chỉ --</option>
+                                                @foreach($user->diaChis as $dc)
+                                                    <option value="{{ $dc->id }}"
+                                                        {{ old('dia_chi_id', $user->diaChis->where('mac_dinh', 1)->first()?->id ?? '') == $dc->id ? 'selected' : '' }}>
+                                                        {{ $dc->dia_chi_1 }}, {{ $dc->xa_phuong }}, {{ $dc->quan_huyen }}, {{ $dc->tinh_thanh }}
+                                                        @if($dc->mac_dinh) [Mặc định] @endif
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            
+                                            <a href="{{ route('user.address.create') }}" class="btn btn-link p-0">+ Thêm địa chỉ mới</a>
                                         </div>
                                         <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-save"></i> Cập nhật thông tin
@@ -145,7 +120,6 @@
                             </div>
                         </div>
 
-                        <!-- Tab Đơn hàng -->
                         <div class="tab-pane fade" id="orders">
                             <div class="card">
                                 <div class="card-header">
@@ -210,19 +184,27 @@
 @endsection
 
 <style>
-    .nav-link {
-        color: #333;
-        padding: 10px 15px;
-        border-radius: 5px;
-        margin-bottom: 5px;
-    }
-    .nav-link:hover,
-    .nav-link.active {
-        background-color: #007bff;
-        color: white !important;
-    }
-    .nav-link i {
-        margin-right: 8px;
-        width: 20px;
-    }
+  .sidebar-menu li {
+    margin-bottom: 8px;
+}
+.sidebar-menu a, .sidebar-menu button {
+    display: block;
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    background: none;
+    transition: background 0.2s;
+}
+.sidebar-menu a:hover{
+    background: #2505f8;
+    color: #fff !important;
+}
+.sidebar-menu button:hover {
+    background: #d9534f ;
+    color: #fff !important; 
+}
+.sidebar-menu i {
+    margin-right: 8px;
+}
 </style>

@@ -97,34 +97,92 @@
       </div>
     </div>
     <div id="offcanvas-flip2" uk-offcanvas="flip: true; overlay: true">
-      <div class="uk-offcanvas-bar" style="    background: white;
-            width: 350px;">
-
+      <div class="uk-offcanvas-bar" style="background: white; width: 350px;">
         <button class="uk-offcanvas-close" style="color:#272727" type="button" uk-close></button>
-
-        <h3 style="font-size: 14px;
-                color: #272727;
-                text-transform: uppercase;
-                margin: 3px 0 30px 0;
-                font-weight: 500; letter-spacing: 2px;">Giỏ hàng</h3>
+        <h3 style="font-size: 14px; color: #272727; text-transform: uppercase; margin: 3px 0 30px 0; font-weight: 500; letter-spacing: 2px;">Giỏ hàng</h3>
         <div class="site-nav-container-last" style="color:#272727">
           <div class="cart-view clearfix">
             <table id="cart-view">
               <tbody>
-                <tr class="item_1">
-                  <td class="img"><a href="" title="Nike Air Max 90 Essential &quot;Grape&quot;"><img
-                        src="{{ asset('images/shoes/1.jpg') }}" alt="/products/nike-air-max-90-essential-grape"></a>
-                  </td>
-                  <td>
-                    <a class="pro-title-view" style="color: #272727" href=""
-                      title="Nike Air Max 90 Essential &quot;Grape&quot;">Nike Air Max 90 Essential "Grape"</a>
-                    <span class="variant">Tím / 36</span>
-                    <span class="pro-quantity-view">1</span>
-                    <span class="pro-price-view">4,800,000₫</span>
-                    <span class="remove_link remove-cart"><a href=""><i style="color: #272727;"
-                          class="fas fa-times"></i></a></span>
-                  </td>
-                </tr>
+                @if(Auth::user())
+
+                  @php
+                    $cart = \App\Models\Cart::with('cartDetails.bienTheSanPham')->where('nguoi_dung_id', Auth::id())->where('trang_thai', 'dang_mua')->first();
+                  @endphp
+                  @if($cart && $cart->cartDetails && $cart->cartDetails->count())
+                    @foreach($cart->cartDetails as $item)
+                    <tr>
+                      <td class="img">
+                        <a href="{{ url('shoe/product/'.$item->bienTheSanPham->product->id) }}">
+                          @php
+                            $img = $item->bienTheSanPham->hinh_anh_chinh 
+                              ?? ($item->bienTheSanPham->images && $item->bienTheSanPham->images->count() > 0
+                                  ? $item->bienTheSanPham->images->first()->duong_dan
+                                  : 'images/no-image.png');
+                          @endphp
+                          <img src="{{ asset($img) }}" alt="{{ $item->bienTheSanPham->product->ten ?? 'Sản phẩm' }}">
+                        </a>
+                      </td>
+                      <td>
+                        <a class="pro-title-view" style="color: #272727" href="{{ url('shoe/product/'.$item->bienTheSanPham->product->id) }}">
+                          {{ $item->bienTheSanPham->product->ten ?? 'Sản phẩm' }}
+                        </a>
+                        <span class="variant">
+                          {{ $item->bienTheSanPham->mau_sac ?? '' }} / {{ $item->bienTheSanPham->size_eu ?? '' }}
+                        </span>
+                          <span class="pro-quantity-view">{{ $item->so_luong }}</span>
+                        <span class="pro-price-view">{{ number_format($item->bienTheSanPham->gia_ban) }}₫</span>
+                        <span class="remove_link remove-cart">
+                          <form action="{{ route('cart.remove', $item->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" style="background: none; border: none; color: #272727;">
+                              <i class="fas fa-times"></i>
+                            </button>
+                          </form>
+                        </span>
+                      </td>
+                    </tr>
+                    @endforeach
+                  @else
+                    <tr>
+                      <td colspan="2" class="text-center text-muted">Giỏ hàng trống</td>
+                    </tr>
+                  @endif
+                @else
+                  @if(session('cart') && count(session('cart')) > 0)
+                    @foreach(session('cart') as $item)
+                    <tr>
+                      <td class="img">
+                        <a href="{{ url('shoe/product/'.$item['san_pham_id']) }}">
+                          <img src="{{ asset($item['image']) }}" alt="{{ $item['name'] }}">
+                        </a>
+                      </td>
+                      <td>
+                        <a class="pro-title-view" style="color: #272727" href="{{ url('shoe/product/'.$item['san_pham_id']) }}">
+                          {{ $item['name'] }}
+                        </a>
+                        <span class="variant">{{ $item['color'] ?? '' }} / {{ $item['size'] ?? '' }}</span>
+                        <span class="pro-quantity-view">{{ $item['quantity'] }}</span>
+                        <span class="pro-price-view">{{ number_format($item['price']) }}₫</span>
+                        <span class="remove_link remove-cart">
+                        <form action="{{ route('cart.remove', $item['san_pham_id']) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" style="background: none; border: none;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </form>
+                        </span>
+                      </td>
+                    </tr>
+                    @endforeach
+                  @else
+                    <tr>
+                      <td colspan="2" class="text-center text-muted">Giỏ hàng trống</td>
+                    </tr>
+                  @endif
+                @endif
               </tbody>
             </table>
             <span class="line"></span>
@@ -132,17 +190,42 @@
               <tbody>
                 <tr>
                   <td class="text-left">TỔNG TIỀN:</td>
-                  <td class="text-right" id="total-view-cart">4,800,000₫</td>
+                  <td class="text-right" id="total-view-cart">
+                    @if(Auth::check() && $cart)
+                      {{
+                        number_format(
+                          $cart->cartDetails->sum(function($i){
+                           $gia = $i->don_gia ?? 0;
+                            return $gia * $i->so_luong;
+                          })
+                        )
+                      }}₫
+                    @else
+                      @php
+                          $total = 0;
+                          if(session('cart')) {
+                              foreach(session('cart') as $item) {
+                                  $total += ($item['price'] ?? 0) * ($item['quantity'] ?? 1);
+                              }
+                          }
+                      @endphp
+                      {{ number_format($total) }}₫
+                    @endif
+                  </td>
                 </tr>
                 <tr>
-                  <td class="distance-td"><a href="" class="linktocart button dark">Xem giỏ hàng</a></td>
-                  <td><a href="" class="linktocheckout button dark">Thanh toán</a></td>
+                  <td class="distance-td">
+                    <a href="{{ route('cart.index') }}" class="linktocart button dark">Xem giỏ hàng</a>
+                  </td>
+                  <td>
+                    <a href="#" class="linktocheckout button dark">Thanh toán</a>
+                  </td>
                 </tr>
               </tbody>
             </table>
-
-            <a href="" target="_blank" class="button btn-check" style="text-decoration:none;"><span>Click nhận mã giảm
-                giá ngay !</span></a>
+            <a href="#" target="_blank" class="button btn-check" style="text-decoration:none;">
+              <span>Click nhận mã giảm giá ngay !</span>
+            </a>
           </div>
         </div>
       </div>
@@ -174,7 +257,7 @@
         @endif
 
         <a style="color: #272727" href="#" uk-toggle="target: #offcanvas-flip2">
-          <i class="fas fa-shopping-cart"></i>
+          <i id=""class="fas fa-shopping-cart"></i>
         </a>
 
         <button class="navbar-toggler" type="button" uk-toggle="target: #offcanvas-flip1" data-target="#navbarNav"

@@ -9,7 +9,7 @@
             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
         </div>
     </form>
-
+    @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
     <a href="{{ route('admin.categories.create') }}" class="btn btn-primary mb-3">Thêm danh mục</a>
 
     <div class="card mb-4">
@@ -31,7 +31,7 @@
             </ul>
         </div>
     </div>
-
+    @endif
     {{-- Bảng danh sách chi tiết --}}
     <div class="card">
         <div class="card-header">
@@ -67,6 +67,7 @@
                         </td>
                         <td>{{ $cat->ngay_tao }}</td>
                         <td>{{ $cat->ngay_cap_nhat }}</td>
+                        @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
                         <td>
                             <a href="{{ route('admin.categories.edit', $cat->id) }}" class="btn btn-warning btn-sm">Sửa</a>
                             <form action="{{ route('admin.categories.destroy', $cat->id) }}" method="POST" style="display:inline;">
@@ -74,6 +75,7 @@
                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Xóa?')">Xóa</button>
                             </form>
                         </td>
+                        @endif
                     </tr>
                     @endforeach
                     @if($categories->isEmpty())

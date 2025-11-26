@@ -1,4 +1,3 @@
-{{-- resources/views/admin/users/show.blade.php --}}
 @extends('admin.layouts.master')
 
 @section('content')
@@ -18,6 +17,27 @@
             <p><strong>Ngày sinh:</strong> {{ $user->ngay_sinh }}</p>
             <p><strong>Ngày tạo:</strong> {{ $user->ngay_tao }}</p>
             <p><strong>Ngày cập nhật:</strong> {{ $user->ngay_cap_nhat }}</p>
+
+            <div class="mt-4">
+                <h5>Địa chỉ nhận hàng</h5>
+                @forelse($user->diaChis as $dc)
+                    <div class="border rounded p-2 mb-2">
+                        <p><strong>Họ tên nhận:</strong> {{ $dc->ho_ten }}</p>
+                        <p><strong>SĐT:</strong> {{ $dc->so_dien_thoai }}</p>
+                        <p><strong>Địa chỉ:</strong> {{ $dc->dia_chi_1 }}{{ $dc->dia_chi_2 ? ', '.$dc->dia_chi_2 : '' }}, {{ $dc->xa_phuong }}, {{ $dc->quan_huyen }}, {{ $dc->tinh_thanh }}</p>
+                        <p><strong>Loại địa chỉ:</strong> {{ $dc->loai_dia_chi }}</p>
+                        <p><strong>Mã bưu điện:</strong> {{ $dc->ma_buu_dien }}</p>
+                        <p><strong>Quốc gia:</strong> {{ $dc->quoc_gia }}</p>
+                        <p><strong>Ghi chú:</strong> {{ $dc->ghi_chu }}</p>
+                        @if($dc->mac_dinh)
+                            <span class="badge bg-primary">Mặc định</span>
+                        @endif
+                    </div>
+                @empty
+                    <p class="text-muted">Người dùng chưa có địa chỉ nhận hàng.</p>
+                @endforelse
+            </div>
+
             <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-warning">Sửa</a>
             <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Quay lại</a>
         </div>

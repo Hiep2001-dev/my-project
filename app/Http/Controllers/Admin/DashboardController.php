@@ -4,10 +4,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Product;
+use App\Models\Order;
+use App\Models\Post;
 class DashboardController extends Controller
 {
     public function index()
     {
+        $productCount = Product::count();
+        $userCount = User::count();
+        $orderCount = Order::count();
+        $postCount = Post::count();
         $admins = User::where('vai_tro', 'quan_li')->get();
         $nhanviens = User::where('vai_tro', 'nhan_vien')->get();
         $sidebarItems = [
@@ -34,6 +41,10 @@ class DashboardController extends Controller
             'web_title' => 'Admin',
             'admins' => $admins,
             'nhanviens' => $nhanviens,
+            'productCount' => $productCount,
+            'userCount' => $userCount,
+            'orderCount' => $orderCount,
+            'postCount' => $postCount,
         ]);
     }
 }

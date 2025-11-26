@@ -6,9 +6,11 @@
     <h3>Biến thể của sản phẩm: {{ $product->ten }}</h3>
 </div>
 <div class="page-content">
+    @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
     <a href="{{ route('admin.products.variations.create', $product->id) }}" class="btn btn-primary mb-2">
         <i class="bi bi-plus"></i> Thêm biến thể
     </a>
+    @endif
     <table class="table table-striped">
         <thead>
             <tr>
@@ -42,7 +44,9 @@
                         <span class="badge bg-danger">Ngừng KD</span>
                     @endif
                 </td>
+                
                 <td>
+                    @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
                     <a href="{{ route('admin.products.variations.show', [$product->id, $variation->id]) }}" class="btn btn-sm btn-info"><i class="bi bi-eye"></i></a>
                     <a href="{{ route('admin.products.variations.edit', [$product->id, $variation->id]) }}" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
                     <a href="{{ route('admin.products.images.index', [$product->id, $variation->id]) }}" class="btn btn-sm btn-secondary">
@@ -52,6 +56,7 @@
                         @csrf
                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Xóa biến thể này?')"><i class="bi bi-trash"></i></button>
                     </form>
+                    @endif
                 </td>
             </tr>
             @endforeach

@@ -18,22 +18,27 @@ class ShoeUserController extends Controller
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
-        
+
         $request->validate([
             'ho_ten' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => 'required|email|unique:nguoi_dung,email,' . $user->id,
+            'ngay_sinh' => 'nullable|date',
             'so_dien_thoai' => 'nullable|string|max:20',
-            'dia_chi' => 'nullable|string|max:500',
         ]);
-        
+
         $user->update([
             'ho_ten' => $request->ho_ten,
             'email' => $request->email,
+            'ngay_sinh' => $request->ngay_sinh,
             'so_dien_thoai' => $request->so_dien_thoai,
-            'dia_chi' => $request->dia_chi,
         ]);
-        
+
         return redirect()->route('shoe.profile')->with('success', 'Cập nhật thông tin thành công!');
+    }
+
+    public function showChangePasswordForm()
+    {
+        return view('shoe.profile.change-password');
     }
 
     public function changePassword(Request $request)
@@ -41,33 +46,25 @@ class ShoeUserController extends Controller
         $request->validate([
             'current_password' => 'required',
             'new_password' => 'required|min:6|confirmed',
-        ], [
-            'current_password.required' => 'Vui lòng nhập mật khẩu hiện tại',
-            'new_password.required' => 'Vui lòng nhập mật khẩu mới',
-            'new_password.min' => 'Mật khẩu mới phải có ít nhất 6 ký tự',
-            'new_password.confirmed' => 'Xác nhận mật khẩu không khớp',
         ]);
-        
+
         $user = Auth::user();
-        
-        // Kiểm tra mật khẩu hiện tại
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không đúng']);
+        if (!\Hash::check($request->current_password, $user->mat_khau)) {
+            return back()->with('error', 'Mật khẩu hiện tại không đúng!');
         }
-        
-        // Cập nhật mật khẩu mới
-        $user->update([
-            'password' => Hash::make($request->new_password)
-        ]);
-        
-        return redirect()->route('shoe.profile')->with('success', 'Đổi mật khẩu thành công!');
+
+        $user->mat_khau = bcrypt($request->new_password);
+        $user->save();
+
+        return back()->with('success', 'Đổi mật khẩu thành công!');
     }
+
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
         return redirect()->route('shoe.index')->with('success', 'Đã đăng xuất thành công!');
     }
 }

@@ -8,22 +8,21 @@
 <div class="page-content">
     <section class="section">
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <span>Danh sách sản phẩm</span>
-                <a href="{{ route('admin.products.create') }}" class="btn btn-primary btn-sm">
-                    <i class="bi bi-plus"></i> Thêm sản phẩm
-                </a>
-            </div>
-            <div class="card-body">
-                {{-- Form tìm kiếm --}}
-                <form action="{{ route('admin.products.index') }}" method="GET" class="mb-4">
+            <form action="{{ route('admin.products.index') }}" method="GET" class="mb-4">
                     <div class="input-group">
                         <input type="text" name="keyword" class="form-control" placeholder="Nhập tên hoặc mã SKU để tìm kiếm..." value="{{ request('keyword') }}">
                         <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                     </div>
                 </form>
-
-                {{-- Hiển thị danh sách sản phẩm --}}
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Danh sách sản phẩm</span>
+                @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
+                <a href="{{ route('admin.products.create') }}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus"></i> Thêm sản phẩm
+                </a>
+                @endif
+            </div>
+            <div class="card-body">
                 <table class="table table-striped" id="productTable">
                     <thead>
                         <tr>
@@ -66,17 +65,19 @@
                             <td>{{ $product->ngay_tao }}</td>
                             <td>{{ $product->ngay_cap_nhat }}</td>
                             <td>
-                                <a href="{{ route('admin.products.show', $product->id) }}" class="btn btn-sm btn-info" title="Xem"><i class="bi bi-eye"></i></a>
-                                <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-warning" title="Sửa"><i class="bi bi-pencil"></i></a>
                                 <a href="{{ route('admin.products.variations.index', $product->id) }}" class="btn btn-sm btn-secondary" title="Biến thể">
                                     <i class="bi bi-list-ul"></i>
                                 </a>
-                                <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-sm btn-danger" title="Xóa" onclick="return confirm('Bạn có chắc muốn xóa?')">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
+                                @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
+                                    <a href="{{ route('admin.products.show', $product->id) }}" class="btn btn-sm btn-info" title="Xem"><i class="bi bi-eye"></i></a>
+                                    <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-warning" title="Sửa"><i class="bi bi-pencil"></i></a>
+                                    <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Xóa" onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                         @endforeach

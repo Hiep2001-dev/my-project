@@ -2,15 +2,15 @@
 @section('content')
 <div class="page-heading"><h3>Quản lý thương hiệu</h3></div>
 <div class="page-content">
-    {{-- Form tìm kiếm --}}
     <form action="{{ route('admin.brands.index') }}" method="GET" class="mb-4">
         <div class="input-group">
             <input type="text" name="keyword" class="form-control" placeholder="Nhập tên để tìm kiếm..." value="{{ request('keyword') }}">
             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
         </div>
     </form>
-
+@if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
     <a href="{{ route('admin.brands.create') }}" class="btn btn-primary mb-2">Thêm thương hiệu</a>
+@endif
     <table class="table">
         <thead>
             <tr>
@@ -34,6 +34,7 @@
                     @else <span class="badge bg-danger">Ngừng hoạt động</span>
                     @endif
                 </td>
+                @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
                 <td>
                     <a href="{{ route('admin.brands.edit', $brand->id) }}" class="btn btn-warning btn-sm">Sửa</a>
                     @if($brand->products->count() == 0)
@@ -45,6 +46,7 @@
                         <button class="btn btn-secondary btn-sm" disabled title="Không thể xóa thương hiệu đang có sản phẩm">Không thể xóa</button>
                     @endif
                 </td>
+                @endif
             </tr>
             @endforeach
         </tbody>

@@ -12,10 +12,8 @@ class User extends Authenticatable
     const CREATED_AT = 'ngay_tao';
     const UPDATED_AT = 'ngay_cap_nhat';
 
-    // Thay bằng tên bảng thực tế của bạn (ví dụ 'nguoi_dung')
-    protected $table = 'nguoi_dung';
 
-    // Khóa chính (mặc định 'id')
+    protected $table = 'nguoi_dung';
     protected $primaryKey = 'id';
 
     protected $hidden = [
@@ -44,9 +42,14 @@ class User extends Authenticatable
         
     ];
 
-    // Nếu cột password tên khác (ví dụ 'mat_khau'), Laravel auth cần biết:
+  
     public function getAuthPassword()
     {
         return $this->mat_khau; // đổi nếu tên cột khác
+    }
+
+    public function diaChis()
+    {
+        return $this->hasMany(Address::class, 'nguoi_dung_id');
     }
 }

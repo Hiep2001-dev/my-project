@@ -1,14 +1,11 @@
 @extends('shoe.layouts.master')
 
-<body>
+@section('content')
     @include('shoe.layouts.header')
-    {{-- Navbar --}}
     @include('shoe.layouts.sidebar')
-    {{-- Banner --}}
+
     <div>
-        <div>
-            <img src="{{ asset('images/collection_banner.jpg') }}" alt="Products">
-        </div>
+        <img src="{{ asset('images/collection_banner.jpg') }}" alt="Products">
     </div>
     <div class="breadcrumb-shop">
         <div class="container">
@@ -60,9 +57,9 @@
                             @endforeach
                         </div>
                     </div>
-                    {{-- Danh mục blog --}}
-                   @include('shoe.layouts.sidebar-blog')
-            {{-- Nội dung blog --}}
+                    @include('shoe.layouts.sidebar-blog')
+                </div>
+            </div>
             <div class="col-md-9 col-sm-12 col-xs-12">
                 <div class="heading-page clearfix">
                     <h1>Tin tức</h1>
@@ -111,4 +108,4 @@
         </div>
     </div>
     @include('shoe.layouts.footer')
-</body>
+@endsection

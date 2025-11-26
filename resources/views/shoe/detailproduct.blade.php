@@ -100,6 +100,7 @@
                                     </div>
                                     
                                     @php
+
                                         $colors = $product->variations
                                             ->where('trang_thai', 'hien')
                                             ->pluck('mau_sac')
@@ -107,18 +108,22 @@
                                             ->filter()
                                             ->values();
                                             
-                                        $sizes = $product->variations
-                                            ->where('trang_thai', 'hien')
-                                            ->pluck('size_eu')
-                                            ->unique()
-                                            ->filter()
-                                            ->values();
-                                        
                                         // Tạo mảng giá theo màu và size
                                         $priceData = [];
+                                        $colorSizeMap = []; // Map màu -> danh sách size
+                                        
                                         foreach($product->variations->where('trang_thai', 'hien') as $v) {
                                             $key = $v->mau_sac . '_' . $v->size_eu;
                                             $priceData[$key] = $v->gia_ban;
+                                            
+                                            // Thêm size vào danh sách của màu
+                                            if (!isset($colorSizeMap[$v->mau_sac])) {
+                                                $colorSizeMap[$v->mau_sac] = [];
+                                            }
+                                            if (!in_array($v->size_eu, $colorSizeMap[$v->mau_sac])) {
+                                                $colorSizeMap[$v->mau_sac][] = $v->size_eu;
+                                            }
+                                            
                                             // Giá theo màu (lấy variation đầu tiên của màu đó)
                                             if (!isset($priceData[$v->mau_sac])) {
                                                 $priceData[$v->mau_sac] = $v->gia_ban;
@@ -127,7 +132,7 @@
                                         
                                         // Giá mặc định
                                         $firstColor = $colors->first();
-                                        $firstSize = $sizes->first();
+                                        $firstSize = $colorSizeMap[$firstColor][0] ?? null;
                                         $defaultPrice = $priceData[$firstColor . '_' . $firstSize] ?? $priceData[$firstColor] ?? null;
                                     @endphp
                                     
@@ -137,12 +142,22 @@
                                         </span>
                                     </div>
 
-                                    {{-- Hidden input chứa dữ liệu giá --}}
+                                    {{-- Hidden input chứa dữ liệu giá và size theo màu --}}
                                     <input type="hidden" id="price-data" value='@json($priceData)'>
+                                    <input type="hidden" id="color-size-map" value='@json($colorSizeMap)'>
 
-                                    <form id="add-item-form" action="#" method="POST" class="variants clearfix">
-                                        @if($colors->count() > 0 || $sizes->count() > 0)
+                                    {{-- Thay thế phần form --}}
+                                    <form id="add-item-form" action="{{ route('cart.add') }}" method="POST" class="variants clearfix">
+                                        @csrf
+                                        {{-- Hidden inputs để gửi dữ liệu --}}
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <input type="hidden" id="cart-color" name="color" value="{{ $firstColor }}">
+                                        <input type="hidden" id="cart-size" name="size" value="{{ $firstSize }}">
+                                        <input type="hidden" id="cart-price" name="price" value="{{ $defaultPrice }}">
+                                        
+                                        @if($colors->count() > 0)
                                             <div class="select clearfix" style="display: block !important;">
+                                                {{-- Phần màu sắc --}}
                                                 @if($colors->count() > 0)
                                                     <div class="selector-wrapper" style="display: block !important; margin-bottom: 20px;">
                                                         <label style="color: #000; font-weight: 600; display: block; margin-bottom: 10px;">
@@ -197,46 +212,22 @@
                                                     </div>
                                                 @endif
                                                 
-                                                @if($sizes->count() > 0)
-                                                    <div class="selector-wrapper" style="display: block !important; margin-bottom: 20px;">
-                                                        <label style="color: #000; font-weight: 600; display: block; margin-bottom: 10px;">
-                                                            <i class="fa fa-ruler" style="margin-right: 8px;"></i>
-                                                            Kích thước
-                                                        </label>
-                                                        <div class="size-filter" style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                                            @foreach($sizes as $index => $size)
-                                                                <div class="size-option" data-size="{{ $size }}">
-                                                                    <input type="radio" name="size" id="size-{{ $index }}" 
-                                                                           value="{{ $size }}" 
-                                                                           {{ $index == 0 ? 'checked' : '' }}
-                                                                           style="display: none;"
-                                                                           onchange="updatePriceFromSize('{{ $size }}')">
-                                                                    <label for="size-{{ $index }}" 
-                                                                           style="display: block; min-width: 50px; height: 40px; 
-                                                                                  padding: 8px 15px;
-                                                                                  background-color: {{ $index == 0 ? '#007bff' : '#fff' }}; 
-                                                                                  border: 2px solid {{ $index == 0 ? '#007bff' : '#ddd' }}; 
-                                                                                  border-radius: 5px; 
-                                                                                  cursor: pointer;
-                                                                                  text-align: center;
-                                                                                  line-height: 24px;
-                                                                                  font-weight: 600;
-                                                                                  color: {{ $index == 0 ? '#fff' : '#000' }};
-                                                                                  transition: all 0.3s ease;">
-                                                                        {{ $size }}
-                                                                    </label>
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
+                                                {{-- Phần kích thước --}}
+                                                <div class="selector-wrapper" style="display: block !important; margin-bottom: 20px;">
+                                                    <label style="color: #000; font-weight: 600; display: block; margin-bottom: 10px;">
+                                                        <i class="fa fa-ruler" style="margin-right: 8px;"></i>
+                                                        Kích thước
+                                                    </label>
+                                                    <div id="size-filter" class="size-filter" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                                        {{-- Size sẽ được render bằng JS --}}
                                                     </div>
-                                                @endif
+                                                </div>
                                             </div>
                                         @else
                                             <div class="alert alert-warning">
                                                 <i class="fa fa-exclamation-triangle"></i> Sản phẩm hiện không có biến thể khả dụng.
                                             </div>
                                         @endif
-                                        
                                         <div class="selector-actions">
                                             <div class="quantity-area clearfix">
                                                 <input type="button" value="-" onclick="minusQuantity()" class="qty-btn">
@@ -245,10 +236,10 @@
                                             </div>
                                             <div class="wrap-addcart clearfix">
                                                 <div class="row-flex">
-                                                    <button type="button" class="button btn-addtocart addtocart-modal" {{ $colors->count() == 0 && $sizes->count() == 0 ? 'disabled' : '' }}>
-                                                        Thêm vào
+                                                    <button type="submit" class="button btn-addtocart addtocart-modal" {{ $colors->count() == 0 ? 'disabled' : '' }}>
+                                                        Thêm vào giỏ
                                                     </button>
-                                                    <button type="button" class="buy-now button" style="display: block;" {{ $colors->count() == 0 && $sizes->count() == 0 ? 'disabled' : '' }}>
+                                                    <button type="button" class="buy-now button" style="display: block;" {{ $colors->count() == 0 ? 'disabled' : '' }}>
                                                         Mua ngay
                                                     </button>
                                                 </div>
@@ -326,53 +317,194 @@
 
 <script>
 let priceData = {};
+let colorSizeMap = {};
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded');
+    
     // Load dữ liệu giá
     const priceInput = document.getElementById('price-data');
     if (priceInput) {
         try {
             priceData = JSON.parse(priceInput.value);
+            console.log('Price data:', priceData);
         } catch(e) {
             console.error('Lỗi parse price data:', e);
         }
     }
+    
+    // Load dữ liệu size theo màu
+    const colorSizeInput = document.getElementById('color-size-map');
+    if (colorSizeInput) {
+        try {
+            colorSizeMap = JSON.parse(colorSizeInput.value);
+            console.log('Color-Size Map:', colorSizeMap);
+        } catch(e) {
+            console.error('Lỗi parse color-size map:', e);
+        }
+    }
+    
+    // Render size ban đầu cho màu đầu tiên
+    const firstColor = document.querySelector('input[name="color"]:checked');
+    if (firstColor) {
+        renderSizesForColor(firstColor.value);
+    }
+    
+    // Khởi tạo giá trị ban đầu cho hidden inputs
+    updateCartInputs();
+    
+    // Xử lý submit form
+    const form = document.getElementById('add-item-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            updateCartInputs();
+            
+            const color = document.getElementById('cart-color').value;
+            const size = document.getElementById('cart-size').value;
+            const price = document.getElementById('cart-price').value;
+            
+            if (!color || !size) {
+                e.preventDefault();
+                alert('Vui lòng chọn màu sắc và kích thước!');
+                return false;
+            }
+            
+            if (!price) {
+                e.preventDefault();
+                alert('Không tìm thấy giá cho sản phẩm này!');
+                return false;
+            }
+            
+            console.log('Submitting to cart:', {
+                color: color,
+                size: size,
+                price: price,
+                quantity: document.getElementById('quantity').value
+            });
+        });
+    }
 });
 
+function renderSizesForColor(color) {
+    const sizeContainer = document.getElementById('size-filter');
+    if (!sizeContainer) {
+        console.error('Size container not found!');
+        return;
+    }
+    
+    // Lấy danh sách size của màu này
+    const sizes = colorSizeMap[color] || [];
+    console.log('Rendering sizes for color', color, ':', sizes);
+    
+    // Xóa tất cả size cũ
+    sizeContainer.innerHTML = '';
+    
+    if (sizes.length === 0) {
+        sizeContainer.innerHTML = '<p style="color: #999;">Không có size khả dụng cho màu này</p>';
+        return;
+    }
+    
+    // Render lại các size mới
+    sizes.forEach((size, index) => {
+        const sizeDiv = document.createElement('div');
+        sizeDiv.className = 'size-option';
+        sizeDiv.setAttribute('data-size', size);
+        
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = 'size';
+        input.id = 'size-' + color + '-' + index;
+        input.value = size;
+        input.checked = index === 0;
+        input.style.display = 'none';
+        input.onchange = function() { updatePriceFromSize(size); };
+        
+        const label = document.createElement('label');
+        label.setAttribute('for', 'size-' + color + '-' + index);
+        label.textContent = size;
+        label.style.cssText = `
+            display: block; 
+            min-width: 50px; 
+            height: 40px; 
+            padding: 8px 15px;
+            background-color: ${index === 0 ? '#007bff' : '#fff'}; 
+            border: 2px solid ${index === 0 ? '#007bff' : '#ddd'}; 
+            border-radius: 5px; 
+            cursor: pointer;
+            text-align: center;
+            line-height: 24px;
+            font-weight: 600;
+            color: ${index === 0 ? '#fff' : '#000'};
+            transition: all 0.3s ease;
+        `;
+        
+        sizeDiv.appendChild(input);
+        sizeDiv.appendChild(label);
+        sizeContainer.appendChild(sizeDiv);
+    });
+    
+    // Cập nhật giá sau khi render size
+    if (sizes.length > 0) {
+        updatePriceFromSize(sizes[0]);
+    }
+}
+
 function updatePriceFromColor(color) {
+    console.log('Color changed to:', color);
+    
     // Reset style cho tất cả màu
     document.querySelectorAll('.color-option label').forEach(label => {
         label.style.border = '2px solid #ddd';
         label.style.transform = 'scale(1)';
+        label.style.boxShadow = 'none';
     });
     
-    // Thêm style cho màu được chọn
+    // Thêm style cho màu được chọn với hiệu ứng sáng
     const selectedOption = document.querySelector(`.color-option[data-color="${color}"] label`);
     if (selectedOption) {
         selectedOption.style.border = '3px solid #007bff';
         selectedOption.style.transform = 'scale(1.1)';
+        selectedOption.style.boxShadow = '0 0 15px rgba(0, 123, 255, 0.6)';
+        
+        selectedOption.style.animation = 'pulse 0.4s ease-out';
+        setTimeout(() => {
+            selectedOption.style.animation = '';
+        }, 400);
     }
     
-    updatePrice();
+    // Render lại size theo màu vừa chọn
+    renderSizesForColor(color);
+    
+    updateCartInputs();
 }
 
 function updatePriceFromSize(size) {
+    console.log('Size changed to:', size);
+    
     // Reset style cho tất cả size
     document.querySelectorAll('.size-option label').forEach(label => {
         label.style.backgroundColor = '#fff';
         label.style.borderColor = '#ddd';
         label.style.color = '#000';
+        label.style.boxShadow = 'none';
     });
     
-    // Thêm style cho size được chọn
+    // Thêm style cho size được chọn với hiệu ứng sáng
     const selectedOption = document.querySelector(`.size-option[data-size="${size}"] label`);
     if (selectedOption) {
         selectedOption.style.backgroundColor = '#007bff';
         selectedOption.style.borderColor = '#007bff';
         selectedOption.style.color = '#fff';
+        selectedOption.style.boxShadow = '0 0 15px rgba(0, 123, 255, 0.6)';
+        
+        selectedOption.style.animation = 'pulse 0.4s ease-out';
+        setTimeout(() => {
+            selectedOption.style.animation = '';
+        }, 400);
     }
     
     updatePrice();
+    updateCartInputs();
 }
 
 function updatePrice() {
@@ -382,30 +514,67 @@ function updatePrice() {
     const color = colorInput ? colorInput.value : null;
     const size = sizeInput ? sizeInput.value : null;
     
+    console.log('Updating price for:', { color, size });
+    
     let price = null;
     
     // Ưu tiên tìm giá theo màu + size
     if (color && size) {
         const key = color + '_' + size;
         price = priceData[key];
+        console.log('Price key:', key, '=> Price:', price);
     }
     
     // Nếu không tìm thấy, lấy giá theo màu
     if (!price && color) {
         price = priceData[color];
+        console.log('Fallback to color price:', price);
     }
     
-    // Cập nhật giá hiển thị
+    // Cập nhật giá hiển thị với hiệu ứng
     const priceElement = document.querySelector('#price-preview .pro-price');
     if (priceElement) {
         if (price) {
             const formattedPrice = new Intl.NumberFormat('vi-VN').format(price);
+            
+            priceElement.style.animation = 'priceChange 0.5s ease-out';
+            setTimeout(() => {
+                priceElement.style.animation = '';
+            }, 500);
+            
             priceElement.textContent = formattedPrice + '₫';
             priceElement.setAttribute('data-price', price);
         } else {
             priceElement.textContent = 'Liên hệ';
+            priceElement.setAttribute('data-price', '');
         }
     }
+}
+
+function updateCartInputs() {
+    const colorInput = document.querySelector('input[name="color"]:checked');
+    const sizeInput = document.querySelector('input[name="size"]:checked');
+    const priceElement = document.querySelector('#price-preview .pro-price');
+    
+    const cartColor = document.getElementById('cart-color');
+    const cartSize = document.getElementById('cart-size');
+    const cartPrice = document.getElementById('cart-price');
+    
+    if (cartColor && colorInput) {
+        cartColor.value = colorInput.value;
+    }
+    if (cartSize && sizeInput) {
+        cartSize.value = sizeInput.value;
+    }
+    if (cartPrice && priceElement) {
+        cartPrice.value = priceElement.getAttribute('data-price') || '';
+    }
+    
+    console.log('Cart inputs updated:', {
+        color: cartColor?.value,
+        size: cartSize?.value,
+        price: cartPrice?.value
+    });
 }
 
 function minusQuantity() {
@@ -413,6 +582,12 @@ function minusQuantity() {
     let value = parseInt(input.value) || 1;
     if (value > 1) {
         input.value = value - 1;
+        
+        const btn = event.target;
+        btn.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            btn.style.transform = 'scale(1)';
+        }, 100);
     }
 }
 
@@ -420,17 +595,60 @@ function plusQuantity() {
     const input = document.getElementById('quantity');
     let value = parseInt(input.value) || 1;
     input.value = value + 1;
+    
+    const btn = event.target;
+    btn.style.transform = 'scale(0.9)';
+    setTimeout(() => {
+        btn.style.transform = 'scale(1)';
+    }, 100);
 }
 </script>
 
 <style>
     .color-option label:hover {
         transform: scale(1.15) !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
     }
     
     .size-option label:hover {
         border-color: #007bff !important;
         color: #007bff !important;
+        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.4) !important;
+    }
+    
+    .qty-btn {
+        transition: all 0.2s ease !important;
+    }
+    
+    .qty-btn:active {
+        transform: scale(0.9) !important;
+    }
+    
+    /* Animation hiệu ứng sáng lên khi click */
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 rgba(0, 123, 255, 0.7);
+        }
+        50% {
+            box-shadow: 0 0 25px rgba(0, 123, 255, 0.9);
+        }
+        100% {
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.6);
+        }
+    }
+    
+    @keyframes priceChange {
+        0% {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
 </style>

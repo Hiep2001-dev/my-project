@@ -18,7 +18,9 @@ use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\User\BlogController;
 use App\Http\Controllers\User\ShoeUserController;
-
+use App\Http\Controllers\User\AddressController;
+use App\Http\Controllers\User\CartController;
+use App\Http\Controllers\User\ShoeOrderController;
 
 //Admin Routes
 Route::middleware('auth')->group(function () {
@@ -106,10 +108,7 @@ Route::middleware('auth')->group(function () {
   
    
 });
-    // Route::get('admin/products/{productId}/variations/{variationId}/images', [ImageProductController::class, 'index'])
-    // ->name('admin.products.images.index');
-    // Route::get('admin/products/{productId}/variations/{variationId}/images/create', [ImageProductController::class, 'create'])
-    // ->name('admin.products.images.create');
+    
 });
 
 // Authentication Routes
@@ -124,20 +123,43 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/shoe/index', [UserDashboardController::class, 'index'])->name('shoe.index');
 
 Route::get('/shoe/product', [UserProductController::class, 'index'])->name('shoe.product');
+Route::get('shoe/product/{id}/sizes-by-color', [ShoeUserController::class, 'getSizesByColor'])->name('shoe.product.sizes-by-color');
 Route::get('/shoe/product/{id}', [UserProductController::class, 'show'])->name('shoe.detailproduct');
 Route::get('/shoe/category/{id}', [UserProductController::class, 'category'])->name('shoe.category');
 Route::get('/shoe/brand/{id}', [UserProductController::class, 'brand'])->name('shoe.brand');
-
+//bai viet
 Route::get('/shoe/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/shoe/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/shoe/blog/category/{id}', [BlogController::class, 'category'])->name('blog.category');
 
-
+//dia chi
+Route::get('shoe/address/create', [AddressController::class, 'create'])->name('user.address.create');
+Route::post('shoe/address/store', [AddressController::class, 'store'])->name('user.address.store');
+Route::get('shoe/address/edit/{id}', [AddressController::class, 'edit'])->name('user.address.edit');
+Route::put('shoe/address/update/{id}', [AddressController::class, 'update'])->name('user.address.update');
+Route::post('shoe/address/set-default/{id}', [AddressController::class, 'setDefault'])->name('user.address.set-default');
+Route::post('shoe/address/destroy/{id}', [AddressController::class, 'destroy'])->name('user.address.destroy');
+//gio hang
+Route::get('shoe/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('shoe/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::delete('shoe/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+Route::put('shoe/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+Route::get('shoe/cartdetail', function() {
+    return view('shoe.cartdetail');
+})->name('cart.index');
+Route::get('cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+//don hang
+Route::post('shoe/checkout', [ShoeOrderController::class, 'placeOrder'])->name('order.placeOrder');
+Route::get('shoe/order/{id}', [ShoeOrderController::class, 'detail'])->name('order.detail');
+Route::get('shoe/orders', [ShoeOrderController::class, 'history'])->name('order.history');
+Route::get('order/{id}/payment', [ShoeOrderController::class, 'payment'])->name('order.payment');
+Route::post('order/{id}/payment', [ShoeOrderController::class, 'processPayment'])->name('order.processPayment');
 
 Route::middleware('auth')->group(function() {
-    Route::get('shoe/profile', [ShoeUserController::class, 'profile'])->name('shoe.profile'); // Dùng UserController
+    Route::get('shoe/profile', [ShoeUserController::class, 'profile'])->name('shoe.profile');
     Route::post('shoe/profile/update', [ShoeUserController::class, 'updateProfile'])->name('shoe.profile.update');
-    Route::post('shoe/profile/change-password', [ShoeUserController::class, 'changePassword'])->name('shoe.profile.change-password');
+    Route::get('shoe/profile/change-password', [ShoeUserController::class, 'showChangePasswordForm'])->name('shoe.profile.change-password');
+    Route::post('shoe/profile/change-password', [ShoeUserController::class, 'changePassword'])->name('shoe.password.update');
 });
 
 Route::get('/shoe/introduce', function () {
@@ -159,7 +181,6 @@ Route::get('/shoe/signup', function () {
 Route::get('/shoe/signin', [UserLoginController::class, 'showLoginForm'])->name('shoe.signin');
 Route::post('/shoe/signin', [UserLoginController::class, 'login'])->name('shoe.login');
 Route::post('/user/register', [UserRegisterController::class, 'register'])->name('user.register');
-// Route::get('/shoe/index', [UserLoginController::class, 'index'])->name('shoe.index');
 Route::post('/shoe/logout', function () {
     Auth::logout();
     return redirect()->route('shoe.index');
