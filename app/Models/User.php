@@ -45,7 +45,7 @@ class User extends Authenticatable
   
     public function getAuthPassword()
     {
-        return $this->mat_khau; // đổi nếu tên cột khác
+        return $this->mat_khau;
     }
 
     public function diaChis()

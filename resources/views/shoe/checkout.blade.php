@@ -16,19 +16,35 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Tên người nhận</label>
-                        <input type="text" name="ten_nguoi_nhan" class="form-control" required value="{{ Auth::user()->name ?? '' }}">
+                        <input type="text" name="ten_nguoi_nhan" class="form-control" required value="{{ Auth::user()->ho_ten ?? '' }}">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Số điện thoại</label>
-                        <input type="text" name="sdt_nguoi_nhan" class="form-control" required>
+                        <input type="text" name="sdt_nguoi_nhan" class="form-control" required value="{{ Auth::user()->so_dien_thoai ?? '' }}">
                     </div>
                     <div class="col-12">
                         <label class="form-label">Địa chỉ nhận hàng</label>
-                        <input type="text" name="dia_chi_1" class="form-control" required>
+                        <input type="text" name="dia_chi_1" class="form-control mb-2" required value="{{ Auth::user()->diaChis->where('mac_dinh', 1)->first()->dia_chi_1 ?? '' }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Xã/Phường</label>
+                        <input type="text" name="xa_phuong" class="form-control" required value="{{ Auth::user()->diaChis->where('mac_dinh', 1)->first()->xa_phuong ?? '' }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Quận/Huyện</label>
+                        <input type="text" name="quan_huyen" class="form-control" required value="{{ Auth::user()->diaChis->where('mac_dinh', 1)->first()->quan_huyen ?? '' }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Tỉnh/Thành</label>
+                        <input type="text" name="tinh_thanh" class="form-control" required value="{{ Auth::user()->diaChis->where('mac_dinh', 1)->first()->tinh_thanh ?? '' }}">
                     </div>
                     <div class="col-12">
                         <label class="form-label">Ghi chú đơn hàng</label>
                         <textarea name="ghi_chu" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-bold">Mã giảm giá</label>
+                        <input type="text" name="ma_giam_gia" class="form-control" placeholder="Nhập mã giảm giá nếu có">
                     </div>
                 </div>
                 <h4 class="mt-4 mb-3 text-success"><i class="bi bi-bag-check"></i> Tóm tắt đơn hàng</h4>

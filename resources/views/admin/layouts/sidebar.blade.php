@@ -26,8 +26,8 @@
                     <span>Người dùng</span>
                 </a>
             </li>
-            <li class="sidebar-item">
-                <a href="#" class="sidebar-link">
+            <li class="sidebar-item {{ Route::is('admin.orders.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.orders.index') }}" class="sidebar-link">
                     <i class="bi bi-bag-fill"></i>
                     <span>Đơn hàng</span>
                 </a>
@@ -60,8 +60,8 @@
             </li>
             @endif
             @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
-            <li class="sidebar-item">
-                <a href="#" class="sidebar-link">
+            <li class="sidebar-item {{ Route::is('admin.banners.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.banners.index') }}" class="sidebar-link">
                     <i class="bi bi-image"></i>
                     <span>Banner</span>
                 </a>

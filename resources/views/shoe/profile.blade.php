@@ -36,8 +36,12 @@
                             <hr>
                             <ul class="sidebar-menu list-unstyled">
                                 <li><a href="{{ route('shoe.profile') }}"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
-                                <li><a href="#"><i class="fas fa-box"></i> Đơn hàng của tôi</a></li>
-                                <li><a href="{{ route('shoe.profile.change-password') }}"><i class="fas fa-lock"></i> Đổi mật khẩu</a></li>
+                                <li>
+                                    <a href="{{ route('order.history') }}"><i class="fas fa-box"></i> Đơn hàng của tôi</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('shoe.profile.change-password') }}"><i class="fas fa-lock"></i> Đổi mật khẩu</a>
+                                </li>
                                 <li>
                                     <form action="{{ route('shoe.logout') }}" method="POST" style="display:inline;">
                                         @csrf

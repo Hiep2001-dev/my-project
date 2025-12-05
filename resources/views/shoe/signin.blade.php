@@ -30,7 +30,7 @@
         });
     </script>
     @endif
-  {{-- @include('shoe.layouts.sidebar') --}}
+  @include('shoe.layouts.sidebar')
   <!--Content-->
   <div class="content">
     <section class="signin ">
