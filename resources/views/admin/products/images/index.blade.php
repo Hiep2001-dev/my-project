@@ -8,7 +8,9 @@
     <a href="{{ route('admin.products.images.create', [$product->id, $variation->id]) }}" class="btn btn-primary mb-2">
         <i class="bi bi-plus"></i> Thêm hình ảnh
     </a>
-    
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
     <table class="table table-striped">
         <thead>
             <tr>

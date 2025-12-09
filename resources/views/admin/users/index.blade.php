@@ -8,14 +8,6 @@
     <section class="section">
         
         <div class="card mb-4">
-             @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <span>Danh sách quản lý & nhân viên</span>
-                <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">
-                    <i class="bi bi-plus"></i> Thêm người dùng
-                </a>
-            </div>
-            @endif
             <div class="card-body">
                 <form method="GET" action="{{ route('admin.users.index') }}" class="row g-2">
                     <div class="col-auto">

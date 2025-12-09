@@ -1,4 +1,3 @@
-{{-- filepath: resources/views/admin/products/variations/index.blade.php --}}
 @extends('admin.layouts.master')
 
 @section('content')
@@ -10,6 +9,9 @@
     <a href="{{ route('admin.products.variations.create', $product->id) }}" class="btn btn-primary mb-2">
         <i class="bi bi-plus"></i> Thêm biến thể
     </a>
+    @endif
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
     @endif
     <table class="table table-striped">
         <thead>

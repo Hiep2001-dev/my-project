@@ -117,7 +117,6 @@ class ShoeOrderController extends Controller
         return view('shoe.orderdetailview', compact('order', 'message'));
     }
 
-    // Hiển thị lịch sử đơn hàng
     public function history()
     {
         $orders = Order::where('nguoi_dung_id', auth()->id())->orderByDesc('thoi_gian_dat')->get();
