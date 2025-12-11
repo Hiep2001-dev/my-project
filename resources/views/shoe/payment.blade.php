@@ -13,7 +13,7 @@
             <label class="form-label fw-bold mb-3">Phương thức thanh toán</label>
             <div class="d-flex gap-4">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="phuong_thuc_tt" id="cod" value="cod" required>
+                    <input class="form-check-input" type="radio" name="phuong_thuc_tt" id="cod" value="cod" checked required>
                     <label class="form-check-label" for="cod">
                         <img src="{{ asset('images/payment_cod.png') }}" alt="COD" style="height:40px;">
                         <span class="ms-2">Thanh toán khi nhận hàng (COD)</span>

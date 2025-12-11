@@ -68,7 +68,25 @@
                 </table>
             </div>
             <div class="text-end fs-5 mt-3">
-                <strong>Tổng tiền: </strong>
+                @if($order->giam_gia > 0 && $order->ma_giam_gia_id && $order->discount)
+                    <div class="mb-2">
+                        <span class="badge bg-success">
+                            Đã áp dụng mã giảm giá: {{ $order->discount->ma_code }}
+                        </span>
+                        <span>
+                            @if($order->discount->loai == 'phan_tram')
+                                Giảm {{ $order->discount->gia_tri }}%
+                            @else
+                                Giảm {{ number_format($order->discount->gia_tri) }}₫
+                            @endif
+                        </span>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Giá đã giảm:</strong>
+                        <span class="text-danger">-{{ number_format($order->giam_gia) }}₫</span>
+                    </div>
+                @endif
+                <strong>Tổng tiền sau giảm:</strong>
                 <span class="text-success">{{ number_format($order->tong_tien) }}₫</span>
             </div>
         </div>
@@ -76,6 +94,16 @@
             <a href="{{ route('shoe.product') }}" class="btn btn-outline-primary px-4 fw-bold">
                 <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
             </a>
+            @if($order->trang_thai == 'cho_xu_ly')
+                <div class="d-flex gap-2">
+                    <form action="{{ route('order.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Bạn chắc chắn muốn hủy đơn hàng này?');">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-danger px-4 fw-bold">Hủy đơn hàng</button>
+                    </form>
+                    
+                </div>
+            @endif
         </div>
     </div>
 </div>

@@ -55,7 +55,6 @@ class Order extends Model
         return $this->belongsTo(Discount::class, 'ma_giam_gia_id');
     }
 
-    // Quan hệ với chi tiết đơn hàng
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class, 'don_hang_id');

@@ -218,7 +218,7 @@
                     <a href="{{ route('cart.index') }}" class="linktocart button dark">Xem giỏ hàng</a>
                   </td>
                   <td>
-                    <a href="#" class="linktocheckout button dark">Thanh toán</a>
+                    <a href="{{ route('cart.checkout') }}" class="linktocheckout button dark">Thanh toán</a>
                   </td>
                 </tr>
               </tbody>

@@ -72,7 +72,7 @@
                                     <div class="col-md-4 col-xs-12 col-sm-12">
                                         <a href="{{ route('blog.show', $post->id) }}" class="blog-post-thumbnail"
                                             title="{{ $post->tieu_de }}">
-                                            <img src="{{ $post->hinh_anh_dai_dien ? asset('storage/' . $post->hinh_anh_dai_dien) : asset('images/no-image.png') }}"
+                            S                <img src="{{ $post->hinh_anh_dai_dien ? asset('storage/' . $post->hinh_anh_dai_dien) : asset('images/no-image.png') }}"
                                                 alt="{{ $post->tieu_de }}">
                                         </a>
                                     </div>

@@ -83,7 +83,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Email <span class="text-danger">*</span></label>
-                                                    <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
+                                                    <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" disabled>
                                                 </div>
                                             </div>
                                         </div>

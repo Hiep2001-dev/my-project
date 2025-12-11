@@ -26,13 +26,11 @@ class OrderDetail extends Model
         'trang_thai_danh_gia',
     ];
 
-    // Quan hệ với đơn hàng
     public function order()
     {
         return $this->belongsTo(Order::class, 'don_hang_id');
     }
 
-    // Quan hệ với biến thể sản phẩm
     public function productVariation()
     {
         return $this->belongsTo(ProductVariation::class, 'bien_the_id');

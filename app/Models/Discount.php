@@ -18,7 +18,6 @@ class Discount extends Model
         'mo_ta',
         'loai',
         'gia_tri',
-        'giam_toi_da',
         'ngay_bat_dau',
         'ngay_ket_thuc',
         'so_lan_da_dung',

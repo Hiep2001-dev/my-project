@@ -133,7 +133,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // USER ROUTES
 
 Route::get('/shoe/index', [UserDashboardController::class, 'index'])->name('shoe.index');
-
+// san pham
 Route::get('/shoe/product', [UserProductController::class, 'index'])->name('shoe.product');
 Route::get('shoe/product/{id}/sizes-by-color', [ShoeUserController::class, 'getSizesByColor'])->name('shoe.product.sizes-by-color');
 Route::get('/shoe/product/{id}', [UserProductController::class, 'show'])->name('shoe.detailproduct');
@@ -166,7 +166,8 @@ Route::get('shoe/order/{id}', [ShoeOrderController::class, 'detail'])->name('ord
 Route::get('shoe/orders', [ShoeOrderController::class, 'history'])->name('order.history');
 Route::get('order/{id}/payment', [ShoeOrderController::class, 'payment'])->name('order.payment');
 Route::post('order/{id}/payment', [ShoeOrderController::class, 'processPayment'])->name('order.processPayment');
-
+Route::put('order/{id}/cancel', [ShoeOrderController::class, 'cancel'])->name('order.cancel');
+// profile
 Route::middleware('auth')->group(function () {
     Route::get('shoe/profile', [ShoeUserController::class, 'profile'])->name('shoe.profile');
     Route::post('shoe/profile/update', [ShoeUserController::class, 'updateProfile'])->name('shoe.profile.update');

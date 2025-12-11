@@ -234,12 +234,20 @@
                                                 <input type="text" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
                                                 <input type="button" value="+" onclick="plusQuantity()" class="qty-btn">
                                             </div>
+                                            {{-- Đặt ngoài form add-item-form --}}
+                                            <form id="buy-now-form" action="{{ route('cart.checkout') }}" method="GET" style="display:none;">
+                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                <input type="hidden" name="color" id="buy-now-color" value="{{ $firstColor }}">
+                                                <input type="hidden" name="size" id="buy-now-size" value="{{ $firstSize }}">
+                                                <input type="hidden" name="price" id="buy-now-price" value="{{ $defaultPrice }}">
+                                                <input type="hidden" name="quantity" id="buy-now-quantity" value="1">
+                                            </form>
                                             <div class="wrap-addcart clearfix">
                                                 <div class="row-flex">
                                                     <button type="submit" class="button btn-addtocart addtocart-modal" {{ $colors->count() == 0 ? 'disabled' : '' }}>
                                                         Thêm vào giỏ
                                                     </button>
-                                                    <button type="button" class="buy-now button" style="display: block;" {{ $colors->count() == 0 ? 'disabled' : '' }}>
+                                                    <button type="button" class="buy-now button" style="display: block;" {{ $colors->count() == 0 ? 'disabled' : '' }} onclick="submitBuyNowForm()">
                                                         Mua ngay
                                                     </button>
                                                 </div>
@@ -601,6 +609,15 @@ function plusQuantity() {
     setTimeout(() => {
         btn.style.transform = 'scale(1)';
     }, 100);
+}
+
+function submitBuyNowForm() {
+    // Cập nhật lại giá trị trước khi submit
+    document.getElementById('buy-now-color').value = document.querySelector('input[name="color"]:checked')?.value || '';
+    document.getElementById('buy-now-size').value = document.querySelector('input[name="size"]:checked')?.value || '';
+    document.getElementById('buy-now-price').value = document.querySelector('#price-preview .pro-price')?.getAttribute('data-price') || '';
+    document.getElementById('buy-now-quantity').value = document.getElementById('quantity')?.value || 1;
+    document.getElementById('buy-now-form').submit();
 }
 </script>
 
