@@ -11,6 +11,7 @@
     </form>
     @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
     <a href="{{ route('admin.categories.create') }}" class="btn btn-primary mb-3">Thêm danh mục</a>
+    <a href="{{ route('admin.categories.exportExcel') }}" class="btn btn-success mb-3">Xuất Excel</a>
 
     <div class="card mb-4">
 

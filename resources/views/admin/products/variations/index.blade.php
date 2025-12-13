@@ -13,10 +13,16 @@
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
+    <div class="mb-3 d-flex gap-2">
+    <a href="{{ route('products.variations.exportExcel', ['productId' => $product->id]) }}"
+   class="btn btn-success btn-sm">
+    Xuất Excel
+</a>
+</div>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>#</th>
+                <th>ID</th>
                 <th>Mã biến thể</th>
                 <th>Màu sắc</th>
                 <th>Size (cm)</th>

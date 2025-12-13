@@ -80,7 +80,7 @@
                 margin: 3px 0 30px 0;
                 font-weight: 500; letter-spacing: 2px;">Tìm kiếm</h3>
         <div class="search-box wpo-wrapper-search">
-          <form action="search" class="searchform searchform-categoris ultimate-search">
+          <form action="#" class="searchform searchform-categoris ultimate-search">
             <div class="wpo-search-inner" style="display:inline">
               <input type="hidden" name="type" value="product">
               <input required="" id="inputSearchAuto" name="q" maxlength="40" autocomplete="off"
@@ -247,18 +247,16 @@
         @endif
 
         @if(Auth::check())
-          <a href="#" uk-toggle="target: #offcanvas-flip" style="color: #272727">
-            <i class="fas fa-search" style="color: black"></i>
-          </a>
+          <a style="color: #272727" href="#" uk-toggle="target: #offcanvas-flip2">
+          <i id=""class="fas fa-shopping-cart"></i>
+        </a>
         @else
           <a href="{{ url('shoe/signin') }}" style="color: #272727" title="Vui lòng đăng nhập để tìm kiếm">
             <i class="fas fa-search" style="color: black"></i>
           </a>
         @endif
 
-        <a style="color: #272727" href="#" uk-toggle="target: #offcanvas-flip2">
-          <i id=""class="fas fa-shopping-cart"></i>
-        </a>
+        
 
         <button class="navbar-toggler" type="button" uk-toggle="target: #offcanvas-flip1" data-target="#navbarNav"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\ProductVariation;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ProductVariationsExport;
 
 class ProductVariationController extends Controller
 {
-    // Hiển thị danh sách biến thể của một sản phẩm
     public function index($productId)
     {
         $product = Product::findOrFail($productId);
@@ -17,14 +18,12 @@ class ProductVariationController extends Controller
         return view('admin.products.variations.index', compact('product', 'variations'));
     }
 
-    // Hiển thị form thêm biến thể
     public function create($productId)
     {
         $product = Product::findOrFail($productId);
         return view('admin.products.variations.create', compact('product'));
     }
 
-    // Lưu biến thể mới
     public function store(Request $request, $productId)
     {
         $request->validate([
@@ -47,7 +46,6 @@ class ProductVariationController extends Controller
             ->with('success', 'Thêm biến thể thành công!');
     }
 
-    // Hiển thị chi tiết biến thể
     public function show($productId, $id)
     {
         $product = Product::findOrFail($productId);
@@ -55,7 +53,6 @@ class ProductVariationController extends Controller
         return view('admin.products.variations.show', compact('product', 'variation'));
     }
 
-    // Hiển thị form sửa biến thể
     public function edit($productId, $id)
     {
         $product = Product::findOrFail($productId);
@@ -63,7 +60,6 @@ class ProductVariationController extends Controller
         return view('admin.products.variations.edit', compact('product', 'variation'));
     }
 
-    // Cập nhật biến thể
     public function update(Request $request, $productId, $id)
     {
         $variation = ProductVariation::findOrFail($id);
@@ -84,11 +80,17 @@ class ProductVariationController extends Controller
             ->with('success', 'Cập nhật biến thể thành công!');
     }
 
-    // Xóa biến thể
     public function destroy($productId, $id)
     {
         ProductVariation::destroy($id);
         return redirect()->route('admin.products.variations.index', $productId)
             ->with('success', 'Xóa biến thể thành công!');
+    }
+    public function exportProductVariationsExcel($productId)
+    {
+        return Excel::download(
+            new ProductVariationsExport($productId),
+            "product_variations_{$productId}.xlsx"
+        );
     }
 }

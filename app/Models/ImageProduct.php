@@ -16,7 +16,6 @@ class ImageProduct extends Model
         'mo_ta',
         'mac_dinh',
         'thu_tu',
-        // 'ngay_tao'
     ];
 
     public function variation()

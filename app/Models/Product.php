@@ -12,7 +12,6 @@ class Product extends Model
     protected $fillable = [
         'ma_sku',
         'ten',
-        'duong_dan',
         'thuong_hieu_id',
         'mo_ta',
         'gioi_tinh',

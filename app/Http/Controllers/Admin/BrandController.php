@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Exports\BrandsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BrandController extends Controller
 {
@@ -75,5 +77,9 @@ class BrandController extends Controller
     public function destroy($id) {
         Brand::destroy($id);
         return redirect()->route('admin.brands.index')->with('success', 'Xóa thương hiệu thành công!');
+    }
+    public function exportExcel()
+    {
+        return Excel::download(new BrandsExport, 'brands.xlsx');
     }
 }

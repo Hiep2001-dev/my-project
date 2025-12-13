@@ -234,20 +234,12 @@
                                                 <input type="text" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
                                                 <input type="button" value="+" onclick="plusQuantity()" class="qty-btn">
                                             </div>
-                                            {{-- Đặt ngoài form add-item-form --}}
-                                            <form id="buy-now-form" action="{{ route('cart.checkout') }}" method="GET" style="display:none;">
-                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                <input type="hidden" name="color" id="buy-now-color" value="{{ $firstColor }}">
-                                                <input type="hidden" name="size" id="buy-now-size" value="{{ $firstSize }}">
-                                                <input type="hidden" name="price" id="buy-now-price" value="{{ $defaultPrice }}">
-                                                <input type="hidden" name="quantity" id="buy-now-quantity" value="1">
-                                            </form>
                                             <div class="wrap-addcart clearfix">
                                                 <div class="row-flex">
                                                     <button type="submit" class="button btn-addtocart addtocart-modal" {{ $colors->count() == 0 ? 'disabled' : '' }}>
                                                         Thêm vào giỏ
                                                     </button>
-                                                    <button type="button" class="buy-now button" style="display: block;" {{ $colors->count() == 0 ? 'disabled' : '' }} onclick="submitBuyNowForm()">
+                                                    <button type="button" class="buy-now button" {{ $colors->count() == 0 ? 'disabled' : '' }} onclick="submitBuyNowForm()">
                                                         Mua ngay
                                                     </button>
                                                 </div>
@@ -669,3 +661,11 @@ function submitBuyNowForm() {
         }
     }
 </style>
+
+<form id="buy-now-form" action="{{ route('cart.checkout') }}" method="GET" style="height:0;overflow:hidden;">
+    <input type="hidden" name="san_pham_id" value="{{ $product->id }}">
+    <input type="hidden" name="color" id="buy-now-color" value="{{ $firstColor }}">
+    <input type="hidden" name="size" id="buy-now-size" value="{{ $firstSize }}">
+    <input type="hidden" name="price" id="buy-now-price" value="{{ $defaultPrice }}">
+    <input type="hidden" name="quantity" id="buy-now-quantity" value="1">
+</form>

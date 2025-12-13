@@ -1,4 +1,3 @@
-{{-- filepath: resources/views/admin/products/index.blade.php --}}
 @extends('admin.layouts.master')
 
 @section('content')
@@ -26,10 +25,15 @@
                 @if(session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
+                <div class="mb-3 d-flex gap-2">
+                    <a href="{{ route('admin.products.exportExcel') }}" class="btn btn-success btn-sm">
+                        <i class="bi bi-file-earmark-excel"></i> Xuất Excel
+                    </a>
+                </div>
                 <table class="table table-striped" id="productTable">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th>ID</th>
                             <th>Tên sản phẩm</th>
                             <th>SKU</th>
                             <th>Thương hiệu</th>

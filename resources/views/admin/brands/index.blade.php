@@ -17,6 +17,9 @@
                     @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
                         <a href="{{ route('admin.brands.create') }}" class="btn btn-primary mb-2">Thêm thương hiệu</a>
                     @endif
+                    <a href="{{ route('admin.brands.exportExcel') }}" class="btn btn-success btn-sm">
+                        Xuất Excel
+                    </a>
                     <table class="table">
                         <thead>
                             <tr>

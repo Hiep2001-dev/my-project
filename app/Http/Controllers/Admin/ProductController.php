@@ -6,14 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Brand;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ProductsExport;
 class ProductController extends Controller
 {
     public function index(Request $request)
     {
         $keyword = $request->input('keyword');
 
-        // Nếu có từ khóa, thực hiện tìm kiếm
         if ($keyword) {
             $products = Product::with(['brand', 'variations'])
                 ->where('ten', 'LIKE', '%' . $keyword . '%') // Tìm kiếm theo tên sản phẩm
@@ -21,7 +21,6 @@ class ProductController extends Controller
                 ->orderBy('id', 'desc')
                 ->paginate(10);
         } else {
-            // Nếu không có từ khóa, lấy tất cả sản phẩm
             $products = Product::with(['brand', 'variations'])
                 ->orderBy('id', 'desc')
                 ->paginate(10);
@@ -40,7 +39,6 @@ class ProductController extends Controller
         $request->validate([
             'ma_sku' => 'nullable|string|max:80|unique:san_pham,ma_sku',
             'ten' => 'required|string|max:255',
-            'duong_dan' => 'nullable|string|max:255|unique:san_pham,duong_dan',
             'thuong_hieu_id' => 'nullable|exists:thuong_hieu,id',
             'mo_ta' => 'nullable|string',
             'gioi_tinh' => 'nullable|in:nam,nu,unisex',
@@ -75,7 +73,6 @@ class ProductController extends Controller
         $request->validate([
             'ma_sku' => 'nullable|string|max:80|unique:san_pham,ma_sku,' . $id,
             'ten' => 'required|string|max:255',
-            'duong_dan' => 'nullable|string|max:255|unique:san_pham,duong_dan,' . $id,
             'thuong_hieu_id' => 'nullable|exists:thuong_hieu,id',
             'mo_ta' => 'nullable|string',
             'gioi_tinh' => 'nullable|in:nam,nu,unisex',
@@ -84,7 +81,6 @@ class ProductController extends Controller
             'hoat_dong' => 'nullable|boolean',
         ]);
         $data = $request->all();
-        $data['duong_dan'] = $this->makeSlug($data['ten']); // Tạo slug từ tên sản phẩm
 
         $product->update($data);
 
@@ -97,8 +93,9 @@ class ProductController extends Controller
         return redirect()->route('admin.products.index')->with('success', 'Xóa sản phẩm thành công!');
     }
 
-    private function makeSlug($string)
+    public function exportExcel()
     {
-        return \Str::slug($string, '-');
+        return Excel::download(new ProductsExport, 'products.xlsx');
     }
+
 }

@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [BrandController::class, 'index'])->name('admin.brands.index');
         Route::get('/create', [BrandController::class, 'create'])->name('admin.brands.create');
         Route::post('/store', [BrandController::class, 'store'])->name('admin.brands.store');
+        Route::get('/export-excel', [BrandController::class, 'exportExcel'])->name('admin.brands.exportExcel');
         Route::get('/{id}/edit', [BrandController::class, 'edit'])->name('admin.brands.edit');
         Route::post('/{id}/update', [BrandController::class, 'update'])->name('admin.brands.update');
         Route::post('/{id}/delete', [BrandController::class, 'destroy'])->name('admin.brands.destroy');
@@ -52,6 +53,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('admin.categories.index');
         Route::get('/create', [CategoryController::class, 'create'])->name('admin.categories.create');
         Route::post('/store', [CategoryController::class, 'store'])->name('admin.categories.store');
+        Route::get('/export-excel', [CategoryController::class, 'exportExcel'])->name('admin.categories.exportExcel');
         Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('admin.categories.edit');
         Route::post('/{id}/update', [CategoryController::class, 'update'])->name('admin.categories.update');
         Route::post('/{id}/delete', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
@@ -59,19 +61,21 @@ Route::middleware('auth')->group(function () {
     // Product
     Route::prefix('admin/products')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('admin.products.index');
+         Route::get('/export-excel', [ProductController::class, 'exportExcel'])->name('admin.products.exportExcel');
         Route::get('/create', [ProductController::class, 'create'])->name('admin.products.create');
         Route::post('/store', [ProductController::class, 'store'])->name('admin.products.store');
         Route::get('/{id}', [ProductController::class, 'show'])->name('admin.products.show');
         Route::get('/{id}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
         Route::post('/{id}/update', [ProductController::class, 'update'])->name('admin.products.update');
         Route::post('/{id}/delete', [ProductController::class, 'destroy'])->name('admin.products.destroy');
-
+       
     });
     // Product Variations
     Route::prefix('products/{productId}/variations')->group(function () {
         Route::get('/', [ProductVariationController::class, 'index'])->name('admin.products.variations.index');
         Route::get('/create', [ProductVariationController::class, 'create'])->name('admin.products.variations.create');
         Route::post('/store', [ProductVariationController::class, 'store'])->name('admin.products.variations.store');
+         Route::get('/export-excel', [ProductVariationController::class, 'exportProductVariationsExcel'])->name('products.variations.exportExcel');
         Route::get('/{id}', [ProductVariationController::class, 'show'])->name('admin.products.variations.show');
         Route::get('/{id}/edit', [ProductVariationController::class, 'edit'])->name('admin.products.variations.edit');
         Route::post('/{id}/update', [ProductVariationController::class, 'update'])->name('admin.products.variations.update');
@@ -100,6 +104,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [PostController::class, 'index'])->name('admin.posts.index');
             Route::get('/create', [PostController::class, 'create'])->name('admin.posts.create');
             Route::post('/store', [PostController::class, 'store'])->name('admin.posts.store');
+            Route::get('/export-excel', [ProductVariationController::class, 'exportProductVariationsExcel'])->name('admin.products.variations.exportExcel');
             Route::get('/{id}', [PostController::class, 'show'])->name('admin.posts.show');
             Route::get('/{id}/edit', [PostController::class, 'edit'])->name('admin.posts.edit');
             Route::put('/{id}', [PostController::class, 'update'])->name('admin.posts.update');
@@ -139,6 +144,8 @@ Route::get('shoe/product/{id}/sizes-by-color', [ShoeUserController::class, 'getS
 Route::get('/shoe/product/{id}', [UserProductController::class, 'show'])->name('shoe.detailproduct');
 Route::get('/shoe/category/{id}', [UserProductController::class, 'category'])->name('shoe.category');
 Route::get('/shoe/brand/{id}', [UserProductController::class, 'brand'])->name('shoe.brand');
+Route::get('/shoe/search', [UserProductController::class, 'search'])->name('shoe.search');
+
 // bai viet
 Route::get('/shoe/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/shoe/blog/{id}', [BlogController::class, 'show'])->name('blog.show');

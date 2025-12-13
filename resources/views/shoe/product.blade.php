@@ -85,24 +85,17 @@
         <div class="col-md-9 col-sm-12 col-xs-12">
             <div class="wrap-collection-title row">
                 <div class="col-md-8 col-sm-12 col-xs-12">
-                    <h1 class="title">Tất cả sản phẩm</h1>
+                    <h1 class="title">
+                        Tất cả sản phẩm
+                        
+                    </h1>
                     <div class="alert-no-filter"></div>
                 </div>
-                <div class="col-md-4 d-sm-none d-md-block d-none d-sm-block" style="float: left">
-                    <div class="option browse-tags">
-                        <span class="custom-dropdown custom-dropdown--grey">
-                            <select class="sort-by custom-dropdown__select">
-                                <option value="price-ascending">Giá: Tăng dần</option>
-                                <option value="price-descending">Giá: Giảm dần</option>
-                                <option value="title-ascending">Tên: A-Z</option>
-                                <option value="title-descending">Tên: Z-A</option>
-                                <option value="created-ascending">Cũ nhất</option>
-                                <option value="created-descending">Mới nhất</option>
-                                <option value="best-selling">Bán chạy nhất</option>
-                                <option value="quantity-descending">Tồn kho: Giảm dần</option>
-                            </select>
-                        </span>
-                    </div>
+                <div class="col-md-4 d-flex justify-content-end align-items-center">
+                    <form action="{{ route('shoe.search') }}" method="GET" class="d-flex" style="gap:8px;">
+                        <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm..." value="{{ request('q') }}" style="max-width:180px;">
+                        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                    </form>
                 </div>
             </div>
             <div class="row">

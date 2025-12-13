@@ -21,10 +21,6 @@
                             <input type="text" name="ten" class="form-control" required value="{{ $product->ten }}">
                         </div>
                         <div class="mb-3">
-                            <label for="duong_dan" class="form-label">Đường dẫn</label>
-                            <input type="text" name="duong_dan" class="form-control" value="{{ $product->duong_dan }}">
-                        </div>
-                        <div class="mb-3">
                             <label for="thuong_hieu_id" class="form-label">Thương hiệu</label>
                             <select name="thuong_hieu_id" class="form-select">
                                 <option value="">-- Chọn thương hiệu --</option>

@@ -6,18 +6,38 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Discount;
 use App\Models\Order;
+use App\Models\ProductVariation;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 
 class ShoeOrderController extends Controller
 {
-    public function checkout()
+    public function checkout(Request $request)
     {
         $cart = Cart::with('cartDetails.bienTheSanPham.product')
             ->where('nguoi_dung_id', auth()->id())
             ->first();
 
-        return view('shoe.checkout', compact('cart'));
+        $buyNowProduct = [];
+        if ($request->has('san_pham_id')) {
+            $bienThe = ProductVariation::where('san_pham_id', $request->san_pham_id)
+                ->where('mau_sac', $request->color)
+                ->where('size_eu', $request->size)
+                ->first();
+
+            if ($bienThe) {
+                $buyNowProduct[] = [
+                    'ten' => $bienThe->product->ten,
+                    'image' => $bienThe->hinh_anh_chinh ?? ($bienThe->images->first()->duong_dan ?? 'images/no-image.png'),
+                    'mau_sac' => $bienThe->mau_sac,
+                    'size_eu' => $bienThe->size_eu,
+                    'gia_ban' => $request->gia_ban,
+                    'so_luong' => $request->so_luong ?? 1,
+                ];
+            }
+        }
+
+        return view('shoe.checkout', compact('cart', 'buyNowProduct'));
     }
 
     public function placeOrder(Request $request)

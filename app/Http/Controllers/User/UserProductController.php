@@ -98,5 +98,13 @@ class UserProductController extends Controller
             'sizes' => $sizesData
         ]);
     }
+    public function search(Request $request)
+    {
+        $keyword = $request->input('q');
+        $products = Product::where('ten', 'like', '%' . $keyword . '%')->paginate(20);
+        $categories = Category::where('hoat_dong', 1)->get();
+        $brands = Brand::where('hoat_dong', 1)->get();
+        return view('shoe.product', compact('products','categories','brands','keyword'));
+    }
     
 }

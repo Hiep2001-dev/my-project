@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CategoriesExport;
 
 class CategoryController extends Controller
 {
@@ -12,14 +14,12 @@ class CategoryController extends Controller
     {
         $keyword = $request->input('keyword');
 
-        // Nếu có từ khóa, thực hiện tìm kiếm
         if ($keyword) {
             $categories = Category::where('ten', 'LIKE', '%' . $keyword . '%') 
                 ->with('children', 'parent') 
                 ->orderBy('id', 'desc')
                 ->paginate(10);
         } else {
-            // Nếu không có từ khóa, lấy tất cả danh mục
             $categories = Category::with('children', 'parent')->paginate(10);
         }
 
@@ -74,4 +74,8 @@ class CategoryController extends Controller
         $category->delete();
         return redirect()->route('admin.categories.index')->with('success', 'Xóa danh mục thành công!');
     }
+    public function exportExcel()
+{
+    return Excel::download(new CategoriesExport, 'categories.xlsx');
+}
 }

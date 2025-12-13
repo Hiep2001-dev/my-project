@@ -20,10 +20,6 @@
                             <label for="ten">Tên sản phẩm <span class="text-danger">*</span></label>
                             <input type="text" name="ten" id="ten" class="form-control" required value="{{ old('ten') }}">
                         </div>
-                        <div class="form-group">
-                            <label for="duong_dan">Đường dẫn (slug)</label>
-                            <input type="text" name="duong_dan" id="duong_dan" class="form-control" readonly value="{{ old('duong_dan') }}">
-                        </div>
                         <div class="mb-3">
                             <label for="thuong_hieu_id" class="form-label">Thương hiệu</label>
                             <select name="thuong_hieu_id" class="form-select">
