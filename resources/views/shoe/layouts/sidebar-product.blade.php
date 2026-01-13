@@ -1,3 +1,4 @@
+{{-- <pre>{{ print_r($genders, true) }}</pre> --}}
 <div class="sidebar-page">
     <div class="group-menu">
         <div class="page_menu_title title_block">
@@ -129,6 +130,31 @@
                                             @endforeach
                                         </ul>
                                     </div>
+                                    @elseif(strtolower($cat->ten) === 'giới tính')
+                                    <a href="javascript:void(0)"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseFilterGender{{ $cat->id }}"
+                                        aria-expanded="false"
+                                        aria-controls="collapseFilterGender{{ $cat->id }}">
+                                        <span>{{ $cat->ten }}</span>
+                                    </a>
+                                    <div class="block_content collapse mt-2" id="collapseFilterGender{{ $cat->id }}">
+                                        <ul class="list-unstyled ms-3 mt-2">
+                                            @foreach($genders as $gender)
+                                                <li class="mb-2">
+                                                    <input type="checkbox" 
+                                                        id="gender-{{ $gender }}-{{ $cat->id }}" 
+                                                        name="genders[]" 
+                                                        value="{{ $gender }}"
+                                                        class="filter-checkbox filter-gender-checkbox"
+                                                        onchange="applyFilters()">
+                                                    <label for="gender-{{ $gender }}-{{ $cat->id }}" style="cursor: pointer;">
+                                                        <span>{{ $gender }}</span>
+                                                    </label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
                                 @else
                                     <a href="{{ route('shoe.category', $cat->id) }}" title="{{ $cat->ten }}">
                                         <span>{{ $cat->ten }}</span>
@@ -149,7 +175,7 @@ function applyFilters() {
     let selectedColors = [];
     let selectedSizes = [];
     let selectedBrands = [];
-    
+    let selectedGenders = [];
     document.querySelectorAll('.filter-color-checkbox:checked').forEach(cb => {
         selectedColors.push(cb.value);
     });
@@ -161,17 +187,22 @@ function applyFilters() {
     document.querySelectorAll('.filter-brand-checkbox:checked').forEach(cb => {
         selectedBrands.push(cb.value);
     });
+     document.querySelectorAll('.filter-gender-checkbox:checked').forEach(cb => {
+        selectedGenders.push(cb.value);
+    });
     
     // Tạo URL với query parameters
     let url = new URL(window.location.href);
     url.searchParams.delete('colors[]');
     url.searchParams.delete('sizes[]');
     url.searchParams.delete('brands[]');
+    url.searchParams.delete('genders[]');
+
     
     selectedColors.forEach(color => url.searchParams.append('colors[]', color));
     selectedSizes.forEach(size => url.searchParams.append('sizes[]', size));
     selectedBrands.forEach(brand => url.searchParams.append('brands[]', brand));
-    
+    selectedGenders.forEach(gender => url.searchParams.append('genders[]', gender));
     // Reload trang với bộ lọc mới
     window.location.href = url.toString();
 }
@@ -187,6 +218,7 @@ function clearFilters() {
     url.searchParams.delete('colors[]');
     url.searchParams.delete('sizes[]');
     url.searchParams.delete('brands[]');
+    url.searchParams.delete('genders[]');
     window.location.href = url.toString();
 }
 
@@ -209,6 +241,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Restore brands
     url.searchParams.getAll('brands[]').forEach(brand => {
         let checkbox = document.querySelector(`.filter-brand-checkbox[value="${brand}"]`);
+        if (checkbox) checkbox.checked = true;
+    });
+    // giới tính
+      url.searchParams.getAll('genders[]').forEach(gender => {
+        let checkbox = document.querySelector(`.filter-gender-checkbox[value="${gender}"]`);
         if (checkbox) checkbox.checked = true;
     });
 });

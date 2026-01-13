@@ -1,3 +1,4 @@
+
 <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
   <div class="container">
     <a class="navbar-brand" href="{{ url('shoe/index') }}">
@@ -19,6 +20,7 @@
         </li>
       </ul>
     </div>
+    
     <div id="offcanvas-flip1" uk-offcanvas="flip: true; overlay: true">
       <div class="uk-offcanvas-bar" style="background: white;
         width: 100%;">
@@ -105,33 +107,32 @@
             <table id="cart-view">
               <tbody>
                 @if(Auth::user())
-
                   @php
-                    $cart = \App\Models\Cart::with('cartDetails.bienTheSanPham')->where('nguoi_dung_id', Auth::id())->where('trang_thai', 'dang_mua')->first();
+                    $cart = \App\Models\Cart::with('cartDetails.productVariation')->where('nguoi_dung_id', Auth::id())->where('trang_thai', 'dang_mua')->first();
                   @endphp
                   @if($cart && $cart->cartDetails && $cart->cartDetails->count())
                     @foreach($cart->cartDetails as $item)
                     <tr>
                       <td class="img">
-                        <a href="{{ url('shoe/product/'.$item->bienTheSanPham->product->id) }}">
+                        <a href="{{ url('shoe/product/'.$item->productVariation->product->id) }}">
                           @php
-                            $img = $item->bienTheSanPham->hinh_anh_chinh 
-                              ?? ($item->bienTheSanPham->images && $item->bienTheSanPham->images->count() > 0
-                                  ? $item->bienTheSanPham->images->first()->duong_dan
+                            $img = $item->productVariation->hinh_anh_chinh 
+                              ?? ($item->productVariation->images && $item->productVariation->images->count() > 0
+                                  ? $item->productVariation->images->first()->duong_dan
                                   : 'images/no-image.png');
                           @endphp
-                          <img src="{{ asset($img) }}" alt="{{ $item->bienTheSanPham->product->ten ?? 'Sản phẩm' }}">
+                          <img src="{{ asset($img) }}" alt="{{ $item->productVariation->product->ten ?? 'Sản phẩm' }}">
                         </a>
                       </td>
                       <td>
-                        <a class="pro-title-view" style="color: #272727" href="{{ url('shoe/product/'.$item->bienTheSanPham->product->id) }}">
-                          {{ $item->bienTheSanPham->product->ten ?? 'Sản phẩm' }}
+                        <a class="pro-title-view" style="color: #272727" href="{{ url('shoe/product/'.$item->productVariation->product->id) }}">
+                          {{ $item->productVariation->product->ten ?? 'Sản phẩm' }}
                         </a>
                         <span class="variant">
-                          {{ $item->bienTheSanPham->mau_sac ?? '' }} / {{ $item->bienTheSanPham->size_eu ?? '' }}
+                          {{ $item->productVariation->mau_sac ?? '' }} / {{ $item->productVariation->size_eu ?? '' }}
                         </span>
                           <span class="pro-quantity-view">{{ $item->so_luong }}</span>
-                        <span class="pro-price-view">{{ number_format($item->bienTheSanPham->gia_ban) }}₫</span>
+                        <span class="pro-price-view">{{ number_format($item->productVariation->gia_ban) }}₫</span>
                         <span class="remove_link remove-cart">
                           <form action="{{ route('cart.remove', $item->id) }}" method="POST" style="display:inline;">
                             @csrf
@@ -223,9 +224,9 @@
                 </tr>
               </tbody>
             </table>
-            <a href="#" target="_blank" class="button btn-check" style="text-decoration:none;">
+            {{-- <a href="#" target="_blank" class="button btn-check" style="text-decoration:none;">
               <span>Click nhận mã giảm giá ngay !</span>
-            </a>
+            </a> --}}
           </div>
         </div>
       </div>
@@ -244,16 +245,15 @@
           <a href="{{ url('shoe/signin') }}" style="color: #272727" title="Đăng nhập">
             <i class="fas fa-user-alt"></i>
           </a>
+          <a style="color: #272727" href="#" uk-toggle="target: #offcanvas-flip2">
+          <i id=""class="fas fa-shopping-cart"></i>
+        </a>
         @endif
 
         @if(Auth::check())
           <a style="color: #272727" href="#" uk-toggle="target: #offcanvas-flip2">
           <i id=""class="fas fa-shopping-cart"></i>
         </a>
-        @else
-          <a href="{{ url('shoe/signin') }}" style="color: #272727" title="Vui lòng đăng nhập để tìm kiếm">
-            <i class="fas fa-search" style="color: black"></i>
-          </a>
         @endif
 
         
@@ -267,5 +267,5 @@
   </div>
   </div>
 </nav>
-
+{{-- <pre>{{ print_r(session('cart'), true) }}</pre> --}}
 </div>

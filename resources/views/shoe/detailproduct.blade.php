@@ -6,8 +6,20 @@
 @section('content')
 
     @include('shoe.layouts.header')
-    @include('shoe.layouts.sidebar')
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+    @include('shoe.layouts.sidebar')
     <main>
         <div id="product" class="productDetail-page">
             <div class="breadcrumb-shop">
@@ -239,13 +251,13 @@
                                                     <button type="submit" class="button btn-addtocart addtocart-modal" {{ $colors->count() == 0 ? 'disabled' : '' }}>
                                                         Thêm vào giỏ
                                                     </button>
-                                                    <button type="button" class="buy-now button" {{ $colors->count() == 0 ? 'disabled' : '' }} onclick="submitBuyNowForm()">
+                                                    {{-- <button type="button" class="buy-now button" {{ $colors->count() == 0 ? 'disabled' : '' }} onclick="submitBuyNowForm()">
                                                         Mua ngay
-                                                    </button>
+                                                    </button> --}}
                                                 </div>
-                                                <a href="#" target="_blank" class="button btn-check" style="color: #ffffff;text-decoration:none;">
+                                                {{-- <a href="#" target="_blank" class="button btn-check" style="color: #ffffff;text-decoration:none;">
                                                     <span>Click nhận mã giảm giá ngay !</span>
-                                                </a>
+                                                </a> --}}
                                             </div>
                                         </div>
                                     </form>
@@ -611,6 +623,34 @@ function submitBuyNowForm() {
     document.getElementById('buy-now-quantity').value = document.getElementById('quantity')?.value || 1;
     document.getElementById('buy-now-form').submit();
 }
+// document.addEventListener('DOMContentLoaded', function() {
+//     const addCartForm = document.getElementById('add-item-form');
+//     if (addCartForm) {
+//         addCartForm.addEventListener('submit', function(e) {
+//             e.preventDefault();
+//             const formData = new FormData(addCartForm);
+//             fetch(addCartForm.action, {
+//                 method: 'POST',
+//                 headers: {
+//                     'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+//                 },
+//                 body: formData
+//             })
+//             .then(response => response.json())
+//             .then(data => {
+//                 // Nếu thêm thành công, mở sidebar giỏ hàng
+//                 if (data.success) {
+//                     UIkit.offcanvas('#offcanvas-flip2').show();
+//                 } else {
+//                     alert(data.message || 'Thêm vào giỏ thất bại!');
+//                 }
+//             })
+//             .catch(() => {
+//                 alert('Có lỗi xảy ra, vui lòng thử lại!');
+//             });
+//         });
+//     }
+// });
 </script>
 
 <style>

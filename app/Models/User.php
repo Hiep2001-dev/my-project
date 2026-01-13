@@ -23,8 +23,6 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'ngay_tao' => 'datetime',
-        'ngay_cap_nhat' => 'datetime',
     ];
 
     protected $fillable = [

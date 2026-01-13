@@ -1,4 +1,3 @@
-{{-- filepath: resources/views/admin/products/show.blade.php --}}
 @extends('admin.layouts.master')
 
 @section('content')

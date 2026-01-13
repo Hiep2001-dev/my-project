@@ -1,4 +1,3 @@
-{{-- filepath: resources/views/admin/posts/categories/edit.blade.php --}}
 @extends('admin.layouts.master')
 @section('content')
 <div class="container mt-4">

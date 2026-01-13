@@ -14,12 +14,12 @@ class CartController extends Controller
     
     public function index()
     {
-        $cart = Cart::with('cartDetails.bienTheSanPham')
+        $cart = Cart::with('cartDetails.productVariation')
             ->where('nguoi_dung_id', Auth::id())
             ->where('trang_thai', 'dang_mua')
             ->first();
-
-        return view('shoe.cartdetail', compact('cart'));
+        $cartItems = session('cart', []);
+        return view('shoe.cartdetail', compact('cart', 'cartItems'));
     }
 
     public function add(Request $request)
@@ -39,10 +39,27 @@ class CartController extends Controller
             $bienThe = ProductVariation::where('san_pham_id', $request->product_id)
                 ->where('mau_sac', $request->color)
                 ->where('size_eu', $request->size)
+
                 ->first();
 
             if (!$bienThe) {
                 return back()->with('error', 'Không tìm thấy biến thể sản phẩm!');
+            }
+
+            //check kho
+           $tongSoLuongTrongGio = 0;
+            foreach ($cart->cartDetails as $item) {
+                if (
+                    $item->productVariation->san_pham_id == $request->product_id &&
+                    $item->productVariation->mau_sac == $request->color &&
+                    $item->productVariation->size_eu == $request->size
+                ) {
+                    $tongSoLuongTrongGio += $item->so_luong;
+                }
+            }
+            $soLuongThem = (int)$request->input('quantity', 1);
+            if ($bienThe->so_luong < ($tongSoLuongTrongGio + $soLuongThem)) {
+                return back()->with('error', 'Số lượng trong kho không đủ!');
             }
 
             $bienTheId = $bienThe->id;
@@ -67,35 +84,9 @@ class CartController extends Controller
                 ]);
             }
         } else {
-            $cart = session('cart', []);
-            $found = false;
-            foreach ($cart as &$item) {
-                if (
-                    $item['san_pham_id'] == $request->product_id &&
-                    $item['color'] == $request->color &&
-                    $item['size'] == $request->size
-                ) {
-                    $item['quantity'] += (int)$request->quantity;
-                    $found = true;
-                    break;
-                }
-            }
-            unset($item);
-
-            if (!$found) {
-                $cart[] = [
-                    'san_pham_id' => $request->product_id,
-                    'name' => $request->product_name,
-                    'image' => $request->image,
-                    'price' => $request->price,
-                    'color' => $request->color,
-                    'size' => $request->size,
-                    'quantity' => (int)$request->quantity,
-                ];
-            }
-            session(['cart' => $cart]);
+           return $this->addSession($request);
         }
-        return redirect()->back()->with('success', 'Đã thêm vào giỏ hàng!');
+        return redirect()->back()->with('success', 'Đã thêm vào giỏ hàng thành công !');
         
     }
 
@@ -137,12 +128,108 @@ class CartController extends Controller
     }
     public function checkout()
     {
-        $cart = Cart::with('cartDetails.bienTheSanPham.product')
+        $cart = Cart::with('cartDetails.productVariation.product')
             ->where('nguoi_dung_id', Auth::id())
             ->where('trang_thai', 'dang_mua')
             ->first();
 
         return view('shoe.checkout', compact('cart'));
+    }
+    public function addSession(Request $request)
+{
+    $cart = session('cart', []);
+    $bienThe = ProductVariation::with('product', 'images')
+        ->where('san_pham_id', $request->product_id)
+        ->where('mau_sac', $request->color)
+        ->where('size_eu', $request->size)
+        ->first();
+
+    if (!$bienThe) {
+        return back()->with('error', 'Không tìm thấy biến thể sản phẩm!');
+    }
+
+    // Kiểm tra số lượng tồn kho
+    $tongSoLuongTrongGio = 0;
+    foreach ($cart as $item) {
+        if (
+            $item['san_pham_id'] == $request->product_id &&
+            $item['color'] == $request->color &&
+            $item['size'] == $request->size
+        ) {
+            $tongSoLuongTrongGio += $item['quantity'];
+        }
+    }
+    $soLuongThem = (int)$request->quantity;
+    if ($bienThe->so_luong < ($tongSoLuongTrongGio + $soLuongThem)) {
+        return back()->with('error', 'Số lượng trong kho không đủ!');
+    }
+
+    $found = false;
+    foreach ($cart as &$item) {
+        if (
+            $item['san_pham_id'] == $request->product_id &&
+            $item['color'] == $request->color &&
+            $item['size'] == $request->size
+        ) {
+            $item['quantity'] += $soLuongThem;
+            $found = true;
+            break;
+        }
+    }
+    unset($item);
+
+    if (!$found) {
+        $image = $bienThe ? ($bienThe->hinh_anh_chinh ?? ($bienThe->images->first()->duong_dan ?? 'images/no-image.png')) : 'images/no-image.png';
+        $name = $bienThe && $bienThe->product ? $bienThe->product->ten : '';
+
+        $cart[] = [
+            'san_pham_id' => $request->product_id,
+            'name'        => $name,
+            'image'       => $image,
+            'price'       => $request->price,
+            'color'       => $request->color,
+            'size'        => $request->size,
+            'quantity'    => $soLuongThem,
+        ];
+    }
+    session(['cart' => $cart]);
+    return redirect()->back()->with('success', 'Đã thêm vào giỏ hàng thành công !');
+}
+    public function updateSession(Request $request, $key)
+    {
+    $cart = session('cart', []);
+    $quantity = max(1, (int)$request->input('quantity', 1));
+    if (isset($cart[$key])) {
+        $cart[$key]['quantity'] = $quantity;
+        session(['cart' => $cart]);
+        $item_total = ($cart[$key]['price'] ?? 0) * $quantity;
+        $total = collect($cart)->sum(function($i) {
+            return ($i['price'] ?? 0) * ($i['quantity'] ?? 1);
+        });
+        return response()->json([
+            'success' => true,
+            'item_total' => number_format($item_total),
+            'total' => number_format($total)
+        ]);
+    }
+    return response()->json(['success' => false]);
+    } 
+
+    public function removeSession($key)
+    {
+        $cart = session('cart', []);
+        if (isset($cart[$key])) {
+            unset($cart[$key]);
+            session(['cart' => array_values($cart)]);
+            $total = collect($cart)->sum(function($i) {
+                return ($i['price'] ?? 0) * ($i['quantity'] ?? 1);
+            });
+            return response()->json([
+                'success' => true,
+                'total' => number_format($total)
+            ]);
+        }
+        return response()->json(['success' => false]);
     }
    
 }

@@ -91,8 +91,17 @@
 @endsection
 
 @section('scripts')
-<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
 <script>
-    CKEDITOR.replace('noi_dung');
+    ClassicEditor
+        .create(document.querySelector('#noi_dung'))
+        .catch(error => {
+            console.error(error);
+        });
+     ClassicEditor
+        .create(document.querySelector('#tom_tat'))
+        .catch(error => {
+            console.error(error);
+        });
 </script>
 @endsection

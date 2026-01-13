@@ -67,4 +67,5 @@ class ShoeUserController extends Controller
 
         return redirect()->route('shoe.index')->with('success', 'Đã đăng xuất thành công!');
     }
+    
 }

@@ -142,7 +142,7 @@
               <div class="col-md-4">
                 <div class="post_item">
                   <div class="post_featured">
-                    <a href="{{ route('admin.posts.show', $post->id) }}" title="{{ $post->tieu_de }}">
+                    <a href="#" title="{{ $post->tieu_de }}">
                       <img class="img-resize" style="padding-bottom:15px;"
                         src="{{ $post->hinh_anh_dai_dien ? asset('storage/' . $post->hinh_anh_dai_dien) : asset('images/no-image.png') }}"
                         alt="{{ $post->tieu_de }}">

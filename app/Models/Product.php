@@ -24,13 +24,11 @@ class Product extends Model
         'hoat_dong',    
     ];
 
-    // Quan hệ với thương hiệu
     public function brand()
     {
         return $this->belongsTo(Brand::class, 'thuong_hieu_id');
     }
 
-    // Một sản phẩm có nhiều biến thể
     public function variations()
     {
         return $this->hasMany(ProductVariation::class, 'san_pham_id');

@@ -9,7 +9,7 @@
             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
         </div>
     </form>
-    @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
+    @if(in_array(Auth::user()->vai_tro, ['super_admin']))
     <a href="{{ route('admin.categories.create') }}" class="btn btn-primary mb-3">Thêm danh mục</a>
     <a href="{{ route('admin.categories.exportExcel') }}" class="btn btn-success mb-3">Xuất Excel</a>
 
@@ -33,7 +33,6 @@
         </div>
     </div>
     @endif
-    {{-- Bảng danh sách chi tiết --}}
     <div class="card">
         <div class="card-header">
             <strong>Danh sách chi tiết</strong>

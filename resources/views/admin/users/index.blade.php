@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="card mb-4">
-             @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
+             @if(in_array(Auth::user()->vai_tro, ['super_admin']))
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span>Danh sách quản lý & nhân viên</span>
                 <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">
@@ -45,7 +45,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($users->whereIn('vai_tro', ['quan_li', 'nhan_vien']) as $user)
+                        @foreach($users->whereIn('vai_tro', ['nhan_vien']) as $user)
                         <tr>
                             <td>{{ $user->id }}</td>
                             <td>
@@ -63,9 +63,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if($user->vai_tro == 'quan_li') Quản lý
-                                @elseif($user->vai_tro == 'nhan_vien') Nhân viên
-                                @endif
+                                {{  $user->vai_tro }}
                             </td>
                             <td>
                                 @if($user->trang_thai == 'hoat_dong')

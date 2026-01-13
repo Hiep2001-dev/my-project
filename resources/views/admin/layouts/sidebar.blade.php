@@ -23,7 +23,7 @@
             <li class="sidebar-item {{ Route::is('admin.users.index') ? 'active' : '' }}">
                 <a href="{{ route('admin.users.index') }}" class="sidebar-link">
                     <i class="bi bi-people-fill"></i>
-                    <span>Người dùng</span>
+                    <span>Tài khoản</span>
                 </a>
             </li>
             <li class="sidebar-item {{ Route::is('admin.orders.index') ? 'active' : '' }}">
@@ -51,7 +51,7 @@
                     <span>Sản phẩm</span>
                 </a>
             </li>
-            @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
+            @if(in_array(Auth::user()->vai_tro, ['super_admin']))
             <li class="sidebar-item {{ Route::is('admin.posts.index') ? 'active' : '' }}">
                 <a href="{{ route('admin.posts.index') }}" class="sidebar-link">
                     <i class="bi bi-file-earmark-text"></i>
@@ -59,7 +59,7 @@
                 </a>
             </li>
             @endif
-            @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
+            @if(in_array(Auth::user()->vai_tro, ['super_admin']))
             <li class="sidebar-item {{ Route::is('admin.banners.index') ? 'active' : '' }}">
                 <a href="{{ route('admin.banners.index') }}" class="sidebar-link">
                     <i class="bi bi-image"></i>

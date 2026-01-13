@@ -46,7 +46,6 @@
 
 @include('shoe.layouts.sidebar')
 
-{{-- Banner --}}
 <div>
     <img src="{{ asset('images/collection_banner.jpg') }}" alt="Products" style="width:100%;max-height:300px;object-fit:cover;">
 </div>
@@ -77,11 +76,11 @@
 
 <div class="container" style="margin-top: 50px;">
     <div class="row">
-        {{-- Sidebar --}}
+
         <div class="col-md-3 col-sm-12 col-xs-12 sidebar-fix">
             @include('shoe.layouts.sidebar-product')
         </div>
-        {{-- List Product --}}
+
         <div class="col-md-9 col-sm-12 col-xs-12">
             <div class="wrap-collection-title row">
                 <div class="col-md-8 col-sm-12 col-xs-12">
@@ -97,6 +96,30 @@
                         <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                     </form>
                 </div>
+                <div class="col-md-12 mt-3">
+                <form method="GET" action="{{ url()->current() }}" class="row g-2 align-items-center" id="price-filter-form">
+                    @foreach(request()->except(['min_price', 'max_price', 'page']) as $key => $value)
+                        @if(is_array($value))
+                            @foreach($value as $v)
+                                <input type="hidden" name="{{ $key }}[]" value="{{ $v }}">
+                            @endforeach
+                        @else
+                            <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                        @endif
+                    @endforeach
+                    <div class="col-auto">
+                        <label for="min_price" class="form-label mb-0">Giá từ</label>
+                        <input type="number" min="0" name="min_price" id="min_price" class="form-control" placeholder="Tối thiểu" value="{{ request('min_price') }}">
+                    </div>
+                    <div class="col-auto">
+                        <label for="max_price" class="form-label mb-0">đến</label>
+                        <input type="number" min="0" name="max_price" id="max_price" class="form-control" placeholder="Tối đa" value="{{ request('max_price') }}">
+                    </div>
+                    <div class="col-auto align-self-end">
+                        <button type="submit" class="btn btn-outline-primary">Lọc giá</button>
+                    </div>
+                </form>
+            </div>
             </div>
             <div class="row">
                 
@@ -130,7 +153,6 @@
                 </div>
                 @endforeach
             </div>
-            {{-- Phân trang --}}
             <div class="sortpagibar pagi clearfix text-center">
                 {{ $products->links() }}
             </div>
@@ -138,6 +160,6 @@
     </div>
 </div>
 
-{{-- Gallery --}}
+
 @include("shoe.layouts.footer")
 @endsection

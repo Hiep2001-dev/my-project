@@ -1,4 +1,3 @@
-{{-- filepath: resources/views/admin/posts/create.blade.php --}}
 @extends('admin.layouts.master')
 @section('content')
 <div class="container mt-4">
@@ -86,8 +85,12 @@
 @endsection
 
 @section('scripts')
-<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
 <script>
-    CKEDITOR.replace('noi_dung');
+    ClassicEditor
+        .create(document.querySelector('#noi_dung'))
+        .catch(error => {
+            console.error(error);
+        });
 </script>
 @endsection

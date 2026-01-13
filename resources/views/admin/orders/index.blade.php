@@ -69,7 +69,7 @@
                                 <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-sm btn-info" title="Xem chi tiết">
                                     <i class="bi bi-eye"></i>
                                 </a>
-                                @if(in_array(Auth::user()->vai_tro ?? '', ['super_admin', 'quan_li']))
+                                @if(in_array(Auth::user()->vai_tro ?? '', ['super_admin']))
                                     <a href="{{ route('admin.orders.edit', $order->id) }}" class="btn btn-sm btn-warning" title="Sửa">
                                         <i class="bi bi-pencil"></i>
                                     </a>

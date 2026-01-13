@@ -103,16 +103,15 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Địa chỉ nhận hàng</label>
-                                            <select name="dia_chi_id" class="form-control mb-2" id="diaChiSelect">
-                                                <option value="">-- Chọn địa chỉ --</option>
-                                                @foreach($user->diaChis as $dc)
-                                                    <option value="{{ $dc->id }}"
-                                                        {{ old('dia_chi_id', $user->diaChis->where('mac_dinh', 1)->first()?->id ?? '') == $dc->id ? 'selected' : '' }}>
-                                                        {{ $dc->dia_chi_1 }}, {{ $dc->xa_phuong }}, {{ $dc->quan_huyen }}, {{ $dc->tinh_thanh }}
-                                                        @if($dc->mac_dinh) [Mặc định] @endif
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                           @foreach($user->diaChis as $dc)
+                                        <div class="d-flex align-items-center mb-1">
+                                            <span style="flex:1;">
+                                                {{ $dc->dia_chi_1 }}, {{ $dc->xa_phuong }}, {{ $dc->quan_huyen }}, {{ $dc->tinh_thanh }}
+                                                @if($dc->mac_dinh) <span class="badge bg-success">Mặc định</span> @endif
+                                            </span>
+                                            <a href="{{ route('user.address.edit', $dc->id) }}" class="btn btn-link btn-sm text-warning me-2">Chỉnh sửa</a>
+                                        </div>
+                                    @endforeach
                                             
                                             <a href="{{ route('user.address.create') }}" class="btn btn-link p-0">+ Thêm địa chỉ mới</a>
                                         </div>

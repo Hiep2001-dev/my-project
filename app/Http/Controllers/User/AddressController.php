@@ -77,5 +77,13 @@ class AddressController extends Controller
 
         return redirect()->route('shoe.profile')->with('success', 'Cập nhật địa chỉ thành công!');
     }
+    public function destroy($id)
+    {
+        $address = Auth::user()->diaChis()->findOrFail($id);
+        $address->delete();
+
+        return redirect()->route('shoe.profile')->with('success', 'Xóa địa chỉ thành công!');
+    }
+    
    
 }

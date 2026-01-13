@@ -81,18 +81,42 @@
                     </div>
                 </div>
             </div>
-            <!-- Chart Section (Bạn có thể thêm chart ở đây nếu muốn) -->
             <div class="card mt-4">
                 <div class="card-header">
-                    <h4>Thống kê đơn hàng</h4>
+                    <h4>Thống kê doanh thu</h4>
                 </div>
                 <div class="card-body">
-                    <canvas id="profileVisit"></canvas>
+                    tổng doanh thu: <strong class="text-success">{{ number_format($total) }} VND</strong>
+                </div>
+            </div>
+            @if(Auth::user()->vai_tro=='super_admin')
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h4>Thống kê lợi nhuận</h4>
+                </div>
+                <div class="card-body">
+                    tổng lợi nhuận: <strong class="text-success">{{ number_format($profits) }} VND</strong>
+                </div>
+            </div>
+            @endif`
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h4>Sản phẩm sắp hết hàng</h4>
+                </div>
+                <div class="card-body">
+                    @if($warnings->isEmpty())
+                        <p>Tất cả sản phẩm đều đủ hàng.</p>
+                    @else
+                        <ul>
+                            @foreach($warnings as $warning)
+                                <li>{{ $warning->product->ten }} - Biến thể: {{ $warning->mau_sac }} - Số lượng còn lại: {{ $warning->so_luong }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
                 </div>
             </div>
         </div>
         <div class="col-12 col-lg-3">
-            <!-- Thông tin tài khoản -->
             <div class="card mb-4 shadow-sm border-0">
                 <div class="card-header">
                     <h4>Thông tin tài khoản</h4>

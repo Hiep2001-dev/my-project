@@ -21,10 +21,10 @@ use App\Http\Controllers\User\UserProductController;
 use App\Http\Controllers\User\UserRegisterController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\User\ForgotPasswordController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 // Admin Routes
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
@@ -166,7 +166,10 @@ Route::put('shoe/cart/update/{id}', [CartController::class, 'update'])->name('ca
 Route::get('shoe/cartdetail', function () {
     return view('shoe.cartdetail');
 })->name('cart.index');
-Route::get('cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+Route::put('cart/update-session/{key}', [CartController::class, 'updateSession'])->name('cart.update.session');
+Route::post('cart/remove-session/{key}', [CartController::class, 'removeSession'])->name('cart.remove.session');
+
+Route::get('cart/checkout', [ShoeOrderController::class, 'checkout'])->name('cart.checkout');
 // don hang
 Route::post('shoe/checkout', [ShoeOrderController::class, 'placeOrder'])->name('order.placeOrder');
 Route::get('shoe/order/{id}', [ShoeOrderController::class, 'detail'])->name('order.detail');
@@ -199,10 +202,11 @@ Route::get('/shoe/signup', function () {
 // Login and Register
 Route::get('/shoe/signin', [UserLoginController::class, 'showLoginForm'])->name('shoe.signin');
 Route::post('/shoe/signin', [UserLoginController::class, 'login'])->name('shoe.login');
-Route::post('/user/register', [UserRegisterController::class, 'register'])->name('user.register');
+Route::post('/shoe/register', [UserRegisterController::class, 'register'])->name('shoe.register');
+Route::get('shoe/forgot-password', [ForgotPasswordController::class, 'showForgotForm'])->name('forgot.form');
+Route::post('shoe/forgot-password', [ForgotPasswordController::class, 'sendNewPassword'])->name('forgot.send');
 Route::post('/shoe/logout', function () {
     Auth::logout();
-
     return redirect()->route('shoe.index');
 })->name('shoe.logout');
 Route::get('/check-email', function (Request $request) {

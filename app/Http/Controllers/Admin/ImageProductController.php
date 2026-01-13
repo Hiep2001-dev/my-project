@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class ImageProductController extends Controller
 {
-    // Danh sách hình ảnh của biến thể sản phẩm
+    
     public function index($productId, $variationId)
     {
         $variation = ProductVariation::where('san_pham_id', $productId)->findOrFail($variationId);
@@ -21,7 +21,6 @@ class ImageProductController extends Controller
         ]);
     }
 
-    // Hiển thị form thêm hình ảnh cho biến thể
     public function create($productId, $variationId,)
     {
         $variation = ProductVariation::where('san_pham_id', $productId)->findOrFail($variationId);

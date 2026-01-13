@@ -61,7 +61,7 @@
                     <div class="submit">
                       <input class="btn" type="submit" id="dangnhap" value="Đăng Nhập">
                     <div class="forgetpassword">
-                            <p id="quenmk">Quên mật khẩu?</p> hoặc <a href="{{ url('shoe/signup') }}">Đăng kí</a>
+                            <a href="{{ url('shoe/forgot-password') }}">Quên mật khẩu?</a> hoặc <a href="{{ url('shoe/signup') }}">Đăng kí</a>
                       </div>
                     </div>
                 </form>

@@ -14,7 +14,7 @@
                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                         </div>
                     </form>
-                    @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
+                    @if(in_array(Auth::user()->vai_tro, ['super_admin']))
                         <a href="{{ route('admin.brands.create') }}" class="btn btn-primary mb-2">Thêm thương hiệu</a>
                     @endif
                     <a href="{{ route('admin.brands.exportExcel') }}" class="btn btn-success btn-sm">
@@ -43,7 +43,7 @@
                                         @else <span class="badge bg-danger">Ngừng hoạt động</span>
                                         @endif
                                     </td>
-                                    @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
+                                    @if(in_array(Auth::user()->vai_tro, ['super_admin']))
                                         <td>
                                             <a href="{{ route('admin.brands.edit', $brand->id) }}" class="btn btn-warning btn-sm">Sửa</a>
                                             @if($brand->products->count() == 0)

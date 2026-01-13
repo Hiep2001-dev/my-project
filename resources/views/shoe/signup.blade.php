@@ -1,7 +1,7 @@
 @extends('shoe.layouts.master')
 @section('content')
     @include('shoe.layouts.header')
-  {{-- @include('shoe.layouts.sidebar')  --}}
+  @include('shoe.layouts.sidebar') 
   <!--Content-->
   <div class="content">
     <section class="signup">
@@ -13,33 +13,21 @@
             </div>
             <div class="signin-right ">
               
-                <form action="{{ route('user.register') }}" method="POST" class="form-signup" id="signupForm">
+                <form action="{{ route('shoe.register') }}" method="POST" class="form-signup" id="signupForm">
                     @csrf
                      
                     <div class="firstname form-control1 ">
                         <input type="text" id="name" name="ho_ten" placeholder="Họ Tên" required>
                     </div>
-                    
-                    <div class="sex form-control1">
-                       <div class="female">
-                          <input type="radio" id="female" name="gioi_tinh" value="nu" checked>
-                          <label for="female">Nữ</label>
-                       </div>
-                       <div class="male">
-                        <input type="radio" id="male" name="gioi_tinh" value="nam">
-                        <label for="male">Nam</label>
-                     </div>
-                    </div>
-                  
                     <div class="email form-control1">
                         <input type="email" id="email" name="email" placeholder="Email"required>
                         <span id="email-error" class="text-danger" style="font-size: 14px"></span>
                     </div >
-                  {{-- <div class="sdt form-control1">
+                  <div class="sdt form-control1">
                     <div>
                       <input type="text" name="so_dien_thoai" placeholder="Số điện thoại" required>
                     </div>
-                  </div> --}}
+                  </div>
                     <div class="password form-control1">
                         <input type="password" id="password" name="mat_khau" placeholder="Mật khẩu" required>
                     </div>
@@ -47,7 +35,7 @@
                         <input type="password" id="password_confirmation" name="mat_khau_confirmation" placeholder="Nhập lại mật khẩu" required>
                         <span id="password-error" class="text-danger" style="font-size: 14px"></span>
                     </div>
-                    <div class="recaptcha form-control1">This site is protected by reCAPTCHA and the Google <a href="">Privacy Policy</a> and <a href="">Terms of Service</a> apply.</div>
+                    <div class="recaptcha form-control1"></div>
                     
                       <button type="submit" class="btn btn-primary w-100">Đăng kí</button>
                     
@@ -91,7 +79,6 @@
                           }
                       });
 
-                      // Khi submit form
                       form.addEventListener('submit', function(e) {
                           let valid = true;
 

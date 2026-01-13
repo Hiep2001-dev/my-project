@@ -6,6 +6,7 @@
 @include('shoe.layouts.header')
 @include('shoe.layouts.sidebar')
 <div class="container py-5">
+
     <div class="card shadow-lg rounded-4 animate__animated animate__fadeIn">
         <div class="card-header" style="background: linear-gradient(90deg,#e0f2fe 0,#bae6fd 100%); color:#2563eb;" class="rounded-top-4 d-flex justify-content-between align-items-center">
             <h2 class="mb-0"><i class="bi bi-receipt"></i> Đơn hàng {{ $order->ma_don ?? $order->id }}</h2>
@@ -31,7 +32,10 @@
                             @default <span class="badge bg-light">Khác</span>
                         @endswitch
                     </div>
-                    <div><strong>Phương thức thanh toán:</strong> {{ $order->phuong_thuc_tt }}</div>
+                    <div>
+                        <strong> Ngày giao dự kiến: </strong> {{ $order->ngay_giao_du_kien }}
+                    </div>
+                    <div><strong>Phương thức thanh toán: </strong> {{ $order->phuong_thuc_tt }}</div>
                 </div>
             </div>
             <h5 class="mb-3 text-primary"><i class="bi bi-box-seam"></i> Sản phẩm trong đơn hàng</h5>
@@ -86,14 +90,25 @@
                         <span class="text-danger">-{{ number_format($order->giam_gia) }}₫</span>
                     </div>
                 @endif
-                <strong>Tổng tiền sau giảm:</strong>
-                <span class="text-success">{{ number_format($order->tong_tien) }}₫</span>
+                <div>
+                    <strong>Phí vận chuyển:</strong>
+                    <span class="text-danger">{{ number_format($order->phi_ship ?? 0) }}₫</span>
+                </div>
+                <div>
+                    <strong>Tổng tiền:</strong>
+                    <span class="text-success">{{ number_format($order->tong_tien ) }}₫</span>
+                </div>
             </div>
         </div>
         <div class="card-footer d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 bg-white rounded-bottom-4">
             <a href="{{ route('shoe.product') }}" class="btn btn-outline-primary px-4 fw-bold">
                 <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
             </a>
+            @if($order->trang_thai_tt == 'chua_tt' && $order->trang_thai == 'cho_xu_ly')
+                <a href="{{ route('order.payment', $order->id) }}" class="btn btn-primary px-4 fw-bold">
+                    <i class="bi bi-credit-card"></i> Thanh toán ngay
+                </a>
+            @endif
             @if($order->trang_thai == 'cho_xu_ly')
                 <div class="d-flex gap-2">
                     <form action="{{ route('order.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Bạn chắc chắn muốn hủy đơn hàng này?');">

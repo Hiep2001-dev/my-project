@@ -76,17 +76,5 @@
     </form>
     
 </div>
-<script>
-function slugify(str) {
-    str = str.toLowerCase().trim();
-    str = str.replace(/[\s\-]+/g, '-');
-    str = str.replace(/[^\w\-]+/g, '');
-    str = str.replace(/\-\-+/g, '-');
-    return str;
-}
 
-document.getElementById('ten').addEventListener('input', function() {
-    document.getElementById('duong_dan').value = slugify(this.value);
-});
-</script>
 @endsection

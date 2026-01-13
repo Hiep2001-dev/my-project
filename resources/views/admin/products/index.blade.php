@@ -15,7 +15,7 @@
                 </form>
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span>Danh sách sản phẩm</span>
-                @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
+                @if(in_array(Auth::user()->vai_tro, ['super_admin']))
                 <a href="{{ route('admin.products.create') }}" class="btn btn-primary btn-sm">
                     <i class="bi bi-plus"></i> Thêm sản phẩm
                 </a>

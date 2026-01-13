@@ -9,107 +9,210 @@ use App\Models\Order;
 use App\Models\ProductVariation;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderPlacedMail;
 
 class ShoeOrderController extends Controller
 {
     public function checkout(Request $request)
     {
-        $cart = Cart::with('cartDetails.bienTheSanPham.product')
-            ->where('nguoi_dung_id', auth()->id())
-            ->first();
+        $cart = null;
+        $cartItems = collect([]);
+        $hasSessionItems = false;
+        $hasDbItems = false;
+        $user = auth()->user();
+        $defaultAddress = null;
 
-        $buyNowProduct = [];
-        if ($request->has('san_pham_id')) {
-            $bienThe = ProductVariation::where('san_pham_id', $request->san_pham_id)
-                ->where('mau_sac', $request->color)
-                ->where('size_eu', $request->size)
+        if ($user) {
+            $cart = Cart::with('cartDetails.ProductVariation.product')
+                ->where('nguoi_dung_id', $user->id)
                 ->first();
-
-            if ($bienThe) {
-                $buyNowProduct[] = [
-                    'ten' => $bienThe->product->ten,
-                    'image' => $bienThe->hinh_anh_chinh ?? ($bienThe->images->first()->duong_dan ?? 'images/no-image.png'),
-                    'mau_sac' => $bienThe->mau_sac,
-                    'size_eu' => $bienThe->size_eu,
-                    'gia_ban' => $request->gia_ban,
-                    'so_luong' => $request->so_luong ?? 1,
+            $hasDbItems = $cart && $cart->cartDetails && $cart->cartDetails->count() > 0;
+            $defaultAddress = $user->diaChis->where('mac_dinh', 1)->first();
+        } else {
+            $cartSession = session('cart', []);
+            $cartItems = collect($cartSession)->map(function ($item) {
+                return (object)[
+                    'ten' => $item['name'] ?? '',
+                    'image' => $item['image'] ?? '',
+                    'mau_sac' => $item['color'] ?? '',
+                    'size_eu' => $item['size'] ?? '',
+                    'gia_ban' => $item['price'] ?? 0,
+                    'so_luong' => $item['quantity'] ?? 1,
                 ];
-            }
+            });
+            $hasSessionItems = $cartItems->count() > 0;
         }
 
-        return view('shoe.checkout', compact('cart', 'buyNowProduct'));
+        return view('shoe.checkout', [
+            'cart' => $cart,
+            'cartItems' => $cartItems,
+            'user' => $user,
+            'defaultAddress' => $defaultAddress,
+            'hasSessionItems' => $hasSessionItems,
+            'hasDbItems' => $hasDbItems,
+        ]);
     }
 
     public function placeOrder(Request $request)
     {
-        $cart = Cart::with('cartDetails.bienTheSanPham.product')
-            ->where('nguoi_dung_id', auth()->id())
-            ->firstOrFail();
+        $tinh_thanh = $request->input('tinh_thanh');
+            $hcm_names = ['TP.HCM', 'Thành phố Hồ Chí Minh', 'Hồ Chí Minh', 'Ho Chi Minh', 'TP HCM', 'Tp Hồ Chí Minh', 'TpHCM', 'Thành phố HCM'];
+            if (in_array(trim(mb_strtolower($tinh_thanh)), array_map('mb_strtolower', $hcm_names))) {
+                $phi_ship = 30000;
+                $ngay_giao_du_kien = now()->addDays(3) ;
+            } else {
+                $phi_ship = 50000;
+                $ngay_giao_du_kien = now()->addDays(7) ;
+            }
+        if (auth()->check()) {
+            $cart = Cart::with('cartDetails.productVariation.product')
+                ->where('nguoi_dung_id', auth()->id())
+                ->firstOrFail();
 
-        // Tính tổng tiền ban đầu
-        $tong_tien = $cart->cartDetails->sum(function ($i) {
-            return ($i->bienTheSanPham->gia_ban ?? 0) * $i->so_luong;
-        });
+            $tong_tien = $cart->cartDetails->sum(function ($i) {
+                return ($i->productVariation->gia_ban ?? 0) * $i->so_luong ;
+            });
 
-        $giam_gia = 0;
-        $ma_giam_gia_id = null;
-        if ($request->filled('ma_giam_gia')) {
-            $discount = Discount::where('ma_code', $request->ma_giam_gia)
-                ->where('hoat_dong', 1)
-                ->where('ngay_bat_dau', '<=', now())
-                ->where('ngay_ket_thuc', '>=', now())
-                ->first();
+            $giam_gia = 0;
+            $ma_giam_gia_id = null;
+            if ($request->filled('ma_giam_gia')) {
+                $discount = Discount::where('ma_code', $request->ma_giam_gia)
+                    ->where('hoat_dong', 1)
+                    ->where('ngay_bat_dau', '<=', now())
+                    ->where('ngay_ket_thuc', '>=', now())
+                    ->first();
 
-            if ($discount) {
-                $ma_giam_gia_id = $discount->id;
-                if ($discount->loai == 'phan_tram') {
-                    $giam_gia = $tong_tien * $discount->gia_tri / 100;
-                } else {
-                    $giam_gia = $discount->gia_tri;
+                if ($discount) {
+                    $ma_giam_gia_id = $discount->id;
+                    if ($discount->loai == 'phan_tram') {
+                        $giam_gia = $tong_tien * $discount->gia_tri / 100;
+                    } else {
+                        $giam_gia = $discount->gia_tri;
+                    }
                 }
             }
+
+            $order = new Order;
+            $order->nguoi_dung_id = auth()->id();
+            $order->ten_nguoi_nhan = $request->ten_nguoi_nhan;
+            $order->sdt_nguoi_nhan = $request->sdt_nguoi_nhan;
+            $order->dia_chi_1 = $request->dia_chi_1;
+            $order->ghi_chu = $request->ghi_chu;
+            $order->trang_thai = 'cho_xu_ly';
+            $order->thoi_gian_dat = now();
+            $order->tong_tien = $tong_tien - $giam_gia + $phi_ship;
+            $order->phi_ship = $phi_ship;
+            $order->giam_gia = $giam_gia;
+            $order->ngay_giao_du_kien= $ngay_giao_du_kien;
+            $order->ma_giam_gia_id = $ma_giam_gia_id;
+            $order->save();
+
+            $order->ma_don = 'DH'.date('Ymd').str_pad($order->id, 5, '0', STR_PAD_LEFT);
+            $order->save();
+
+            foreach ($cart->cartDetails as $item) {
+                OrderDetail::create([
+                    'don_hang_id' => $order->id,
+                    'bien_the_id' => $item->bien_the_id,
+                    'ten_san_pham' => $item->productVariation->product->ten ?? '',
+                    'thuoc_tinh' => $item->productVariation->mau_sac.' / '.$item->productVariation->size_eu,
+                    'hinh_anh' => $item->productVariation->hinh_anh_chinh ?? ($item->productVariation->images->first()->duong_dan ?? ''),
+                    'so_luong' => $item->so_luong,
+                    'don_gia' => $item->productVariation->gia_ban ?? 0,
+                    'gia_goc' => $item->productVariation->gia_goc ?? 0,
+                    'giam_gia' => $item->productVariation->giam_gia ?? 0,
+                    'thanh_tien' => ($item->productVariation->gia_ban ?? 0) * $item->so_luong,
+                    'trang_thai_danh_gia' => 0,
+                ]);
+                $bienThe = $item->productVariation;
+                $bienThe->so_luong -= $item->so_luong;
+                $bienThe->save();
+            }
+            $userEmail = auth()->user()->email ?? null;
+            if ($userEmail) {
+                Mail::to($userEmail)->send(new OrderPlacedMail($order));
+            }
+            $cart->cartDetails()->delete();
+            $cart->delete();
+
+            return redirect()->route('order.payment', ['id' => $order->id]);
+        } else {
+ 
+            $cartSession = session('cart', []);
+            if (empty($cartSession)) {
+                return redirect()->back()->with('error', 'Giỏ hàng trống!');
+            }
+
+            $tong_tien = collect($cartSession)->sum(function ($item) {
+                return ($item['price'] ?? 0) * ($item['quantity'] ?? 1);
+            });
+
+            $giam_gia = 0;
+            $ma_giam_gia_id = null;
+            if ($request->filled('ma_giam_gia')) {
+                $discount = Discount::where('ma_code', $request->ma_giam_gia)
+                    ->where('hoat_dong', 1)
+                    ->where('ngay_bat_dau', '<=', now())
+                    ->where('ngay_ket_thuc', '>=', now())
+                    ->first();
+
+                if ($discount) {
+                    $ma_giam_gia_id = $discount->id;
+                    if ($discount->loai == 'phan_tram') {
+                        $giam_gia = $tong_tien * $discount->gia_tri / 100;
+                    } else {
+                        $giam_gia = $discount->gia_tri;
+                    }
+                }
+            }
+            
+            $order = new Order;
+            $order->nguoi_dung_id = null;
+            $order->ten_nguoi_nhan = $request->ten_nguoi_nhan;
+            $order->sdt_nguoi_nhan = $request->sdt_nguoi_nhan;
+            $order->dia_chi_1 = $request->dia_chi_1;
+            $order->ghi_chu = $request->ghi_chu;
+            $order->trang_thai = 'cho_xu_ly';
+            $order->thoi_gian_dat = now();
+            $order->tong_tien = $tong_tien - $giam_gia + $phi_ship;
+            $order->giam_gia = $giam_gia;
+            $order->phi_ship = $phi_ship;
+            $order->ngay_giao_du_kien= $ngay_giao_du_kien;
+            $order->ma_giam_gia_id = $ma_giam_gia_id;
+            $order->save();
+
+            $order->ma_don = 'DH'.date('Ymd').str_pad($order->id, 5, '0', STR_PAD_LEFT);
+            $order->save();
+
+            foreach ($cartSession as $item) {
+                $bienThe = ProductVariation::where('san_pham_id', $item['product_id'] ?? null)
+                    ->where('mau_sac', $item['color'] ?? '')
+                    ->where('size_eu', $item['size'] ?? '')
+                    ->first();
+
+                OrderDetail::create([
+                    'don_hang_id' => $order->id,
+                    'bien_the_id' => $bienThe->id ?? null,
+                    'ten_san_pham' => $item['name'] ?? '',
+                    'thuoc_tinh' => ($item['color'] ?? '') . ' / ' . ($item['size'] ?? ''),
+                    'hinh_anh' => $item['image'] ?? '',
+                    'so_luong' => $item['quantity'] ?? 1,
+                    'don_gia' => $item['price'] ?? 0,
+                    'gia_goc' => $bienThe->gia_goc ?? 0,
+                    'giam_gia' => $bienThe->giam_gia ?? 0,
+                    'thanh_tien' => ($item['price'] ?? 0) * ($item['quantity'] ?? 1),
+                    'trang_thai_danh_gia' => 0,
+                ]);
+                if ($bienThe) {
+                    $bienThe->so_luong -= ($item['quantity'] ?? 1);
+                    $bienThe->save();
+                }
+            }
+            session()->forget('cart');
+
+            return redirect()->route('order.payment', ['id' => $order->id]);
         }
-
-        $order = new Order;
-        $order->nguoi_dung_id = auth()->id();
-        $order->ten_nguoi_nhan = $request->ten_nguoi_nhan;
-        $order->sdt_nguoi_nhan = $request->sdt_nguoi_nhan;
-        $order->dia_chi_1 = $request->dia_chi_1;
-        $order->ghi_chu = $request->ghi_chu;
-        $order->trang_thai = 'cho_xu_ly';
-        $order->thoi_gian_dat = now();
-        $order->tong_tien = $tong_tien - $giam_gia;
-        $order->giam_gia = $giam_gia;
-        $order->ma_giam_gia_id = $ma_giam_gia_id;
-        $order->save();
-
-        $order->ma_don = 'DH'.date('Ymd').str_pad($order->id, 5, '0', STR_PAD_LEFT);
-        $order->save();
-
-        foreach ($cart->cartDetails as $item) {
-            OrderDetail::create([
-                'don_hang_id' => $order->id,
-                'bien_the_id' => $item->bien_the_id,
-                'ten_san_pham' => $item->bienTheSanPham->product->ten ?? '',
-                'thuoc_tinh' => $item->bienTheSanPham->mau_sac.' / '.$item->bienTheSanPham->size_eu,
-                'hinh_anh' => $item->bienTheSanPham->hinh_anh_chinh ?? ($item->bienTheSanPham->images->first()->duong_dan ?? ''),
-                'so_luong' => $item->so_luong,
-                'don_gia' => $item->bienTheSanPham->gia_ban ?? 0,
-                'gia_goc' => $item->bienTheSanPham->gia_goc ?? 0,
-                'giam_gia' => $item->bienTheSanPham->giam_gia ?? 0,
-                'thanh_tien' => ($item->bienTheSanPham->gia_ban ?? 0) * $item->so_luong,
-                'trang_thai_danh_gia' => 0,
-            ]);
-
-            $bienThe = $item->bienTheSanPham;
-            $bienThe->so_luong -= $item->so_luong;
-            $bienThe->save();
-        }
-
-        $cart->cartDetails()->delete();
-        $cart->delete();
-
-        return redirect()->route('order.payment', ['id' => $order->id]);
     }
 
     public function detail($id, Request $request)

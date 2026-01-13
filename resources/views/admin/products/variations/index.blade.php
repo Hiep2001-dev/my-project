@@ -5,7 +5,7 @@
     <h3>Biến thể của sản phẩm: {{ $product->ten }}</h3>
 </div>
 <div class="page-content">
-    @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
+    @if(in_array(Auth::user()->vai_tro, ['super_admin']))
     <a href="{{ route('admin.products.variations.create', $product->id) }}" class="btn btn-primary mb-2">
         <i class="bi bi-plus"></i> Thêm biến thể
     </a>
@@ -54,7 +54,7 @@
                 </td>
                 
                 <td>
-                    @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
+                    @if(in_array(Auth::user()->vai_tro, ['super_admin']))
                     <a href="{{ route('admin.products.variations.show', [$product->id, $variation->id]) }}" class="btn btn-sm btn-info"><i class="bi bi-eye"></i></a>
                     <a href="{{ route('admin.products.variations.edit', [$product->id, $variation->id]) }}" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i></a>
                     <a href="{{ route('admin.products.images.index', [$product->id, $variation->id]) }}" class="btn btn-sm btn-secondary">

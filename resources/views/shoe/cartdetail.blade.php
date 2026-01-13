@@ -1,22 +1,29 @@
-{{-- filepath: c:\Users\admin\my-project\resources\views\shoe\orderdetail.blade.php --}}
 @extends('shoe.layouts.master')
 
 @section('title', 'Giỏ hàng của bạn')
 
 @section('content')
 @include('shoe.layouts.header')
+
 @include('shoe.layouts.sidebar')
 
 <div class="spacer" style="height:32px;"></div>
 <div class="cart-page">
-    
     <div class="cart-container">
         <div class="cart-header">
             <h1>Giỏ hàng</h1>
-            <p>{{ $cart && $cart->cartDetails->count() ? $cart->cartDetails->count() . ' sản phẩm' : '0 sản phẩm' }}</p>
+            <p>
+                @if(isset($cartItems) && count($cartItems))
+                    {{ count($cartItems) . ' sản phẩm' }}
+                @elseif($cart && $cart->cartDetails->count())
+                    {{ $cart->cartDetails->count() . ' sản phẩm' }}
+                @else
+                    0 sản phẩm
+                @endif
+            </p>
         </div>
 
-        @if($cart && $cart->cartDetails->count())
+        @if((isset($cartItems) && count($cartItems)) || ($cart && $cart->cartDetails->count()))
             <div class="cart-table">
                 <div class="cart-row cart-row--head">
                     <div class="cart-col cart-col--product">Sản phẩm</div>
@@ -27,54 +34,106 @@
                     <div class="cart-col cart-col--action"></div>
                 </div>
 
-                @foreach($cart->cartDetails as $item)
-                <div class="cart-row">
-                    <div class="cart-col cart-col--product">
-                        <img src="{{ asset($item->bienTheSanPham->hinh_anh_chinh ?? $item->bienTheSanPham->images->first()->duong_dan ?? 'images/no-image.png') }}" alt="" class="cart-thumb">
-                        <div>
-                            <p class="cart-name">{{ $item->bienTheSanPham->product->ten ?? 'Sản phẩm' }}</p>
-                            <p class="cart-sku">SKU: {{ $item->bienTheSanPham->sku ?? 'N/A' }}</p>
+                
+                @if(isset($cartItems) && count($cartItems))
+                    @foreach($cartItems as $key => $item)
+                    <div class="cart-row">
+                        <div class="cart-col cart-col--product">
+                            <img src="{{ asset($item['image'] ?? 'images/no-image.png') }}" alt="" class="cart-thumb">
+                            <div>
+                                <p class="cart-name">{{ $item['name'] ?? 'Sản phẩm' }}</p>
+                            </div>
+                        </div>
+                        <div class="cart-col cart-col--variant">
+                            <span class="badge badge--color">{{ $item['color'] ?? '—' }}</span>
+                            <span class="badge badge--size">{{ $item['size'] ?? '—' }}</span>
+                        </div>
+                        <div class="cart-col cart-col--price">
+                            {{ number_format($item['price'] ?? 0) }}₫
+                        </div>
+                        <div class="cart-col cart-col--qty">
+                            <form action="{{ route('cart.update.session', $key) }}" method="POST" class="qty-box" style="display:flex;" onsubmit="return false;">
+                                @csrf
+                                @method('PUT')
+                                {{-- <button type="button" class="qty-box__btn" onclick="changeQty(this, -1)">−</button> --}}
+                                <span style="width:110px;text-align:center;display:flex;justify-content:center;font-weight:600;line-height:38px;" class="qty-show">{{ $item['quantity'] }}</span>
+                               <input type="hidden" class="max-qty" value="{{ $item['max_qty'] ?? 1000 }}">
+                                {{-- <button type="button" class="qty-box__btn" onclick="changeQty(this, 1)">+</button> --}}
+                                <button type="submit" style="display:none"></button>
+                            </form>
+                        </div>
+                        <div class="cart-col cart-col--total">
+                            {{ number_format(($item['price'] ?? 0) * ($item['quantity'] ?? 1)) }}₫
+                        </div>
+                        <div class="cart-col cart-col--action">
+                            <form action="{{ route('cart.remove.session', $key) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn-remove" type="submit">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
-                    <div class="cart-col cart-col--variant">
-                        <span class="badge badge--color">{{ $item->bienTheSanPham->mau_sac ?? '—' }}</span>
-                        <span class="badge badge--size">{{ $item->bienTheSanPham->size_eu ?? '—' }}</span>
+                    @endforeach
+                @elseif($cart && $cart->cartDetails->count())
+                    @foreach($cart->cartDetails as $item)
+                    <div class="cart-row">
+                        <div class="cart-col cart-col--product">
+                            <img src="{{ asset($item->bienTheSanPham->hinh_anh_chinh ?? $item->bienTheSanPham->images->first()->duong_dan ?? 'images/no-image.png') }}" alt="" class="cart-thumb">
+                            <div>
+                                <p class="cart-name">{{ $item->bienTheSanPham->product->ten ?? 'Sản phẩm' }}</p>
+                                <p class="cart-sku">SKU: {{ $item->bienTheSanPham->sku ?? 'N/A' }}</p>
+                            </div>
+                        </div>
+                        <div class="cart-col cart-col--variant">
+                            <span class="badge badge--color">{{ $item->bienTheSanPham->mau_sac ?? '—' }}</span>
+                            <span class="badge badge--size">{{ $item->bienTheSanPham->size_eu ?? '—' }}</span>
+                        </div>
+                        <div class="cart-col cart-col--price">
+                            {{ number_format($item->bienTheSanPham->gia_ban) }}₫
+                        </div>
+                        <div class="cart-col cart-col--qty">
+                            <form action="{{ route('cart.update', $item->id) }}" method="POST" class="qty-box" style="display:flex;" onsubmit="return false;">
+                                @csrf
+                                @method('PUT')
+                                {{-- <button type="button" class="qty-box__btn" onclick="changeQty(this, -1)">−</button> --}}
+                                <span style="width:110px;text-align:center;display:inline-block;font-weight:600;line-height:38px;" class="qty-show">{{ $item->so_luong }}</span>
+                                <input type="hidden" class="max-qty" value="{{ $item->bienTheSanPham->so_luong ?? 1000 }}">
+                                {{-- <button type="button" class="qty-box__btn" onclick="changeQty(this, 1)">+</button> --}}
+                                <button type="submit" style="display:none"></button>
+                            </form>
+                        </div>
+                        <div class="cart-col cart-col--total">
+                            {{ number_format(($item->bienTheSanPham->gia_ban ?? 0) * $item->so_luong) }}₫
+                        </div>
+                        <div class="cart-col cart-col--action">
+                            <form action="{{ route('cart.remove', $item->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn-remove" type="submit">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                    <div class="cart-col cart-col--price">
-                        {{ number_format($item->bienTheSanPham->gia_ban) }}₫
-                    </div>
-                    <div class="cart-col cart-col--qty">
-                        <form action="{{ route('cart.update', $item->id) }}" method="POST" class="qty-box" style="display:flex;" onsubmit="return false;">
-                            @csrf
-                            @method('PUT')
-                            <button type="button" class="qty-box__btn" onclick="changeQty(this, -1)">−</button>
-                            <span style="width:50px;text-align:center;display:inline-block;font-weight:600;line-height:38px;" class="qty-show">{{ $item->so_luong }}</span>
-                            <input type="hidden" name="quantity" value="{{ $item->so_luong }}">
-                            <button type="button" class="qty-box__btn" onclick="changeQty(this, 1)">+</button>
-                            <button type="submit" style="display:none"></button>
-                        </form>
-                    </div>
-                    <div class="cart-col cart-col--total">
-                        {{ number_format(($item->bienTheSanPham->gia_ban ?? 0) * $item->so_luong) }}₫
-                    </div>
-                    <div class="cart-col cart-col--action">
-                        <form action="{{ route('cart.remove', $item->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn-remove" type="submit">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                @endforeach
+                    @endforeach
+                @endif
             </div>
 
             <div class="cart-footer">
                 <div class="cart-total">
                     <div class="cart-total__line">
                         <span>Tạm tính</span>
-                        <strong>{{ number_format($cart->cartDetails->sum(fn($i) => ($i->bienTheSanPham->gia_ban ?? 0) * $i->so_luong)) }}₫</strong>
+                        <strong>
+                            @if(isset($cartItems) && count($cartItems))
+                                {{ number_format(collect($cartItems)->sum(fn($i) => ($i['price'] ?? 0) * ($i['quantity'] ?? 1))) }}₫
+                            @elseif($cart && $cart->cartDetails->count())
+                                {{ number_format($cart->cartDetails->sum(fn($i) => ($i->bienTheSanPham->gia_ban ?? 0) * $i->so_luong)) }}₫
+                            @else
+                                0₫
+                            @endif
+                        </strong>
                     </div>
                     <p class="cart-total__desc">Phí vận chuyển sẽ được tính ở bước thanh toán.</p>
                     <a href="{{ route('cart.checkout') }}" class="btn-checkout">Tiến hành thanh toán</a>
@@ -82,7 +141,7 @@
             </div>
         @else
             <div class="cart-empty">
-                <img src="{{ asset('images/cart-empty.svg') }}" alt="">
+                
                 <p>Giỏ hàng của bạn đang trống.</p>
                 <a href="{{ route('shoe.product') }}" class="btn-outline">Tiếp tục mua sắm</a>
             </div>
@@ -128,41 +187,4 @@
 .btn-outline {display:inline-block;border:1px solid #2563eb;color:#2563eb;padding:12px 28px;border-radius:999px;font-weight:600;}
 @media(max-width:768px){.cart-row {flex-wrap:wrap;gap:16px;}.cart-col {flex:100%;}.cart-footer {flex-direction:column;}.cart-total {width:100%;}}
 </style>
-<script>
-function changeQty(btn, delta) {
-    var form = btn.closest('form');
-    var input = form.querySelector('input[name="quantity"]');
-    var span = form.querySelector('.qty-show');
-    var qty = parseInt(input.value) || 1;
-    qty += delta;
-    if (qty < 1) qty = 1;
-    input.value = qty;
-
-    // Gửi AJAX
-    fetch(form.action, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value,
-            'Accept': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: '_method=PUT&quantity=' + qty
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.success){
-            span.textContent = qty;
-            // Nếu muốn cập nhật tổng tiền, bạn có thể cập nhật thêm ở đây
-            if(data.total){
-                document.querySelector('.cart-total strong').textContent = data.total + '₫';
-            }
-            // Nếu muốn cập nhật thành tiền từng dòng:
-            if(data.item_total){
-                form.closest('.cart-row').querySelector('.cart-col--total').textContent = data.item_total + '₫';
-            }
-        }
-    });
-}
-</script>
 @endsection

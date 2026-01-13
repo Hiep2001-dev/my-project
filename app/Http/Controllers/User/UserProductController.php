@@ -28,15 +28,31 @@ class UserProductController extends Controller
 
         if ($request->has('brands')) {
             $query->where('thuong_hieu_id', $request->input('brands'));
+
         }
+       if ($request->has('genders')) {
+         $query->whereIn('gioi_tinh', $request->input('genders'));
+        }
+        if ($request->filled('min_price')) {
+            $query->whereHas('variations', function ($q) use ($request) {
+                $q->where('gia_ban', '>=', $request->input('min_price'));
+            }); 
+        }
+        if ($request->filled('max_price')) {
+            $query->whereHas('variations', function ($q) use ($request) {
+                $q->where('gia_ban', '<=', $request->input('max_price'));
+            });
+        }
+        
 
 
         $products = $query->with(['variations.images'])->paginate(20);
 
         $categories = Category::where('hoat_dong', 1)->get();
         $brands = Brand::where('hoat_dong', 1)->get();
+        $genders = ['Nam', 'Nữ', 'Unisex'];
 
-        return view('shoe.product', compact('products', 'categories', 'brands'));
+        return view('shoe.product', compact('products', 'categories', 'brands', 'genders'));
     }
 
     public function show($id)
@@ -67,9 +83,12 @@ class UserProductController extends Controller
             ->paginate(20);
 
         $categories = Category::where('hoat_dong', 1)->get();
+        $brands = Brand::where('hoat_dong', 1)->get();  
+
+        $genders = Product::whereNotNull('gioi_tinh')->distinct()->pluck('gioi_tinh')->toArray();
         $currentCategory = Category::findOrFail($id);
 
-        return view('shoe.product', compact('products', 'categories', 'currentCategory'));
+        return view('shoe.product', compact('products', 'categories', 'currentCategory', 'brands', 'genders'));
     }
     public function getSizesByColor(Request $request, $productId)
     {
@@ -77,7 +96,6 @@ class UserProductController extends Controller
         
         $product = Product::findOrFail($productId);
         
-        // Lấy danh sách size và giá theo màu
         $variations = $product->variations()
             ->where('trang_thai', 'hien')
             ->where('mau_sac', $color)
