@@ -55,6 +55,7 @@
                                 {{ $product->ten }}
                             </td>
                             <td>{{ $product->ma_sku }}</td>
+                            
                             <td>{{ $product->brand->ten ?? '' }}</td>
                             <td>
                                 @if($product->gioi_tinh == 'nam') Nam

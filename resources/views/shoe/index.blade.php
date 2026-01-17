@@ -109,17 +109,7 @@
     </div>
     </section>
     <section>
-      <div class="content">
-        <div class="container">
-          <div class="hot_sp">
-            <h2 style="text-align:center;">
-              <a style="font-size: 28px;color: black;text-decoration: none" href="">Sản phẩm mới</a>
-            </h2>
-            <div class="view-all" style="text-align:center;">
-              <a style="color: black;text-decoration: none" href="">Xem thêm</a>
-            </div>
-          </div>
-        </div>
+    
         <!--Product-->
 
     </section>
@@ -226,6 +216,7 @@
 
 <style>
   .product-block .product-img {
+     
     position: relative;
     overflow: hidden;
   }

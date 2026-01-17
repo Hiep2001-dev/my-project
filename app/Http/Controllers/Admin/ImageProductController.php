@@ -30,7 +30,6 @@ class ImageProductController extends Controller
         ]);
     }
 
-    // Lưu hình ảnh mới cho biến thể
     public function store(Request $request, $productId, $variationId)
     {
         $variation = ProductVariation::where('san_pham_id', $productId)->findOrFail($variationId);
@@ -63,7 +62,6 @@ class ImageProductController extends Controller
             ->with('success', 'Thêm hình ảnh thành công!');
     }
 
-    // Hiển thị chi tiết hình ảnh
     public function show($productId, $variationId, $id)
     {
         $variation = ProductVariation::where('san_pham_id', $productId)->findOrFail($variationId);
@@ -75,7 +73,6 @@ class ImageProductController extends Controller
         ]);
     }
 
-    // Hiển thị form sửa hình ảnh
     public function edit($productId, $variationId, $id)
     {
         $variation = ProductVariation::where('san_pham_id', $productId)->findOrFail($variationId);
@@ -87,7 +84,6 @@ class ImageProductController extends Controller
         ]);
     }
 
-    // Cập nhật hình ảnh
     public function update(Request $request, $productId, $variationId, $id)
     {
         $variation = ProductVariation::where('san_pham_id', $productId)->findOrFail($variationId);

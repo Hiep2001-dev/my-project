@@ -47,7 +47,7 @@ class ProductController extends Controller
             'hoat_dong' => 'nullable|boolean',
         ]);
         $data = $request->all();
-        $data['duong_dan'] = $this->makeSlug($data['ten']);
+
         Product::create($data);
 
         return redirect()->route('admin.products.index')->with('success', 'Thêm sản phẩm thành công!');

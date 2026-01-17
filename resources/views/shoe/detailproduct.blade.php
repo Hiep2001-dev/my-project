@@ -251,13 +251,9 @@
                                                     <button type="submit" class="button btn-addtocart addtocart-modal" {{ $colors->count() == 0 ? 'disabled' : '' }}>
                                                         Thêm vào giỏ
                                                     </button>
-                                                    {{-- <button type="button" class="buy-now button" {{ $colors->count() == 0 ? 'disabled' : '' }} onclick="submitBuyNowForm()">
-                                                        Mua ngay
-                                                    </button> --}}
+                                                  
                                                 </div>
-                                                {{-- <a href="#" target="_blank" class="button btn-check" style="color: #ffffff;text-decoration:none;">
-                                                    <span>Click nhận mã giảm giá ngay !</span>
-                                                </a> --}}
+                                                
                                             </div>
                                         </div>
                                     </form>
@@ -623,34 +619,7 @@ function submitBuyNowForm() {
     document.getElementById('buy-now-quantity').value = document.getElementById('quantity')?.value || 1;
     document.getElementById('buy-now-form').submit();
 }
-// document.addEventListener('DOMContentLoaded', function() {
-//     const addCartForm = document.getElementById('add-item-form');
-//     if (addCartForm) {
-//         addCartForm.addEventListener('submit', function(e) {
-//             e.preventDefault();
-//             const formData = new FormData(addCartForm);
-//             fetch(addCartForm.action, {
-//                 method: 'POST',
-//                 headers: {
-//                     'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-//                 },
-//                 body: formData
-//             })
-//             .then(response => response.json())
-//             .then(data => {
-//                 // Nếu thêm thành công, mở sidebar giỏ hàng
-//                 if (data.success) {
-//                     UIkit.offcanvas('#offcanvas-flip2').show();
-//                 } else {
-//                     alert(data.message || 'Thêm vào giỏ thất bại!');
-//                 }
-//             })
-//             .catch(() => {
-//                 alert('Có lỗi xảy ra, vui lòng thử lại!');
-//             });
-//         });
-//     }
-// });
+
 </script>
 
 <style>
@@ -700,6 +669,7 @@ function submitBuyNowForm() {
             transform: scale(1);
         }
     }
+    
 </style>
 
 <form id="buy-now-form" action="{{ route('cart.checkout') }}" method="GET" style="height:0;overflow:hidden;">

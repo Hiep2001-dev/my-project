@@ -95,7 +95,7 @@
                     <h4>Thống kê lợi nhuận</h4>
                 </div>
                 <div class="card-body">
-                    tổng lợi nhuận: <strong class="text-success">{{ number_format($profits) }} VND</strong>
+                    Tổng lợi nhuận: <strong class="text-success">{{ number_format($profits) }} VND</strong>
                 </div>
             </div>
             @endif`

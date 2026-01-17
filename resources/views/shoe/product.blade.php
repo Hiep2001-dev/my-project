@@ -145,6 +145,12 @@
                             <div class="pro-text">
                                 <a href="{{ route('shoe.detailproduct', $product->id) }}">{{ $product->ten }}</a>
                             </div>
+                            <div class="color-count">
+                                @php
+                                    $colorCount = $product->variations->pluck('mau_sac')->unique()->count();
+                                @endphp
+                                <span>Có {{ $colorCount }} màu</span>
+                            </div>
                             <div class="pro-price">
                                 <p>{{ $firstPrice ? number_format($firstPrice, 0, ',', '.') : 'Liên hệ' }}₫</p>
                             </div>

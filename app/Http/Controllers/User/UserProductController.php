@@ -12,7 +12,7 @@ class UserProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::where('hoat_dong', 1);
+        $query = Product::where('hoat_dong', 1)->orderBy('ngay_tao', 'desc');
 
         if ($request->has('colors')) {
             $query->whereHas('variations', function ($q) use ($request) {
@@ -58,7 +58,8 @@ class UserProductController extends Controller
     public function show($id)
     {
         $product = Product::where('hoat_dong', 1)
-            ->with(['variations.images'])
+            ->with(['variations.images'],['variations.mau_sac'])
+            ->orderBy('ngay_tao', 'desc')
             ->findOrFail($id);
 
 

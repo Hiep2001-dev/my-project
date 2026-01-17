@@ -25,6 +25,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            
                             <th>Mã đơn</th>
                             <th>Người nhận</th>
                             <th>SĐT</th>
@@ -40,6 +41,7 @@
                         @foreach($orders as $order)
                         <tr>
                             <td>{{ $order->id }}</td>
+                            
                             <td>{{ $order->ma_don }}</td>
                             <td>{{ $order->ten_nguoi_nhan }}</td>
                             <td>{{ $order->sdt_nguoi_nhan }}</td>
