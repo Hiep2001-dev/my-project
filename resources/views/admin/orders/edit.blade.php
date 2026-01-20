@@ -3,6 +3,8 @@
 @section('content')
 <div class="container py-4">
     <h3>Sửa đơn hàng{{ $order->ma_don }}</h3>
+    @if (Auth::user()->vai_tro == 'super_admin')
+    
     <form action="{{ route('admin.orders.update', $order->id) }}" method="POST">
         @csrf
         @method('PUT')
@@ -18,6 +20,7 @@
             <label class="form-label">Địa chỉ</label>
             <input type="text" name="dia_chi_1" class="form-control" value="{{ $order->dia_chi_1 }}">
         </div>
+        @endif
         <div class="mb-3">
             <label class="form-label">Trạng thái</label>
             <select name="trang_thai" class="form-select">
@@ -29,16 +32,15 @@
                 <option value="huy" @if($order->trang_thai=='huy') selected @endif>Đã hủy</option>
             </select>
         </div>
-        <div class="mb-3">
+    
+        {{-- <div class="mb-3">
             <label class="form-label">Phương thức thanh toán</label>
             <select name="phuong_thuc_tt" class="form-select">
                 <option value="cod" @if($order->phuong_thuc_tt=='cod') selected @endif>COD</option>
-                <option value="the" @if($order->phuong_thuc_tt=='the') selected @endif>Thẻ</option>
-                <option value="chuyen_khoan" @if($order->phuong_thuc_tt=='chuyen_khoan') selected @endif>Chuyển khoản</option>
-                <option value="fundiin" @if($order->phuong_thuc_tt=='fundiin') selected @endif>Fundiin</option>
-                <option value="khac" @if($order->phuong_thuc_tt=='khac') selected @endif>Khác</option>
+                <option value="fundiin" @if($order->phuong_thuc_tt=='vnpay') selected @endif>Fundiin</option>
+                
             </select>
-        </div>
+        </div> --}}
         <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
         <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">Quay lại</a>
     </form>

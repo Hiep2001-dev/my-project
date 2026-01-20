@@ -100,6 +100,8 @@ class ShoeOrderController extends Controller
             $order->dia_chi_1 = $request->dia_chi_1;
             $order->ghi_chu = $request->ghi_chu;
             $order->trang_thai = 'cho_xu_ly';
+            $order->phuong_thuc_tt = $request->phuong_thuc_tt;
+            // $order->trang_thai_tt = 'chua_tt';
             $order->thoi_gian_dat = now();
             $order->tong_tien = $tong_tien - $giam_gia + $phi_ship;
             $order->phi_ship = $phi_ship;
@@ -136,7 +138,7 @@ class ShoeOrderController extends Controller
             $cart->cartDetails()->delete();
             $cart->delete();
 
-            return redirect()->route('order.payment', ['id' => $order->id]);
+            return redirect()->route('order.detail', ['id' => $order->id]);
         } else {
  
             $cartSession = session('cart', []);
@@ -161,7 +163,12 @@ class ShoeOrderController extends Controller
                     $ma_giam_gia_id = $discount->id;
                     if ($discount->loai == 'phan_tram') {
                         $giam_gia = $tong_tien * $discount->gia_tri / 100;
-                    } else {
+                    }
+                    else if($discount->loai == 'tien_mat' ){
+                        $giam_gia = $tong_tien-$discount->gia_tri;
+                    } 
+                    else
+                     {
                         $giam_gia = $discount->gia_tri;
                     }
                 }
@@ -174,6 +181,8 @@ class ShoeOrderController extends Controller
             $order->dia_chi_1 = $request->dia_chi_1;
             $order->ghi_chu = $request->ghi_chu;
             $order->trang_thai = 'cho_xu_ly';
+            // $order->trang_thai_tt = 'chua_tt';
+            $order->phuong_thuc_tt = $request->phuong_thuc_tt;
             $order->thoi_gian_dat = now();
             $order->tong_tien = $tong_tien - $giam_gia + $phi_ship;
             $order->giam_gia = $giam_gia;
@@ -255,7 +264,10 @@ class ShoeOrderController extends Controller
     public function processPayment(Request $request, $id)
     {
         $order = Order::findOrFail($id);
+        if ($order->trang_thai_tt == 'chua_tt' && $order->trang_thai == 'cho_xu_ly') {
         $order->phuong_thuc_tt = $request->phuong_thuc_tt;
+        $order->trang_thai_tt = 'da_tt'; 
+        
         $order->save();
 
         if ($request->phuong_thuc_tt === 'vnpay') {
@@ -319,6 +331,7 @@ class ShoeOrderController extends Controller
         }
 
         return redirect()->route('order.detail', $order->id)->with('success', 'Đã chọn phương thức thanh toán!');
+        }
     }
 
     public function cancel($id)

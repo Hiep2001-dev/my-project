@@ -131,7 +131,7 @@
                             <h6 class="text-muted mb-0">{{ Auth::user()->email }}</h6>
                             <span class="badge bg-info mt-2">
                                 @if(Auth::user()->vai_tro == 'super_admin') Super Admin
-                                @elseif(Auth::user()->vai_tro == 'quan_li') Quản lý
+        
                                 @elseif(Auth::user()->vai_tro == 'nhan_vien') Nhân viên
                                 @else Khách
                                 @endif

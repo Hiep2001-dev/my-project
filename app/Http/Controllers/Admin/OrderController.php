@@ -36,7 +36,20 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         $order = Order::findOrFail($id);
+        $oldStatus = $order->trang_thai;
         $order->update($request->all());
+        
+        if ($request->trang_thai == 'huy' && $oldStatus != 'huy') {
+        foreach ($order->orderDetails as $detail) {
+            $bienThe = $detail->productVariation;
+            if ($bienThe) {
+                 
+                $bienThe->so_luong += $detail->so_luong;
+                $bienThe->save();
+            }
+        }
+
+        }
         return redirect()->route('admin.orders.index')->with('success', 'Cập nhật đơn hàng thành công!');
     }
 

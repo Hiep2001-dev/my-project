@@ -67,6 +67,14 @@
                 </a>
             </li>
             @endif
+            @if (Auth::user()->vai_tro=='super_admin')
+            <li class="sidebar-item {{ Route::is('admin.discount.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.discount.index') }}" class="sidebar-link">
+                    <i class="bi bi-percent"></i>
+                    <span>Mã giảm giá</span>
+                </a>
+            </li>
+            @endif
             <li class="sidebar-item">
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf

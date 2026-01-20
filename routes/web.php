@@ -21,6 +21,7 @@ use App\Http\Controllers\User\UserProductController;
 use App\Http\Controllers\User\UserRegisterController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\User\ForgotPasswordController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -128,6 +129,15 @@ Route::middleware('auth')->group(function () {
         Route::put('/{id}/update', [BannerController::class, 'update'])->name('admin.banners.update');
         Route::delete('/{id}/delete', [BannerController::class, 'destroy'])->name('admin.banners.destroy');
     });
+
+    Route::prefix('admin/discount')->name('admin.discount.')->middleware('auth')->group(function() {
+        Route::get('/', [DiscountController::class, 'index'])->name('index');
+        Route::get('/create', [DiscountController::class, 'create'])->name('create');
+        Route::post('/store', [DiscountController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [DiscountController::class, 'edit'])->name('edit');
+        Route::post('/update/{id}', [DiscountController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [DiscountController::class, 'destroy'])->name('delete');
+});
 });
 
 // Authentication Routes

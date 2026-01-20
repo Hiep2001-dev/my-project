@@ -98,8 +98,10 @@ class UserProductController extends Controller
         $product = Product::findOrFail($productId);
         
         $variations = $product->variations()
+            
             ->where('trang_thai', 'hien')
             ->where('mau_sac', $color)
+            ->where('so_luong', '>', 0)
             ->orderBy('size_eu')
             ->get();
         
@@ -108,7 +110,7 @@ class UserProductController extends Controller
             $sizesData[] = [
                 'size' => $variation->size_eu,
                 'price' => $variation->gia_ban,
-                'stock' => $variation->so_luong_ton ?? 0
+                
             ];
         }
         

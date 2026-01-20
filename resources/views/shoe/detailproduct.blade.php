@@ -115,16 +115,17 @@
 
                                         $colors = $product->variations
                                             ->where('trang_thai', 'hien')
+                                            
                                             ->pluck('mau_sac')
                                             ->unique()
                                             ->filter()
                                             ->values();
                                             
-                                        // Tạo mảng giá theo màu và size
+                    
                                         $priceData = [];
                                         $colorSizeMap = []; // Map màu -> danh sách size
                                         
-                                        foreach($product->variations->where('trang_thai', 'hien') as $v) {
+                                        foreach($product->variations->where('trang_thai', 'hien')->where('so_luong', '>', 0) as $v) {
                                             $key = $v->mau_sac . '_' . $v->size_eu;
                                             $priceData[$key] = $v->gia_ban;
                                             

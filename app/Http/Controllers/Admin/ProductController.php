@@ -24,7 +24,9 @@ class ProductController extends Controller
             $products = Product::with(['brand', 'variations'])
                 ->orderBy('id', 'desc')
                 ->paginate(10);
+            
         }
+        
 
         return view('admin.products.index', compact('products'));
     }

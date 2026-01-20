@@ -80,6 +80,7 @@
                     }
                   @endphp
                   <p class="">{{ $firstPrice ? number_format($firstPrice, 0, ',', '.') : 'Liên hệ' }}₫</p>
+                  
                 </div>
               </div>
             </div>
