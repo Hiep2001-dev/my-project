@@ -30,7 +30,7 @@
             @endif
             <div class="card-body">
                 <table class="table table-striped" id="staffTable">
-                 @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
+                 @if(in_array(Auth::user()->vai_tro, ['super_admin']))
                     <thead>
                         <tr>
                             <th>#</th>
@@ -77,8 +77,8 @@
                             <td>{{ $user->ngay_tao }}</td>
                             <td>
                                 @php
-                                    $isCurrentManager = Auth::user()->vai_tro == 'quan_li';
-                                    $isTargetManager = $user->vai_tro == 'quan_li';
+                                    $isCurrentManager = Auth::user()->vai_tro == 'super_admin';
+                                    $isTargetManager = $user->vai_tro == 'super_admin';
                                 @endphp
 
                                 @if(!($isCurrentManager && $isTargetManager))
@@ -96,7 +96,7 @@
                             </td>
                         </tr>
                         @endforeach
-                        @if($users->whereIn('vai_tro', ['quan_li', 'nhan_vien'])->isEmpty())
+                        @if($users->whereIn('vai_tro', ['nhan_vien'])->isEmpty())
                         <tr>
                             <td colspan="9" class="text-center">Không có dữ liệu</td>
                         </tr>
@@ -155,7 +155,7 @@
                             <td>{{ $user->diem_tich_luy }}</td>
                             <td>{{ $user->ngay_sinh }}</td>
                             <td>{{ $user->ngay_tao }}</td>
-                            @if(in_array(Auth::user()->vai_tro, ['super_admin', 'quan_li']))
+                            @if(in_array(Auth::user()->vai_tro, ['super_admin']))
                             <td>
                                 <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-sm btn-info" title="Xem"><i class="bi bi-eye"></i></a>
                                 <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-warning" title="Sửa"><i class="bi bi-pencil"></i></a>

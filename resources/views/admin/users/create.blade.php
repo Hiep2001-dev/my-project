@@ -32,7 +32,7 @@
             <label for="vai_tro" class="form-label">Vai trò</label>
             <select name="vai_tro" class="form-select">
                 @if(Auth::user()->vai_tro == 'super_admin')
-                    <option value="quan_li">Quản lý</option>
+                    <option value="super_admin">Super Admin</option>
                 @endif
                 <option value="nhan_vien">Nhân viên</option>
                 <option value="khach_hang">Khách hàng</option>

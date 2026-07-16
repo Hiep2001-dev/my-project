@@ -123,7 +123,7 @@
                                             
                     
                                         $priceData = [];
-                                        $colorSizeMap = []; // Map màu -> danh sách size
+                                        $colorSizeMap = []; //
                                         
                                         foreach($product->variations->where('trang_thai', 'hien')->where('so_luong', '>', 0) as $v) {
                                             $key = $v->mau_sac . '_' . $v->size_eu;
@@ -267,6 +267,10 @@
                                             <div class="description-productdetail">
                                                 {!! $product->mo_ta !!}
                                             </div>
+                                            <a href="{{ route('review.list', $product->id) }}">Xem tất cả đánh giá</a></br>
+                                            @auth
+                                                <a href="{{ route('review.create', [$product->id, $variationId ?? null]) }}" class="btn btn-outline-primary">Viết đánh giá</a>
+                                            @endauth
                                         </div>
                                     </div>
                                 </div>

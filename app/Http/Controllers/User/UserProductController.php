@@ -46,7 +46,7 @@ class UserProductController extends Controller
         
 
 
-        $products = $query->with(['variations.images'])->paginate(20);
+        $products = $query->with(['variations.images'])->paginate(8);
 
         $categories = Category::where('hoat_dong', 1)->get();
         $brands = Brand::where('hoat_dong', 1)->get();

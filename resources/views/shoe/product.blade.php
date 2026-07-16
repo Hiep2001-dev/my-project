@@ -159,8 +159,8 @@
                 </div>
                 @endforeach
             </div>
-            <div class="sortpagibar pagi clearfix text-center">
-                {{ $products->links() }}
+            <div class="pagination justify-content-center">
+                {{ $products->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>

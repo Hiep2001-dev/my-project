@@ -22,6 +22,7 @@ use App\Http\Controllers\User\UserRegisterController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\DiscountController;
+use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\User\ForgotPasswordController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -194,6 +195,12 @@ Route::middleware('auth')->group(function () {
     Route::get('shoe/profile/change-password', [ShoeUserController::class, 'showChangePasswordForm'])->name('shoe.profile.change-password');
     Route::post('shoe/profile/change-password', [ShoeUserController::class, 'changePassword'])->name('shoe.password.update');
 });
+//danh gia
+Route::middleware('auth')->group(function() {
+    Route::get('product/{product}/review/create/{variation?}', [ReviewController::class, 'create'])->name('review.create');
+    Route::post('product/{product}/review/store/{variation?}', [ReviewController::class, 'store'])->name('review.store');
+});
+Route::get('product/{product}/reviews', [ReviewController::class, 'list'])->name('review.list');
 
 Route::get('/shoe/introduce', function () {
     return view('shoe.introduce');

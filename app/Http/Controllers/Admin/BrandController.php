@@ -33,7 +33,7 @@ class BrandController extends Controller
         ]);
 
         $data = $request->only(['ten', 'mo_ta', 'hoat_dong', 'danh_muc_id']);
-        $data['duong_dan'] = \Str::slug($request->ten);
+        
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
@@ -62,7 +62,7 @@ class BrandController extends Controller
         ]);
 
         $data = $request->only(['ten', 'mo_ta', 'hoat_dong', 'danh_muc_id']);
-        $data['duong_dan'] = \Str::slug($request->ten);
+        
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
